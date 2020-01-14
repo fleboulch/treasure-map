@@ -2,6 +2,7 @@ package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.kernel.exceptions.DomainException;
 import com.fleboulch.treasuremap.kernel.exceptions.NegativeAttributeException;
+import com.fleboulch.treasuremap.kernel.exceptions.NegativeOrZeroAttributeException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -25,15 +26,18 @@ class DimensionTest {
 
     @ParameterizedTest
     @CsvSource(value = {
+            "0,0",
+            "0,5",
+            "5,0",
             "-2,-2",
             "-4,3",
             "3,-4"
     })
-    void a_dimension_with_negative_width_or_height_cannot_be_created(int width, int height) {
+    void a_dimension_with_negative_or_zero_width_or_height_cannot_be_created(int width, int height) {
 
         assertThatThrownBy(
                 () -> new Dimension(new Width(width), new Height(height))
-        ).isInstanceOf(NegativeAttributeException.class);
+        ).isInstanceOf(NegativeOrZeroAttributeException.class);
     }
 
     @Test

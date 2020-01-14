@@ -2,7 +2,7 @@ package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 
-public class TreasureBox extends Box {
+public class TreasureBox extends PlainsBox {
 
     private final int nbTreasures;
 
