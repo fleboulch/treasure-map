@@ -1,7 +1,7 @@
 package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.kernel.exceptions.DomainException;
-import com.fleboulch.treasuremap.kernel.exceptions.NegativeIndexException;
+import com.fleboulch.treasuremap.kernel.exceptions.NegativeAttributeException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -33,7 +33,7 @@ class DimensionTest {
 
         assertThatThrownBy(
                 () -> new Dimension(new Width(width), new Height(height))
-        ).isInstanceOf(NegativeIndexException.class);
+        ).isInstanceOf(NegativeAttributeException.class);
     }
 
     @Test

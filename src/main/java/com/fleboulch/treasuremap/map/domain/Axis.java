@@ -7,7 +7,7 @@ public abstract class Axis {
     private final int index;
 
     protected Axis(int index) {
-        this.index = Domain.validatePositive(index, "The index for an axis should be positive");
+        this.index = Domain.validatePositiveOrZero(index, "The index for an axis should be positive");
     }
 
     public int index() {

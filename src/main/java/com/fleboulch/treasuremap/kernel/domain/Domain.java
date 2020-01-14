@@ -1,7 +1,8 @@
 package com.fleboulch.treasuremap.kernel.domain;
 
 import com.fleboulch.treasuremap.kernel.exceptions.DomainException;
-import com.fleboulch.treasuremap.kernel.exceptions.NegativeIndexException;
+import com.fleboulch.treasuremap.kernel.exceptions.NegativeAttributeException;
+import com.fleboulch.treasuremap.kernel.exceptions.NegativeOrZeroAttributeException;
 
 public class Domain {
 
@@ -15,10 +16,18 @@ public class Domain {
         return attribute;
     }
 
-    public static int validatePositive(int attribute, String message) {
+    public static int validatePositiveOrZero(int attribute, String message) {
         if (attribute < 0) {
-            throw new NegativeIndexException(message);
+            throw new NegativeAttributeException(message);
         }
         return attribute;
     }
+
+    public static int validatePositive(int attribute, String message) {
+        if (attribute <= 0) {
+            throw new NegativeOrZeroAttributeException(message);
+        }
+        return attribute;
+    }
+
 }

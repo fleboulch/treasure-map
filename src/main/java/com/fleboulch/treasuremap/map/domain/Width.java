@@ -7,7 +7,7 @@ public class Width {
     private final int value;
 
     public Width(int value) {
-        this.value = Domain.validatePositive(value, "A width should have a positive value");
+        this.value = Domain.validatePositiveOrZero(value, "A width should have a positive value");
     }
 
     public int value() {
