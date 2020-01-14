@@ -10,4 +10,8 @@ public class Treasure extends Box {
         super(x, y);
         this.nbTreasures = Domain.validatePositive(nbTreasures, "The number of treasures should be positive");
     }
+
+    public int nbTreasures() {
+        return nbTreasures;
+    }
 }
