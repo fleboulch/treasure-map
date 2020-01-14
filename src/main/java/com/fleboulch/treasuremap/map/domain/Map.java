@@ -1,6 +1,7 @@
 package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.kernel.domain.Domain;
+import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
 
 import java.util.List;
 
@@ -22,7 +23,9 @@ public class Map {
     }
 
     private void checkValidTreasure(TreasureBox treasureBox) {
-//        if (treasureBox.)
+        if (!treasureBox.isInside(dimension)) {
+            throw new BoxIsOutOfMapException();
+        }
     }
 
     public Dimension dimension() {

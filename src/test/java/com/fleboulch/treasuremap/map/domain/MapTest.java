@@ -41,7 +41,7 @@ class MapTest {
     }
 
     @Test
-    void create_a_map_with_one_invalid_treasure() {
+    void map_with_invalid_treasure_coordinates_should_not_be_created() {
         int width = 2;
         int height = 3;
 
