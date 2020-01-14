@@ -1,8 +1,9 @@
 package com.fleboulch.treasuremap.map.domain;
 
-import com.fleboulch.treasuremap.kernel.exceptions.NegativeAttributeException;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 
@@ -24,15 +25,14 @@ class MapTest {
         assertThat(validMap.treasureBoxes()).isEmpty();
     }
 
-    @Test
-    void create_a_map_with_one_treasure() {
-        int width = 2;
-        int height = 3;
-
-        int x = 0;
-        int y = 0;
+    @ParameterizedTest
+    @CsvSource(value = {
+            "0,0,1,1",
+            "0,0,2,3"
+    })
+    void create_a_map_with_valid_treasure_coordinates(int x, int y, int width, int height) {
         TreasureBox treasure = buildTreasure(x, y);
-        Map validMap = buildMap(width, height, List.of(treasure));
+        Map validMap = buildMapWithTreasures(width, height, List.of(treasure));
 
         assertThat(validMap.dimension().width().value()).isEqualTo(width);
         assertThat(validMap.dimension().height().value()).isEqualTo(height);
@@ -40,19 +40,34 @@ class MapTest {
         assertThat(validMap.treasureBoxes().size()).isOne();
     }
 
-    @Test
-    void map_with_invalid_treasure_coordinates_should_not_be_created() {
-        int width = 2;
-        int height = 3;
-
-        int x = 2;
-        int y = 3;
+    @ParameterizedTest
+    @CsvSource(value = {
+            "1,1,1,1",
+            "3,3,2,2"
+    })
+    void map_with_invalid_treasure_coordinates_should_not_be_created(int x, int y, int width, int height) {
         TreasureBox treasure = buildTreasure(x, y);
 
         assertThatThrownBy(
-                () -> buildMap(width, height, List.of(treasure))
+                () -> buildMapWithTreasures(width, height, List.of(treasure))
         ).isInstanceOf(BoxIsOutOfMapException.class);
+    }
 
+    @ParameterizedTest
+    @CsvSource(value = {
+            "1,1,1,1",
+            "3,3,2,2"
+    })
+    void map_with_invalid_mountain_coordinates_should_not_be_created(int x, int y, int width, int height) {
+        MountainBox mountainBox = buildMountain(x, y);
+
+        assertThatThrownBy(
+                () -> buildMapWithMountains(width, height, List.of(mountainBox))
+        ).isInstanceOf(BoxIsOutOfMapException.class);
+    }
+
+    private MountainBox buildMountain(int x, int y) {
+        return new MountainBox(new HorizontalAxis(x), new VerticalAxis(y));
     }
 
     private TreasureBox buildTreasure(int x, int y) {
@@ -63,7 +78,11 @@ class MapTest {
         return new Map(new Dimension(new Width(width), new Height(height)), emptyList(), emptyList());
     }
 
-    private Map buildMap(int width, int height, List<TreasureBox> treasures) {
+    private Map buildMapWithTreasures(int width, int height, List<TreasureBox> treasures) {
         return new Map(new Dimension(new Width(width), new Height(height)), treasures, emptyList());
+    }
+
+    private Map buildMapWithMountains(int width, int height, List<MountainBox> mountains) {
+        return new Map(new Dimension(new Width(width), new Height(height)), emptyList(), mountains);
     }
 }

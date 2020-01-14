@@ -13,17 +13,18 @@ public class Map {
 
     public Map(Dimension dimension, List<TreasureBox> treasureBoxes, List<MountainBox> mountainBoxes) {
         this.dimension = Domain.validateNotNull(dimension, "A map should have a dimension");
-        checkValidTreasures(treasureBoxes);
+        checkValid(treasureBoxes, mountainBoxes);
         this.treasureBoxes = Domain.validateNotNull(treasureBoxes, "A map should not have null treasures");
         this.mountainBoxes = Domain.validateNotNull(mountainBoxes, "A map should not have null mountains");
     }
 
-    private void checkValidTreasures(List<TreasureBox> treasureBoxes) {
-        treasureBoxes.forEach(this::checkValidTreasure);
+    private void checkValid(List<TreasureBox> treasureBoxes, List<MountainBox> mountainBoxes) {
+        treasureBoxes.forEach(this::checkValidBox);
+        mountainBoxes.forEach(this::checkValidBox);
     }
 
-    private void checkValidTreasure(TreasureBox treasureBox) {
-        if (!treasureBox.isInside(dimension)) {
+    private void checkValidBox(PlainsBox box) {
+        if (!box.isInside(dimension)) {
             throw new BoxIsOutOfMapException();
         }
     }
