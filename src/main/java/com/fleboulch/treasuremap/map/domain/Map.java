@@ -13,12 +13,12 @@ public class Map {
 
     public Map(Dimension dimension, List<TreasureBox> treasureBoxes, List<MountainBox> mountainBoxes) {
         this.dimension = Domain.validateNotNull(dimension, "A map should have a dimension");
-        checkValid(treasureBoxes, mountainBoxes);
+        checkValidBoxes(treasureBoxes, mountainBoxes);
         this.treasureBoxes = Domain.validateNotNull(treasureBoxes, "A map should not have null treasures");
         this.mountainBoxes = Domain.validateNotNull(mountainBoxes, "A map should not have null mountains");
     }
 
-    private void checkValid(List<TreasureBox> treasureBoxes, List<MountainBox> mountainBoxes) {
+    private void checkValidBoxes(List<TreasureBox> treasureBoxes, List<MountainBox> mountainBoxes) {
         treasureBoxes.forEach(this::checkValidBox);
         mountainBoxes.forEach(this::checkValidBox);
     }

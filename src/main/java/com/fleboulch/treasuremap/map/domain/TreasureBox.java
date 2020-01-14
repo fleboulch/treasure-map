@@ -14,4 +14,9 @@ public class TreasureBox extends PlainsBox {
     public int nbTreasures() {
         return nbTreasures;
     }
+
+    @Override
+    public String toString() {
+        return String.format("T - %s - %s - %s", x(), y(), nbTreasures);
+    }
 }

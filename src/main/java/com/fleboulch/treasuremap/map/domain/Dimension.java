@@ -35,4 +35,12 @@ public class Dimension {
     public int hashCode() {
         return Objects.hash(width, height);
     }
+
+    @Override
+    public String toString() {
+        return "Dimension {" +
+                "width=" + width +
+                ", height=" + height +
+                '}';
+    }
 }
