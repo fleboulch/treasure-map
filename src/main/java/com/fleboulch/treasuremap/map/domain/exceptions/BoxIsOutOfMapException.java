@@ -1,9 +1,12 @@
 package com.fleboulch.treasuremap.map.domain.exceptions;
 
+import com.fleboulch.treasuremap.map.domain.Dimension;
+import com.fleboulch.treasuremap.map.domain.PlainsBox;
+
 public class BoxIsOutOfMapException extends RuntimeException {
 
-    public BoxIsOutOfMapException() {
-        super();
+    public BoxIsOutOfMapException(PlainsBox box, Dimension dimension) {
+        super(String.format("'%s' is out of %s", box, dimension));
     }
 
 }

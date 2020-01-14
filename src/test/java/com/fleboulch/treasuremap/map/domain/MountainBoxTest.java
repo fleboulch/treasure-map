@@ -35,11 +35,11 @@ class MountainBoxTest {
             "1,1,2,2",
             "2,4,6,7",
     })
-    void moutain_should_be_inside_dimension_if_dimension_is_equal_or_bigger_than_moutain_coordinates(int x, int y, int width, int height) {
+    void mountain_should_be_inside_dimension_if_dimension_is_equal_or_bigger_than_mountain_coordinates(int x, int y, int width, int height) {
 
         Dimension dimension = new Dimension(new Width(width), new Height(height));
-        MountainBox moutainBox = buildMountainBox(x, y);
-        assertThat(moutainBox.isInside(dimension)).isTrue();
+        MountainBox mountainBox = buildMountainBox(x, y);
+        assertThat(mountainBox.isInside(dimension)).isTrue();
     }
 
     @ParameterizedTest
@@ -48,11 +48,11 @@ class MountainBoxTest {
             "2,2,2,1",
             "2,2,1,1"
     })
-    void moutain_should_be_outside_dimension_if_dimension_is_smaller_than_moutain_coordinates(int x, int y, int width, int height) {
+    void mountain_should_be_outside_dimension_if_dimension_is_smaller_than_mountain_coordinates(int x, int y, int width, int height) {
 
         Dimension dimension = new Dimension(new Width(width), new Height(height));
-        MountainBox moutainBox = buildMountainBox(x, y);
-        assertThat(moutainBox.isInside(dimension)).isFalse();
+        MountainBox mountainBox = buildMountainBox(x, y);
+        assertThat(mountainBox.isInside(dimension)).isFalse();
     }
 
 

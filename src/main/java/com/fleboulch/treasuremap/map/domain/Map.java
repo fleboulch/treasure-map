@@ -8,24 +8,24 @@ import java.util.List;
 public class Map {
 
     private final Dimension dimension;
-    private final List<TreasureBox> treasureBoxes;
     private final List<MountainBox> mountainBoxes;
+    private final List<TreasureBox> treasureBoxes;
 
-    public Map(Dimension dimension, List<TreasureBox> treasureBoxes, List<MountainBox> mountainBoxes) {
+    public Map(Dimension dimension, List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
         this.dimension = Domain.validateNotNull(dimension, "A map should have a dimension");
-        checkValidBoxes(treasureBoxes, mountainBoxes);
-        this.treasureBoxes = Domain.validateNotNull(treasureBoxes, "A map should not have null treasures");
+        checkValidBoxes(mountainBoxes, treasureBoxes);
         this.mountainBoxes = Domain.validateNotNull(mountainBoxes, "A map should not have null mountains");
+        this.treasureBoxes = Domain.validateNotNull(treasureBoxes, "A map should not have null treasures");
     }
 
-    private void checkValidBoxes(List<TreasureBox> treasureBoxes, List<MountainBox> mountainBoxes) {
-        treasureBoxes.forEach(this::checkValidBox);
+    private void checkValidBoxes(List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
         mountainBoxes.forEach(this::checkValidBox);
+        treasureBoxes.forEach(this::checkValidBox);
     }
 
     private void checkValidBox(PlainsBox box) {
         if (!box.isInside(dimension)) {
-            throw new BoxIsOutOfMapException();
+            throw new BoxIsOutOfMapException(box, dimension);
         }
     }
 
@@ -33,11 +33,12 @@ public class Map {
         return dimension;
     }
 
+    public List<MountainBox> mountainBoxes() {
+        return mountainBoxes;
+    }
+
     public List<TreasureBox> treasureBoxes() {
         return treasureBoxes;
     }
 
-    public List<MountainBox> mountainBoxes() {
-        return mountainBoxes;
-    }
 }

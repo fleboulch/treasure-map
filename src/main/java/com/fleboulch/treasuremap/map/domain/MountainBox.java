@@ -6,4 +6,8 @@ public class MountainBox extends PlainsBox {
         super(x, y);
     }
 
+    @Override
+    public String toString() {
+        return String.format("M - %s - %s", x().index(), y().index());
+    }
 }
