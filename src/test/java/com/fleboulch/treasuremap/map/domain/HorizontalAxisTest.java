@@ -25,4 +25,20 @@ class HorizontalAxisTest {
         ).isInstanceOf(NegativeAttributeException.class);
     }
 
+    @Test
+    void two_horizontal_axis_with_same_index_should_be_equal() {
+        int index = 4;
+        Axis axis1 = new HorizontalAxis(index);
+        Axis axis2 = new HorizontalAxis(index);
+        assertThat(axis1).isEqualTo(axis2);
+    }
+
+    @Test
+    void two_horizontal_axis_with_same_index_should_have_same_hash() {
+        int index = 4;
+        Axis axis1 = new HorizontalAxis(index);
+        Axis axis2 = new HorizontalAxis(index);
+        assertThat(axis1).hasSameHashCodeAs(axis2);
+    }
+
 }

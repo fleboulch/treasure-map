@@ -2,6 +2,8 @@ package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 
+import java.util.Objects;
+
 public abstract class Axis {
 
     private final int index;
@@ -12,5 +14,18 @@ public abstract class Axis {
 
     public int index() {
         return index;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Axis axis = (Axis) o;
+        return index == axis.index;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(index);
     }
 }

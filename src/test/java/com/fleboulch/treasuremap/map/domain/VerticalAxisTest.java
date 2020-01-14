@@ -24,4 +24,20 @@ class VerticalAxisTest {
                 () -> new VerticalAxis(-1)
         ).isInstanceOf(NegativeAttributeException.class);
     }
+
+    @Test
+    void two_vertical_axis_with_same_index_should_be_equal() {
+        int index = 4;
+        Axis axis1 = new VerticalAxis(index);
+        Axis axis2 = new VerticalAxis(index);
+        assertThat(axis1).isEqualTo(axis2);
+    }
+
+    @Test
+    void two_vertical_axis_with_same_index_should_have_same_hash() {
+        int index = 4;
+        Axis axis1 = new VerticalAxis(index);
+        Axis axis2 = new VerticalAxis(index);
+        assertThat(axis1).hasSameHashCodeAs(axis2);
+    }
 }
