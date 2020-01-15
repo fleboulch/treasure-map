@@ -21,7 +21,6 @@ public class Explorer {
         this.y = Domain.validateNotNull(y, "Vertical axis should be not null");
         this.orientation = Domain.validateNotNull(orientation, "Orientation should be not null");
         this.movements = Domain.validateNotNull(movements, "Movements should be not null");
-        ;
     }
 
     public static Explorer of(Name name, HorizontalAxis x, VerticalAxis y, Orientation orientation, String rawMovements) {
