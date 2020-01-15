@@ -1,6 +1,7 @@
 package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.kernel.exceptions.NegativeAttributeException;
+import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import com.fleboulch.treasuremap.shared.coordinates.domain.HorizontalAxis;
 import com.fleboulch.treasuremap.shared.coordinates.domain.VerticalAxis;
 import org.junit.jupiter.api.Test;
@@ -18,8 +19,8 @@ class MountainBoxTest {
     @Test
     void mountain_box_with_valid_indexes_should_be_created() {
         MountainBox mountainBox = buildMountainBox(HORIZONTAL_AXIS, VERTICAL_AXIS);
-        assertThat(mountainBox.x().index()).isEqualTo(HORIZONTAL_AXIS);
-        assertThat(mountainBox.y().index()).isEqualTo(VERTICAL_AXIS);
+        assertThat(mountainBox.coordinates().x().index()).isEqualTo(HORIZONTAL_AXIS);
+        assertThat(mountainBox.coordinates().y().index()).isEqualTo(VERTICAL_AXIS);
     }
 
     @Test
@@ -59,6 +60,6 @@ class MountainBoxTest {
 
 
     private MountainBox buildMountainBox(int horizontalAxis, int verticalAxis) {
-        return new MountainBox(new HorizontalAxis(horizontalAxis), new VerticalAxis(verticalAxis));
+        return new MountainBox(Coordinates.of(horizontalAxis, verticalAxis));
     }
 }

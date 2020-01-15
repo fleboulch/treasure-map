@@ -1,33 +1,24 @@
 package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.kernel.domain.Domain;
-import com.fleboulch.treasuremap.shared.coordinates.domain.HorizontalAxis;
-import com.fleboulch.treasuremap.shared.coordinates.domain.VerticalAxis;
+import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 
 import java.util.Objects;
 
 public abstract class PlainsBox {
 
-    private final HorizontalAxis x;
-    private final VerticalAxis y;
+    private final Coordinates coordinates;
 
-    protected PlainsBox(HorizontalAxis x, VerticalAxis y) {
-        this.x = Domain.validateNotNull(x, "Horizontal axis should not be null");
-        this.y = Domain.validateNotNull(y, "Vertical axis should not be null");
+    protected PlainsBox(Coordinates coordinates) {
+        this.coordinates = Domain.validateNotNull(coordinates, "Coordinates should not be null");
     }
 
-    // duplicated code (create coordinates abstraction)
     public boolean isInside(Dimension dimension) {
-        return x.index() < dimension.width().value() &&
-                y.index() < dimension.height().value();
+        return coordinates.hasValidCoordinates(dimension);
     }
 
-    public HorizontalAxis x() {
-        return x;
-    }
-
-    public VerticalAxis y() {
-        return y;
+    public Coordinates coordinates() {
+        return coordinates;
     }
 
     @Override
@@ -35,12 +26,11 @@ public abstract class PlainsBox {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlainsBox plainsBox = (PlainsBox) o;
-        return x.equals(plainsBox.x) &&
-                y.equals(plainsBox.y);
+        return coordinates.equals(plainsBox.coordinates);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y);
+        return Objects.hash(coordinates);
     }
 }

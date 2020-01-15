@@ -104,7 +104,7 @@ public class ApplicationFactory {
         validateLine(line, 3);
         int x = ConverterUtils.toInt(line[1]);
         int y = ConverterUtils.toInt(line[2]);
-        return new MountainBox(new HorizontalAxis(x), new VerticalAxis(y));
+        return new MountainBox(Coordinates.of(x, y));
     }
 
     private static TreasureBox toTreasure(String[] line) {
@@ -113,7 +113,7 @@ public class ApplicationFactory {
         int x = ConverterUtils.toInt(line[1]);
         int y = ConverterUtils.toInt(line[2]);
         int nbTreasures = ConverterUtils.toInt(line[3]);
-        return new TreasureBox(new HorizontalAxis(x), new VerticalAxis(y), nbTreasures);
+        return new TreasureBox(Coordinates.of(x, y), nbTreasures);
     }
 
 

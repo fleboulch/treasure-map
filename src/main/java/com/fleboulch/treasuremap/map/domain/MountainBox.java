@@ -1,16 +1,15 @@
 package com.fleboulch.treasuremap.map.domain;
 
-import com.fleboulch.treasuremap.shared.coordinates.domain.HorizontalAxis;
-import com.fleboulch.treasuremap.shared.coordinates.domain.VerticalAxis;
+import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 
 public class MountainBox extends PlainsBox {
 
-    public MountainBox(HorizontalAxis x, VerticalAxis y) {
-        super(x, y);
+    public MountainBox(Coordinates coordinates) {
+        super(coordinates);
     }
 
     @Override
     public String toString() {
-        return String.format("M - %s - %s", x().index(), y().index());
+        return String.format("M - %s", coordinates());
     }
 }

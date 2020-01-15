@@ -1,8 +1,7 @@
 package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
-import com.fleboulch.treasuremap.shared.coordinates.domain.HorizontalAxis;
-import com.fleboulch.treasuremap.shared.coordinates.domain.VerticalAxis;
+import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -71,11 +70,11 @@ class MapTest {
     }
 
     private MountainBox buildMountain(int x, int y) {
-        return new MountainBox(new HorizontalAxis(x), new VerticalAxis(y));
+        return new MountainBox(Coordinates.of(x, y));
     }
 
     private TreasureBox buildTreasure(int x, int y) {
-        return new TreasureBox(new HorizontalAxis(x), new VerticalAxis(y), 1);
+        return new TreasureBox(Coordinates.of(x, y), 1);
     }
 
     private TreasureMap buildSimpleMap(int width, int height) {

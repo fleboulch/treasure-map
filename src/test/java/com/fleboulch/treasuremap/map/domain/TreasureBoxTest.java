@@ -1,6 +1,7 @@
 package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.kernel.exceptions.NegativeOrZeroAttributeException;
+import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import com.fleboulch.treasuremap.shared.coordinates.domain.HorizontalAxis;
 import com.fleboulch.treasuremap.shared.coordinates.domain.VerticalAxis;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,8 +20,8 @@ class TreasureBoxTest {
     @ValueSource(ints = {1, 5})
     void treasure_box_with_positive_number_of_treasers_should_be_created(int nbTreasures) {
         TreasureBox treasureBox = buildTreasureBox(HORIZONTAL_AXIS, VERTICAL_AXIS, nbTreasures);
-        assertThat(treasureBox.x().index()).isEqualTo(HORIZONTAL_AXIS);
-        assertThat(treasureBox.y().index()).isEqualTo(VERTICAL_AXIS);
+        assertThat(treasureBox.coordinates().x().index()).isEqualTo(HORIZONTAL_AXIS);
+        assertThat(treasureBox.coordinates().y().index()).isEqualTo(VERTICAL_AXIS);
         assertThat(treasureBox.nbTreasures()).isEqualTo(nbTreasures);
     }
 
@@ -62,7 +63,7 @@ class TreasureBoxTest {
 
 
     private TreasureBox buildTreasureBox(int x, int y, int nbTreasures) {
-        return new TreasureBox(new HorizontalAxis(x), new VerticalAxis(y), nbTreasures);
+        return new TreasureBox(Coordinates.of(x, y), nbTreasures);
     }
 
 }

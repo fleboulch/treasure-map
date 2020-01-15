@@ -5,6 +5,7 @@ import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConf
 import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputRowException;
 import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
+import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import com.fleboulch.treasuremap.shared.coordinates.domain.HorizontalAxis;
 import com.fleboulch.treasuremap.shared.coordinates.domain.VerticalAxis;
 import org.junit.jupiter.api.Test;
@@ -148,7 +149,7 @@ class ApplicationFactoryTest {
     }
 
     private TreasureBox buildTreasure(int x, int y, int nbTreasures) {
-        return new TreasureBox(new HorizontalAxis(x), new VerticalAxis(y), nbTreasures);
+        return new TreasureBox(Coordinates.of(x, y), nbTreasures);
     }
 
     private Dimension buildDimension() {
@@ -156,7 +157,7 @@ class ApplicationFactoryTest {
     }
 
     private MountainBox buildMountain(int x, int y) {
-        return new MountainBox(new HorizontalAxis(x), new VerticalAxis(y));
+        return new MountainBox(Coordinates.of(x, y));
     }
 
 

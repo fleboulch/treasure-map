@@ -3,6 +3,8 @@ package com.fleboulch.treasuremap.shared.coordinates.domain;
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 import com.fleboulch.treasuremap.map.domain.Dimension;
 
+import java.util.Objects;
+
 public class Coordinates {
     private final HorizontalAxis x;
     private final VerticalAxis y;
@@ -30,10 +32,21 @@ public class Coordinates {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinates that = (Coordinates) o;
+        return x.equals(that.x) &&
+                y.equals(that.y);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
+
+    @Override
     public String toString() {
-        return "Coordinates{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return String.format("%s - %s", x.index(), y.index());
     }
 }
