@@ -14,6 +14,7 @@ public abstract class PlainsBox {
         this.y = Domain.validateNotNull(y, "Vertical axis should not be null");
     }
 
+    // duplicated code (create coordinates abstraction)
     public boolean isInside(Dimension dimension) {
         return x.index() < dimension.width().value() &&
                 y.index() < dimension.height().value();

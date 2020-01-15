@@ -1,6 +1,7 @@
 package com.fleboulch.treasuremap.explorer.domain;
 
 import com.fleboulch.treasuremap.kernel.domain.Domain;
+import com.fleboulch.treasuremap.map.domain.Dimension;
 import com.fleboulch.treasuremap.map.domain.HorizontalAxis;
 import com.fleboulch.treasuremap.map.domain.VerticalAxis;
 
@@ -63,4 +64,20 @@ public class Explorer {
         return movements;
     }
 
+    // duplicated code (create coordinates abstraction)
+    public boolean hasValidCoordinates(Dimension dimension) {
+        return x.index() < dimension.width().value() &&
+                y.index() < dimension.height().value();
+    }
+
+    @Override
+    public String toString() {
+        return "Explorer{" +
+                "name=" + name +
+                ", x=" + x +
+                ", y=" + y +
+                ", orientation=" + orientation +
+                ", movements=" + movements +
+                '}';
+    }
 }

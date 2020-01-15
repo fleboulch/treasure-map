@@ -11,4 +11,11 @@ public class Orientation {
     public OrientationType orientationType() {
         return orientationType;
     }
+
+    @Override
+    public String toString() {
+        return "Orientation{" +
+                "orientationType=" + orientationType +
+                '}';
+    }
 }

@@ -32,6 +32,7 @@ class CsvConverterTest {
         assertThat(config.get(2)).isEqualTo("T - 2 - 1 - 1");
     }
 
+    // duplicated code
     private String buildCsvPath(String fileName) throws IOException {
         ClassPathResource classPathResource = new ClassPathResource(fileName, this.getClass());
         return classPathResource.getFile().getPath();

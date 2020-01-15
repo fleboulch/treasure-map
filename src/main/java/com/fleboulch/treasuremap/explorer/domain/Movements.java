@@ -15,4 +15,11 @@ public class Movements {
     public List<MovementType> movementTypes() {
         return movementTypes;
     }
+
+    @Override
+    public String toString() {
+        return "Movements{" +
+                "movementTypes=" + movementTypes +
+                '}';
+    }
 }

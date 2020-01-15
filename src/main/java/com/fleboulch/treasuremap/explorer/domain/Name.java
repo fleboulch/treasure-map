@@ -13,4 +13,11 @@ public class Name {
     public String value() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "Name{" +
+                "value='" + value + '\'' +
+                '}';
+    }
 }
