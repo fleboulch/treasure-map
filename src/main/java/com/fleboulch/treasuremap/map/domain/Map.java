@@ -41,4 +41,11 @@ public class Map {
         return treasureBoxes;
     }
 
+    @Override
+    public String toString() {
+        return String.format("C - %s - %s \n",
+                dimension.width().value(),
+                dimension.height().value()
+                );
+    }
 }

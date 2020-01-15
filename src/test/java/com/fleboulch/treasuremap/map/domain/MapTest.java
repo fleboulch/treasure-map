@@ -79,10 +79,10 @@ class MapTest {
     }
 
     private Map buildMapWithTreasures(int width, int height, List<TreasureBox> treasures) {
-        return new Map(new Dimension(new Width(width), new Height(height)), treasures, emptyList());
+        return new Map(new Dimension(new Width(width), new Height(height)), emptyList(), treasures);
     }
 
     private Map buildMapWithMountains(int width, int height, List<MountainBox> mountains) {
-        return new Map(new Dimension(new Width(width), new Height(height)), emptyList(), mountains);
+        return new Map(new Dimension(new Width(width), new Height(height)), mountains, emptyList());
     }
 }
