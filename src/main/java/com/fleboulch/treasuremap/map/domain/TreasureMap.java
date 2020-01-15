@@ -2,8 +2,11 @@ package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
+import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TreasureMap {
@@ -18,6 +21,33 @@ public class TreasureMap {
         checkValidBoxes(mountainBoxes, treasureBoxes);
         this.mountainBoxes = Domain.validateNotNull(mountainBoxes, "A map should not have null mountains");
         this.treasureBoxes = Domain.validateNotNull(treasureBoxes, "A map should not have null treasures");
+    }
+
+    // TODO: need to refacto this method
+    public PlainsBox from(Coordinates coordinates) {
+        if (coordinates.hasValidCoordinates(dimension)) {
+            Optional<MountainBox> mountain = mountainBoxes.stream()
+                    .filter(mountainBox -> Objects.equals(mountainBox.coordinates(), coordinates))
+                    .findFirst();
+
+            if (mountain.isPresent()) {
+                return mountain.get();
+            }
+
+            Optional<TreasureBox> treasure = treasureBoxes.stream()
+                    .filter(treasureBox -> Objects.equals(treasureBox.coordinates(), coordinates))
+                    .findFirst();
+
+            if (treasure.isPresent()) {
+                return treasure.get();
+            }
+
+            return new PlainsBox(coordinates);
+
+        } else {
+            // return a custom exception instead of generic one
+            throw new IllegalArgumentException(String.format("'%s' are out of map with dimensions %s", coordinates, dimension));
+        }
     }
 
     private void checkValidBoxes(List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {

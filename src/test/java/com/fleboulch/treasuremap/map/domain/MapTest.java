@@ -32,7 +32,7 @@ class MapTest {
             "0,0,2,3"
     })
     void create_a_map_with_valid_treasure_coordinates(int x, int y, int width, int height) {
-        TreasureBox treasure = buildTreasure(x, y);
+        TreasureBox treasure = buildTreasure(Coordinates.of(x, y));
         TreasureMap validTreasureMap = buildMapWithTreasures(width, height, List.of(treasure));
 
         assertThat(validTreasureMap.dimension().width().value()).isEqualTo(width);
@@ -49,7 +49,7 @@ class MapTest {
             "8,0,2,2",
     })
     void map_with_invalid_treasure_coordinates_should_not_be_created(int x, int y, int width, int height) {
-        TreasureBox treasure = buildTreasure(x, y);
+        TreasureBox treasure = buildTreasure(Coordinates.of(x, y));
 
         assertThatThrownBy(
                 () -> buildMapWithTreasures(width, height, List.of(treasure))
@@ -62,19 +62,68 @@ class MapTest {
             "3,3,2,2"
     })
     void map_with_invalid_mountain_coordinates_should_not_be_created(int x, int y, int width, int height) {
-        MountainBox mountainBox = buildMountain(x, y);
+        MountainBox mountainBox = buildMountain(Coordinates.of(x, y));
 
         assertThatThrownBy(
                 () -> buildMapWithMountains(width, height, List.of(mountainBox))
         ).isInstanceOf(BoxIsOutOfMapException.class);
     }
 
-    private MountainBox buildMountain(int x, int y) {
-        return new MountainBox(Coordinates.of(x, y));
+    @Test
+    void check_box_is_a_mountain_from_coordinates() {
+        Coordinates mountainCoordinates = Coordinates.of(1, 2);
+        TreasureMap treasureMap = buildMapWithMountains(3, 4, List.of(buildMountain(mountainCoordinates)));
+
+        PlainsBox box = treasureMap.from(mountainCoordinates);
+        assertThat(box).isInstanceOf(MountainBox.class);
+        assertThat(box.coordinates()).isEqualTo(mountainCoordinates);
+
     }
 
-    private TreasureBox buildTreasure(int x, int y) {
-        return new TreasureBox(Coordinates.of(x, y), 1);
+    @Test
+    void check_box_is_a_treasure_from_coordinates() {
+        Coordinates treasureCoordinates = Coordinates.of(1, 2);
+        TreasureMap treasureMap = buildMapWithTreasures(3, 4, List.of(buildTreasure(treasureCoordinates)));
+
+        PlainsBox box = treasureMap.from(treasureCoordinates);
+        assertThat(box).isInstanceOf(TreasureBox.class);
+        assertThat(box.coordinates()).isEqualTo(treasureCoordinates);
+
+    }
+
+    @Test
+    void check_box_is_a_plains_from_coordinates() {
+        Coordinates coordinates = Coordinates.of(1, 2);
+        TreasureMap treasureMap = buildSimpleMap(3, 4);
+
+        PlainsBox box = treasureMap.from(coordinates);
+        assertThat(box).isInstanceOf(PlainsBox.class);
+        assertThat(box).isNotInstanceOf(MountainBox.class);
+        assertThat(box).isNotInstanceOf(TreasureBox.class);
+        assertThat(box.coordinates()).isEqualTo(coordinates);
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "0,10",
+            "10,0",
+            "10,10",
+    })
+    void check_outside_coordinates_from_map_is_forbidden(int x, int y) {
+        Coordinates coordinates = Coordinates.of(x, y);
+        TreasureMap treasureMap = buildSimpleMap(3, 4);
+
+        assertThatThrownBy(() ->
+                treasureMap.from(coordinates)
+        ).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    private MountainBox buildMountain(Coordinates coordinates) {
+        return new MountainBox(coordinates);
+    }
+
+    private TreasureBox buildTreasure(Coordinates coordinates) {
+        return new TreasureBox(coordinates, 1);
     }
 
     private TreasureMap buildSimpleMap(int width, int height) {

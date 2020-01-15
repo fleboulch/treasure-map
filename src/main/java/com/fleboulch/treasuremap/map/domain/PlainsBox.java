@@ -5,7 +5,7 @@ import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 
 import java.util.Objects;
 
-public abstract class PlainsBox {
+public class PlainsBox {
 
     private final Coordinates coordinates;
 

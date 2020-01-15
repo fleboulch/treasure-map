@@ -1,7 +1,7 @@
 package com.fleboulch.treasuremap.explorer.domain;
 
 import com.fleboulch.treasuremap.kernel.domain.Domain;
-import com.fleboulch.treasuremap.map.domain.Dimension;
+import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 
 import java.util.List;
@@ -25,6 +25,20 @@ public class Explorer {
     public static Explorer of(Name name, Coordinates coordinates, Orientation orientation, String rawMovements) {
         Domain.validateNotNull(rawMovements, "Raw movements should not be null");
         return new Explorer(name, coordinates, orientation, buildMovements(rawMovements));
+    }
+
+    public boolean isOnMountain(TreasureMap treasureMap) {
+        Coordinates explorerCoordinates = coordinates;
+        PlainsBox plainsBox = treasureMap.from(explorerCoordinates);
+
+        return (plainsBox instanceof MountainBox);
+    }
+
+    public boolean isOnTreasure(TreasureMap treasureMap) {
+        Coordinates explorerCoordinates = coordinates;
+        PlainsBox plainsBox = treasureMap.from(explorerCoordinates);
+
+        return (plainsBox instanceof TreasureBox);
     }
 
     private static Movements buildMovements(String rawMovements) {

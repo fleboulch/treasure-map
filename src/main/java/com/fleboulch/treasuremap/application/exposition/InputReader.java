@@ -18,13 +18,16 @@ public class InputReader {
 
     public TreasureQuest process(String filePath) {
 
-        List<String> configurationsWithoutComments = CsvConverter.toConfigurationList(filePath);
-        TreasureQuest treasureQuest = ApplicationFactory.toDomain(configurationsWithoutComments);
+        TreasureQuest treasureQuest = buildTreasureQuestFromCsv(filePath);
         treasureQuestRunner.start(treasureQuest);
 
         return treasureQuest;
 
     }
 
+    private TreasureQuest buildTreasureQuestFromCsv(String filePath) {
+        List<String> configurationsWithoutComments = CsvConverter.toConfigurationList(filePath);
+        return ApplicationFactory.toDomain(configurationsWithoutComments);
+    }
 
 }

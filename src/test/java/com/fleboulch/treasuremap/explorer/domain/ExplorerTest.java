@@ -1,16 +1,20 @@
 package com.fleboulch.treasuremap.explorer.domain;
 
 import com.fleboulch.treasuremap.kernel.exceptions.DomainException;
+import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.assertj.core.data.Index;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ExplorerTest {
+
+    public static final Coordinates VALID_COORDINATES = Coordinates.of(1, 1);
 
     @Test
     void create_movement_sequence_for_an_explorer() {
@@ -60,13 +64,72 @@ class ExplorerTest {
         ).isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    void check_explorer_is_on_a_mountain() {
+        Explorer explorer = buildExplorer("");
+        TreasureMap treasureMap = buildMapWithOneMountain();
+        boolean onMountain = explorer.isOnMountain(treasureMap);
+
+        assertThat(onMountain).isTrue();
+    }
+
+    @Test
+    void check_explorer_is_not_on_a_mountain() {
+        Explorer explorer = buildExplorer("");
+        TreasureMap treasureMap = buildSimpleMap();
+        boolean onMountain = explorer.isOnMountain(treasureMap);
+
+        assertThat(onMountain).isFalse();
+    }
+
+    @Test
+    void check_explorer_is_on_a_treasure() {
+        Explorer explorer = buildExplorer("");
+        TreasureMap treasureMap = buildMapWithOneTreasure();
+        boolean onTreasure = explorer.isOnTreasure(treasureMap);
+
+        assertThat(onTreasure).isTrue();
+    }
+
+    @Test
+    void check_explorer_is_not_on_a_treasure() {
+        Explorer explorer = buildExplorer("");
+        TreasureMap treasureMap = buildSimpleMap();
+        boolean onTreasure = explorer.isOnTreasure(treasureMap);
+
+        assertThat(onTreasure).isFalse();
+    }
+
     private Explorer buildExplorer(String rawMovements) {
         return Explorer.of(
                 new Name("Lara"),
-                Coordinates.of(1, 1),
+                VALID_COORDINATES,
                 new Orientation(OrientationType.S),
                 rawMovements
         );
+    }
+
+
+    private TreasureMap buildSimpleMap() {
+        return new TreasureMap(new Dimension(new Width(5), new Height(5)), emptyList(), emptyList());
+    }
+
+    private TreasureMap buildMapWithOneMountain() {
+        List<MountainBox> mountains = List.of(buildMountain());
+        return new TreasureMap(new Dimension(new Width(5), new Height(5)), mountains, emptyList());
+    }
+
+    private TreasureMap buildMapWithOneTreasure() {
+        List<TreasureBox> treasures = List.of(buildTreasure());
+        return new TreasureMap(new Dimension(new Width(5), new Height(5)), emptyList(), treasures);
+    }
+
+    private MountainBox buildMountain() {
+        return new MountainBox(VALID_COORDINATES);
+    }
+
+    private TreasureBox buildTreasure() {
+        return new TreasureBox(VALID_COORDINATES, 1);
     }
 
 }
