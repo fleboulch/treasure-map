@@ -9,7 +9,6 @@ import com.fleboulch.treasuremap.kernel.utils.ConverterUtils;
 import com.fleboulch.treasuremap.map.domain.*;
 
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 
@@ -22,14 +21,14 @@ public class ApplicationFactory {
 
     public static TreasureQuest toDomain(List<String> treasureQuestConfigurations) {
         Dimension dimension = treasureQuestConfigurations.stream()
-                .filter(rowAsString -> rowAsString.startsWith("C"))
+                .filter(rowAsString -> rowAsString.startsWith(InputType.C.name()))
                 .map(ApplicationFactory::splittedConfiguration)
                 .map(ApplicationFactory::toDimension)
                 .findFirst()
                 .orElseThrow(DimensionConfigurationNotDefinedException::new);
 
         List<PlainsBox> plainsBoxes = treasureQuestConfigurations.stream()
-                .filter(rowAsString -> !rowAsString.startsWith("C"))
+                .filter(rowAsString -> !rowAsString.startsWith(InputType.C.name()))
                 .map(ApplicationFactory::splittedConfiguration)
                 .map(ApplicationFactory::toPlainsBox)
                 .collect(toList());
@@ -44,16 +43,16 @@ public class ApplicationFactory {
 
     private static List<TreasureBox> buildTreasureBoxes(List<PlainsBox> plainsBoxes) {
         return plainsBoxes.stream()
-                    .filter(box -> box instanceof TreasureBox)
-                    .map(box -> (TreasureBox) box)
-                    .collect(toList());
+                .filter(box -> box instanceof TreasureBox)
+                .map(box -> (TreasureBox) box)
+                .collect(toList());
     }
 
     private static List<MountainBox> buildMountainBoxesFrom(List<PlainsBox> plainsBoxes) {
         return plainsBoxes.stream()
-                    .filter(box -> box instanceof MountainBox)
-                    .map(box -> (MountainBox) box)
-                    .collect(toList());
+                .filter(box -> box instanceof MountainBox)
+                .map(box -> (MountainBox) box)
+                .collect(toList());
     }
 
     private static String[] splittedConfiguration(String row) {
@@ -64,18 +63,13 @@ public class ApplicationFactory {
         InputType boxType = InputType.valueOf(line[0].trim());
 
         switch (boxType) {
-            case M: return toMountain(line);
-            case T: return toTreasure(line);
-            default: throw new InvalidInputTypeRowException(line);
+            case M:
+                return toMountain(line);
+            case T:
+                return toTreasure(line);
+            default:
+                throw new InvalidInputTypeRowException(line);
         }
-
-//        if (Objects.equals(boxType, "M")) {
-//            return toMountain(line);
-//        } else if (Objects.equals(boxType, "T")) {
-//            return toTreasure(line);
-//        } else {
-//            throw new InvalidInputTypeRowException(line);
-//        }
     }
 
     private static MountainBox toMountain(String[] line) {
