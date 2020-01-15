@@ -10,8 +10,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CsvConverterTest {
 
-    private static final String CSV_BASE_PATH = "com/fleboulch/treasuremap/application/exposition/utils/";
-
     @Test
     void it_should_exclude_commented_lines_from_csv_and_correctly_convert_simple_csv() throws IOException {
         String filePath = buildCsvPath("simple-quest.csv");
@@ -35,7 +33,8 @@ class CsvConverterTest {
     }
 
     private String buildCsvPath(String fileName) throws IOException {
-        return new ClassPathResource(CSV_BASE_PATH + fileName).getFile().getPath();
+        ClassPathResource classPathResource = new ClassPathResource(fileName, this.getClass());
+        return classPathResource.getFile().getPath();
     }
 
 }
