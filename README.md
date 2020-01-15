@@ -27,3 +27,7 @@ I mainly used it for :
 
 - Treasure quest with multiple users (handle collisions)
 - Add additionnal checks on treasure map configuration (a same box should have only one type)
+
+## Git history
+
+I did not autosquash my work deliberately in master branch to show the way I work so there is lots of fixme commits
