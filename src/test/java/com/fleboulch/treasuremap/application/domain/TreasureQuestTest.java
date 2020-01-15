@@ -4,8 +4,11 @@ import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.Name;
 import com.fleboulch.treasuremap.explorer.domain.Orientation;
 import com.fleboulch.treasuremap.explorer.domain.OrientationType;
-import com.fleboulch.treasuremap.map.domain.*;
-import org.junit.jupiter.api.Test;
+import com.fleboulch.treasuremap.map.domain.Dimension;
+import com.fleboulch.treasuremap.map.domain.Height;
+import com.fleboulch.treasuremap.map.domain.TreasureMap;
+import com.fleboulch.treasuremap.map.domain.Width;
+import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -20,10 +23,10 @@ class TreasureQuestTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-        "3,4",
-        "0,8",
-        "8,0",
-        "8,9"
+            "3,4",
+            "0,8",
+            "8,0",
+            "8,9"
     })
     void it_should_fail_to_create_quest_with_out_of_map_coordinates_for_explorer(int x, int y) {
         assertThatThrownBy(() ->
@@ -37,8 +40,7 @@ class TreasureQuestTest {
                 new Explorers(List.of(
                         Explorer.of(
                                 new Name("Laura"),
-                                new HorizontalAxis(x),
-                                new VerticalAxis(y),
+                                Coordinates.of(x, y),
                                 new Orientation(OrientationType.E),
                                 ""
                         )

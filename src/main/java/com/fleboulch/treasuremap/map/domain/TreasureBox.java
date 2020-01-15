@@ -1,6 +1,8 @@
 package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.kernel.domain.Domain;
+import com.fleboulch.treasuremap.shared.coordinates.domain.HorizontalAxis;
+import com.fleboulch.treasuremap.shared.coordinates.domain.VerticalAxis;
 
 public class TreasureBox extends PlainsBox {
 

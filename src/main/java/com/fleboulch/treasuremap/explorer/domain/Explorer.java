@@ -2,8 +2,7 @@ package com.fleboulch.treasuremap.explorer.domain;
 
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 import com.fleboulch.treasuremap.map.domain.Dimension;
-import com.fleboulch.treasuremap.map.domain.HorizontalAxis;
-import com.fleboulch.treasuremap.map.domain.VerticalAxis;
+import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,22 +10,21 @@ import java.util.stream.Collectors;
 public class Explorer {
 
     private final Name name;
-    private final HorizontalAxis x;
-    private final VerticalAxis y;
+    private final Coordinates coordinates;
     private final Orientation orientation;
     private final Movements movements;
 
-    private Explorer(Name name, HorizontalAxis x, VerticalAxis y, Orientation orientation, Movements movements) {
+    private Explorer(Name name, Coordinates coordinates, Orientation orientation, Movements movements) {
         this.name = Domain.validateNotNull(name, "Name should be not null");
-        this.x = Domain.validateNotNull(x, "Horizontal axis should be not null");
-        this.y = Domain.validateNotNull(y, "Vertical axis should be not null");
+        this.coordinates = Domain.validateNotNull(coordinates, "Coordinates should be not null");
+
         this.orientation = Domain.validateNotNull(orientation, "Orientation should be not null");
         this.movements = Domain.validateNotNull(movements, "Movements should be not null");
     }
 
-    public static Explorer of(Name name, HorizontalAxis x, VerticalAxis y, Orientation orientation, String rawMovements) {
+    public static Explorer of(Name name, Coordinates coordinates, Orientation orientation, String rawMovements) {
         Domain.validateNotNull(rawMovements, "Raw movements should not be null");
-        return new Explorer(name, x, y, orientation, buildMovements(rawMovements));
+        return new Explorer(name, coordinates, orientation, buildMovements(rawMovements));
     }
 
     private static Movements buildMovements(String rawMovements) {
@@ -40,20 +38,20 @@ public class Explorer {
     }
 
     private static MovementType toMovementType(int indexMovement, String rawMovements) {
-        char letter = (char) indexMovement;
-        return MovementType.valueOf(String.valueOf(letter));
+        char movementAsChar = (char) indexMovement;
+        return MovementType.valueOf(String.valueOf(movementAsChar));
     }
 
-    public Name name() {
+    public boolean hasValidCoordinates(Dimension dimension) {
+        return coordinates.hasValidCoordinates(dimension);
+    }
+
+        public Name name() {
         return name;
     }
 
-    public HorizontalAxis x() {
-        return x;
-    }
-
-    public VerticalAxis y() {
-        return y;
+    public Coordinates coordinates() {
+        return coordinates;
     }
 
     public Orientation orientation() {
@@ -64,18 +62,11 @@ public class Explorer {
         return movements;
     }
 
-    // duplicated code (create coordinates abstraction)
-    public boolean hasValidCoordinates(Dimension dimension) {
-        return x.index() < dimension.width().value() &&
-                y.index() < dimension.height().value();
-    }
-
     @Override
     public String toString() {
         return "Explorer{" +
                 "name=" + name +
-                ", x=" + x +
-                ", y=" + y +
+                ", coordinates=" + coordinates +
                 ", orientation=" + orientation +
                 ", movements=" + movements +
                 '}';

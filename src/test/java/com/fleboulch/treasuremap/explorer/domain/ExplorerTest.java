@@ -1,8 +1,7 @@
 package com.fleboulch.treasuremap.explorer.domain;
 
 import com.fleboulch.treasuremap.kernel.exceptions.DomainException;
-import com.fleboulch.treasuremap.map.domain.HorizontalAxis;
-import com.fleboulch.treasuremap.map.domain.VerticalAxis;
+import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.assertj.core.data.Index;
 import org.junit.jupiter.api.Test;
 
@@ -64,8 +63,7 @@ class ExplorerTest {
     private Explorer buildExplorer(String rawMovements) {
         return Explorer.of(
                 new Name("Lara"),
-                new HorizontalAxis(1),
-                new VerticalAxis(1),
+                Coordinates.of(1, 1),
                 new Orientation(OrientationType.S),
                 rawMovements
         );

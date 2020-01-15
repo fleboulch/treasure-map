@@ -6,9 +6,15 @@ import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
 import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputRowException;
 import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputTypeRowException;
-import com.fleboulch.treasuremap.explorer.domain.*;
+import com.fleboulch.treasuremap.explorer.domain.Explorer;
+import com.fleboulch.treasuremap.explorer.domain.Name;
+import com.fleboulch.treasuremap.explorer.domain.Orientation;
+import com.fleboulch.treasuremap.explorer.domain.OrientationType;
 import com.fleboulch.treasuremap.kernel.utils.ConverterUtils;
 import com.fleboulch.treasuremap.map.domain.*;
+import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
+import com.fleboulch.treasuremap.shared.coordinates.domain.HorizontalAxis;
+import com.fleboulch.treasuremap.shared.coordinates.domain.VerticalAxis;
 
 import java.util.List;
 
@@ -130,8 +136,7 @@ public class ApplicationFactory {
 
         return Explorer.of(
                 new Name(name),
-                new HorizontalAxis(horizontalAxis),
-                new VerticalAxis(verticalAxis),
+                Coordinates.of(horizontalAxis, verticalAxis),
                 new Orientation(OrientationType.valueOf(orientation)),
                 rawMovements
         );

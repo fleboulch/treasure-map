@@ -1,4 +1,4 @@
-package com.fleboulch.treasuremap.map.domain;
+package com.fleboulch.treasuremap.shared.coordinates.domain;
 
 public class VerticalAxis extends Axis {
 
