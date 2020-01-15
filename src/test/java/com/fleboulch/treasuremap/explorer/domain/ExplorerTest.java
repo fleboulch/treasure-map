@@ -65,12 +65,13 @@ class ExplorerTest {
     }
 
     @Test
-    void check_explorer_is_on_a_mountain() {
+    void explorer_cannot_be_on_a_mountain() {
         Explorer explorer = buildExplorer("");
         TreasureMap treasureMap = buildMapWithOneMountain();
-        boolean onMountain = explorer.isOnMountain(treasureMap);
+        assertThatThrownBy(() ->
+                explorer.isOnMountain(treasureMap)
+        ).isInstanceOf(InvalidCurrentPositionException.class);
 
-        assertThat(onMountain).isTrue();
     }
 
     @Test
@@ -99,6 +100,17 @@ class ExplorerTest {
 
         assertThat(onTreasure).isFalse();
     }
+
+
+    @Test
+    void check_explorer_is_on_a_plains() {
+        Explorer explorer = buildExplorer("");
+        TreasureMap treasureMap = buildSimpleMap();
+        boolean onPlains = explorer.isOnPlains(treasureMap);
+
+        assertThat(onPlains).isTrue();
+    }
+
 
     private Explorer buildExplorer(String rawMovements) {
         return Explorer.of(

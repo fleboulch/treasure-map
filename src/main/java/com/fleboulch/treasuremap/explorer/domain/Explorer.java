@@ -28,17 +28,30 @@ public class Explorer {
     }
 
     public boolean isOnMountain(TreasureMap treasureMap) {
-        Coordinates explorerCoordinates = coordinates;
-        PlainsBox plainsBox = treasureMap.from(explorerCoordinates);
+        PlainsBox plainsBox = currentBox(treasureMap);
 
-        return (plainsBox instanceof MountainBox);
+        if (plainsBox instanceof MountainBox) {
+            throw new InvalidCurrentPositionException(name.value(), coordinates);
+        } else {
+            return false;
+        }
     }
 
     public boolean isOnTreasure(TreasureMap treasureMap) {
-        Coordinates explorerCoordinates = coordinates;
-        PlainsBox plainsBox = treasureMap.from(explorerCoordinates);
+        PlainsBox plainsBox = currentBox(treasureMap);
 
         return (plainsBox instanceof TreasureBox);
+    }
+
+    public boolean isOnPlains(TreasureMap treasureMap) {
+        PlainsBox plainsBox = currentBox(treasureMap);
+
+        return !(plainsBox instanceof TreasureBox) && !(plainsBox instanceof MountainBox);
+    }
+
+    private PlainsBox currentBox(TreasureMap treasureMap) {
+        Coordinates explorerCoordinates = coordinates;
+        return treasureMap.from(explorerCoordinates);
     }
 
     private static Movements buildMovements(String rawMovements) {
