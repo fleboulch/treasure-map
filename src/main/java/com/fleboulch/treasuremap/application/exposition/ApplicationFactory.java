@@ -1,5 +1,6 @@
 package com.fleboulch.treasuremap.application.exposition;
 
+import com.fleboulch.treasuremap.application.domain.Explorers;
 import com.fleboulch.treasuremap.application.domain.InputType;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
@@ -29,7 +30,7 @@ public class ApplicationFactory {
         List<Explorer> explorers = buildExplorers(treasureQuestConfigurations);
 
         TreasureMap treasureMap = new TreasureMap(dimension, mountains, treasures);
-        return new TreasureQuest(treasureMap);
+        return new TreasureQuest(treasureMap, new Explorers(explorers));
     }
 
     private static List<Explorer> buildExplorers(List<String> treasureQuestConfigurations) {

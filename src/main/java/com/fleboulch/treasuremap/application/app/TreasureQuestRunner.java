@@ -9,7 +9,8 @@ public class TreasureQuestRunner {
     public TreasureQuestRunner() {
     }
 
-    public void start(TreasureQuest treasureQuest) {
+    public String start(TreasureQuest treasureQuest) {
         // TODO
+        return null;
     }
 }
