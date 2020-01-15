@@ -3,11 +3,15 @@ package com.fleboulch.treasuremap.application.exposition;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
 import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputRowException;
+import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputTypeRowException;
 import com.fleboulch.treasuremap.kernel.utils.ConverterUtils;
 import com.fleboulch.treasuremap.map.domain.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 class ApplicationFactory {
 
@@ -24,17 +28,21 @@ class ApplicationFactory {
                 .findFirst()
                 .orElseThrow(DimensionConfigurationNotDefinedException::new);
 
-        List<TreasureBox> treasures = treasureQuestConfigurations.stream()
-                .filter(rowAsString -> rowAsString.startsWith("T"))
+        List<PlainsBox> plainsBoxes = treasureQuestConfigurations.stream()
+                .filter(rowAsString -> !rowAsString.startsWith("C"))
                 .map(ApplicationFactory::splittedConfiguration)
-                .map(ApplicationFactory::toTreasure)
-                .collect(Collectors.toList());
+                .map(ApplicationFactory::toPlainsBox)
+                .collect(toList());
 
-        List<MountainBox> mountains = treasureQuestConfigurations.stream()
-                .filter(rowAsString -> rowAsString.startsWith("M"))
-                .map(ApplicationFactory::splittedConfiguration)
-                .map(ApplicationFactory::toMountain)
-                .collect(Collectors.toList());
+        List<MountainBox> mountains = plainsBoxes.stream()
+                .filter(box -> box instanceof MountainBox)
+                .map(box -> (MountainBox)box)
+                .collect(toList());
+
+        List<TreasureBox> treasures = plainsBoxes.stream()
+                .filter(box -> box instanceof TreasureBox)
+                .map(box -> (TreasureBox)box)
+                .collect(toList());
 
         Map treasureMap = new Map(dimension, mountains, treasures);
         return new TreasureQuest(treasureMap);
@@ -44,18 +52,23 @@ class ApplicationFactory {
         return row.split(CARET_DELIMITER);
     }
 
+    private static PlainsBox toPlainsBox(String[] line) {
+        String boxType = line[0].trim();
+        if (Objects.equals(boxType, "M")) {
+            return toMountain(line);
+        } else if (Objects.equals(boxType, "T")) {
+            return toTreasure(line);
+        } else {
+            throw new InvalidInputTypeRowException(line);
+        }
+    }
+
     private static MountainBox toMountain(String[] line) {
 
         validateLine(line, 3);
         int x = ConverterUtils.toInt(line[1]);
         int y = ConverterUtils.toInt(line[2]);
         return new MountainBox(new HorizontalAxis(x), new VerticalAxis(y));
-    }
-
-    private static void validateLine(String[] line, int expectedNumberOfProperties) {
-        if (line.length != expectedNumberOfProperties) {
-            throw new InvalidInputRowException(line);
-        }
     }
 
     private static TreasureBox toTreasure(String[] line) {
@@ -67,11 +80,18 @@ class ApplicationFactory {
         return new TreasureBox(new HorizontalAxis(x), new VerticalAxis(y), nbTreasures);
     }
 
+
     private static Dimension toDimension(String[] line) {
         validateLine(line, 3);
 
         int width = ConverterUtils.toInt(line[1]);
         int height = ConverterUtils.toInt(line[2]);
         return new Dimension(new Width(width), new Height(height));
+    }
+
+    private static void validateLine(String[] line, int expectedNumberOfProperties) {
+        if (line.length != expectedNumberOfProperties) {
+            throw new InvalidInputRowException(line);
+        }
     }
 }

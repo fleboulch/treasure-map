@@ -3,6 +3,7 @@ package com.fleboulch.treasuremap.application.exposition;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
 import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputRowException;
+import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputTypeRowException;
 import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,10 @@ class ApplicationFactoryTest {
     private static final String INCORRECT_MOUNTAIN_2 = "M - 3";
     private static final String INCORRECT_DIMENSION_1 = "C";
     private static final String INCORRECT_DIMENSION_2 = "C - 1";
+
+    // unknown row type
+    private static final String UNKNOWN_ROW_TYPE_1 = "I - 3 - 4";
+    private static final String UNKNOWN_ROW_TYPE_2 = "K - 3 - 4 - 1";
 
     @Test
     void it_should_successfully_convert_configuration_without_mountain_and_treasure_to_treasure_quest() {
@@ -107,6 +112,18 @@ class ApplicationFactoryTest {
         assertThatThrownBy(() ->
                 ApplicationFactory.toDomain(validConfiguration)
         ).isInstanceOf(InvalidInputRowException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            UNKNOWN_ROW_TYPE_1,
+            UNKNOWN_ROW_TYPE_2,
+    })
+    void it_should_failed_to_convert_configuration_to_treasure_quest_when_row_type_is_invalid(String invalidConfig) {
+        List<String> validConfiguration = buildConfiguration(List.of(DIMENSION, invalidConfig));
+        assertThatThrownBy(() ->
+                ApplicationFactory.toDomain(validConfiguration)
+        ).isInstanceOf(InvalidInputTypeRowException.class);
     }
 
     @Test
