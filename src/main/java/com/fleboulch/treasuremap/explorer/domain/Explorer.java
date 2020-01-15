@@ -3,10 +3,8 @@ package com.fleboulch.treasuremap.explorer.domain;
 import com.fleboulch.treasuremap.map.domain.HorizontalAxis;
 import com.fleboulch.treasuremap.map.domain.VerticalAxis;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Explorer {
 
@@ -33,21 +31,13 @@ public class Explorer {
     }
 
     private static List<MovementType> buildMovementTypeList(String rawMovements) {
-//        return rawMovements.chars()
-//                .mapToObj(explorerIndex -> toMovementType(explorerIndex, rawMovements))
-//                .collect(Collectors.toList());
-
-        List<MovementType> results = new ArrayList<>();
-        IntStream.range(0, rawMovements.length()).forEach(i -> {
-            char c = rawMovements.charAt(i);
-            MovementType movementType = MovementType.valueOf(String.valueOf(c));
-            results.add(movementType);
-        });
-        return results;
+        return rawMovements.chars()
+                .mapToObj(explorerIndex -> toMovementType(explorerIndex, rawMovements))
+                .collect(Collectors.toList());
     }
 
     private static MovementType toMovementType(int indexMovement, String rawMovements) {
-        char letter = rawMovements.charAt(indexMovement);
+        char letter = (char) indexMovement;
         return MovementType.valueOf(String.valueOf(letter));
     }
 
