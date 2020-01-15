@@ -40,6 +40,15 @@ class TreasureQuestRunnerTest {
 
     }
 
+    @Test
+    void simple_quest_with_go_forward() {
+        TreasureQuest inputTreasureQuest = buildSimpleQuest(0, 0, "A");
+        TreasureQuest finalQuest = runner.start(inputTreasureQuest);
+
+        assertThat(inputTreasureQuest).isEqualTo(finalQuest);
+
+    }
+
     private TreasureQuest buildSimpleQuest(int x, int y, String rawMovements) {
         return new TreasureQuest(
                 new TreasureMap(DIMENSION, emptyList(), emptyList()),
