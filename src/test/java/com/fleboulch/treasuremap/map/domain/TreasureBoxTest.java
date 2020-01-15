@@ -13,8 +13,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class TreasureBoxTest {
 
-    public static final int HORIZONTAL_AXIS = 4;
-    public static final int VERTICAL_AXIS = 3;
+    private static final int HORIZONTAL_AXIS = 4;
+    private static final int VERTICAL_AXIS = 3;
 
     @ParameterizedTest
     @ValueSource(ints = {1, 5})

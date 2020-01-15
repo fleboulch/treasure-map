@@ -25,7 +25,7 @@ I mainly used it for :
 
 ## What could be improve
 
-- Treasure quest with multiple users (handle collisions)
+- Treasure quest with multiple users (handle collisions) + check unique name for explorers
 - Add additionnal checks on treasure map configuration (a same box should have only one type)
 
 ## Git history

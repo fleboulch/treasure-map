@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class TreasureQuestTest {
 
-    public static final Dimension DIMENSION = new Dimension(new Width(3), new Height(4));
+    private static final Dimension DIMENSION = new Dimension(new Width(3), new Height(4));
 
     @ParameterizedTest
     @CsvSource(value = {

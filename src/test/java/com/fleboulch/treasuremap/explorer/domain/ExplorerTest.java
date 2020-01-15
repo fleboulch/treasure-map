@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ExplorerTest {
 
-    public static final Coordinates VALID_COORDINATES = Coordinates.of(1, 1);
+    private static final Coordinates VALID_COORDINATES = Coordinates.of(1, 1);
 
     @Test
     void create_movement_sequence_for_an_explorer() {

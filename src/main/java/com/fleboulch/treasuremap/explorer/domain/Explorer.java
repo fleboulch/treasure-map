@@ -13,6 +13,7 @@ public class Explorer {
     private final Coordinates coordinates;
     private final Orientation orientation;
     private final Movements movements;
+    private int nbCollectedTreasures = 0;
 
     private Explorer(Name name, Coordinates coordinates, Orientation orientation, Movements movements) {
         this.name = Domain.validateNotNull(name, "Name should be not null");
@@ -89,6 +90,10 @@ public class Explorer {
         return movements;
     }
 
+    public int nbCollectedTreasures() {
+        return nbCollectedTreasures;
+    }
+
     @Override
     public String toString() {
         return "Explorer{" +
@@ -96,6 +101,7 @@ public class Explorer {
                 ", coordinates=" + coordinates +
                 ", orientation=" + orientation +
                 ", movements=" + movements +
+                ", nbCollectedTreasures=" + nbCollectedTreasures +
                 '}';
     }
 }

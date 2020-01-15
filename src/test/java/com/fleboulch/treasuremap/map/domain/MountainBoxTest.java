@@ -13,8 +13,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MountainBoxTest {
 
-    public static final int HORIZONTAL_AXIS = 4;
-    public static final int VERTICAL_AXIS = 3;
+    private static final int HORIZONTAL_AXIS = 4;
+    private static final int VERTICAL_AXIS = 3;
 
     @Test
     void mountain_box_with_valid_indexes_should_be_created() {
