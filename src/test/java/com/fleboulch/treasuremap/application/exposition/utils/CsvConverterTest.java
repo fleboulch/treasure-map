@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CsvConverterTest {
 
-    public static final String BASE_PATH = "/home/florent/dev/personal/technical-tests/carbon-it/treasure-map/src/test/resources/com/fleboulch/treasuremap/application/exposition/";
+    public static final String BASE_PATH = "/home/florent/dev/personal/technical-tests/carbon-it/treasure-map/src/test/resources/com/fleboulch/treasuremap/application/exposition/utils/";
 
     @Test
     void it_should_exclude_commented_lines_from_csv_and_correctly_convert_simple_csv() {
