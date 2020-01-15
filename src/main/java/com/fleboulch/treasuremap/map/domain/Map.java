@@ -4,9 +4,11 @@ import com.fleboulch.treasuremap.kernel.domain.Domain;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Map {
 
+    public static final String BR_CHARACTER = "\n";
     private final Dimension dimension;
     private final List<MountainBox> mountainBoxes;
     private final List<TreasureBox> treasureBoxes;
@@ -43,9 +45,19 @@ public class Map {
 
     @Override
     public String toString() {
-        return String.format("C - %s - %s \n",
+        String mountain = mountainBoxes.stream()
+                .map(MountainBox::toString)
+                .collect(Collectors.joining(BR_CHARACTER));
+
+        String treasures = treasureBoxes.stream()
+                .map(TreasureBox::toString)
+                .collect(Collectors.joining(BR_CHARACTER));
+
+        return String.format("C - %s - %s %n%s%n%s%n",
                 dimension.width().value(),
-                dimension.height().value()
-                );
+                dimension.height().value(),
+                mountain,
+                treasures
+        );
     }
 }
