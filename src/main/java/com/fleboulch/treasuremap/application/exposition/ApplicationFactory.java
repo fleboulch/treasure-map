@@ -1,5 +1,6 @@
 package com.fleboulch.treasuremap.application.exposition;
 
+import com.fleboulch.treasuremap.application.domain.InputType;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
 import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputRowException;
@@ -60,14 +61,21 @@ public class ApplicationFactory {
     }
 
     private static PlainsBox toPlainsBox(String[] line) {
-        String boxType = line[0].trim();
-        if (Objects.equals(boxType, "M")) {
-            return toMountain(line);
-        } else if (Objects.equals(boxType, "T")) {
-            return toTreasure(line);
-        } else {
-            throw new InvalidInputTypeRowException(line);
+        InputType boxType = InputType.valueOf(line[0].trim());
+
+        switch (boxType) {
+            case M: return toMountain(line);
+            case T: return toTreasure(line);
+            default: throw new InvalidInputTypeRowException(line);
         }
+
+//        if (Objects.equals(boxType, "M")) {
+//            return toMountain(line);
+//        } else if (Objects.equals(boxType, "T")) {
+//            return toTreasure(line);
+//        } else {
+//            throw new InvalidInputTypeRowException(line);
+//        }
     }
 
     private static MountainBox toMountain(String[] line) {

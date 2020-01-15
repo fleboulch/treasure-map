@@ -123,7 +123,7 @@ class ApplicationFactoryTest {
         List<String> validConfiguration = buildConfiguration(List.of(DIMENSION, invalidConfig));
         assertThatThrownBy(() ->
                 ApplicationFactory.toDomain(validConfiguration)
-        ).isInstanceOf(InvalidInputTypeRowException.class);
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
