@@ -43,7 +43,9 @@ class MapTest {
     @ParameterizedTest
     @CsvSource(value = {
             "1,1,1,1",
-            "3,3,2,2"
+            "3,3,2,2",
+            "0,8,2,2",
+            "8,0,2,2",
     })
     void map_with_invalid_treasure_coordinates_should_not_be_created(int x, int y, int width, int height) {
         TreasureBox treasure = buildTreasure(x, y);
