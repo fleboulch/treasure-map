@@ -24,6 +24,7 @@ public class InputReader {
 
     }
 
+    // static function in other class
     private List<String> getConfigurationFrom(String filePath) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(filePath))))) {
 
