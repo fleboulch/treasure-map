@@ -1,6 +1,7 @@
 package com.fleboulch.treasuremap.application.exposition;
 
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
+import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
 import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
 import org.junit.jupiter.api.Test;
@@ -83,6 +84,14 @@ class ApplicationFactoryTest {
         assertThatThrownBy(() ->
                 ApplicationFactory.toDomain(validConfiguration)
         ).isInstanceOf(BoxIsOutOfMapException.class);
+    }
+
+    @Test
+    void it_should_failed_to_convert_configuration_to_treasure_quest_when_dimension_is_not_set() {
+        List<String> validConfiguration = buildConfiguration(List.of(TREASURE_1));
+        assertThatThrownBy(() ->
+                ApplicationFactory.toDomain(validConfiguration)
+        ).isInstanceOf(DimensionConfigurationNotDefinedException.class);
     }
 
     private TreasureBox buildTreasure(int x, int y, int nbTreasures) {

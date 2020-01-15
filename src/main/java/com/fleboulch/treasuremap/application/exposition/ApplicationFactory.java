@@ -18,17 +18,20 @@ class ApplicationFactory {
     public static TreasureQuest toDomain(List<String> treasureQuestConfigurations) {
         Dimension dimension = treasureQuestConfigurations.stream()
                 .filter(rowAsString -> rowAsString.startsWith("C"))
+                .map(ApplicationFactory::splittedConfiguration)
                 .map(ApplicationFactory::toDimension)
                 .findFirst()
                 .orElseThrow(DimensionConfigurationNotDefinedException::new);
 
         List<TreasureBox> treasures = treasureQuestConfigurations.stream()
                 .filter(rowAsString -> rowAsString.startsWith("T"))
+                .map(ApplicationFactory::splittedConfiguration)
                 .map(ApplicationFactory::toTreasure)
                 .collect(Collectors.toList());
 
         List<MountainBox> mountains = treasureQuestConfigurations.stream()
                 .filter(rowAsString -> rowAsString.startsWith("M"))
+                .map(ApplicationFactory::splittedConfiguration)
                 .map(ApplicationFactory::toMountain)
                 .collect(Collectors.toList());
 
@@ -36,16 +39,18 @@ class ApplicationFactory {
         return new TreasureQuest(treasureMap);
     }
 
-    private static MountainBox toMountain(String row) {
-        String[] line = row.split(CARET_DELIMITER);// a CSV has comma separated lines
+    private static String[] splittedConfiguration(String row) {
+        return row.split(CARET_DELIMITER);
+    }
+
+    private static MountainBox toMountain(String[] line) {
 
         int x = ConverterUtils.toInt(line[1]);
         int y = ConverterUtils.toInt(line[2]);
         return new MountainBox(new HorizontalAxis(x), new VerticalAxis(y));
     }
 
-    private static TreasureBox toTreasure(String row) {
-        String[] line = row.split(CARET_DELIMITER);// a CSV has comma separated lines
+    private static TreasureBox toTreasure(String[] line) {
 
         int x = ConverterUtils.toInt(line[1]);
         int y = ConverterUtils.toInt(line[2]);
@@ -53,8 +58,7 @@ class ApplicationFactory {
         return new TreasureBox(new HorizontalAxis(x), new VerticalAxis(y), nbTreasures);
     }
 
-    private static Dimension toDimension(String row) {
-        String[] line = row.split(CARET_DELIMITER);// a CSV has comma separated lines
+    private static Dimension toDimension(String[] line) {
 
         int width = ConverterUtils.toInt(line[1]);
         int height = ConverterUtils.toInt(line[2]);
