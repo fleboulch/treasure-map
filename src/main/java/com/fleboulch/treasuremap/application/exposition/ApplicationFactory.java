@@ -33,18 +33,26 @@ public class ApplicationFactory {
                 .map(ApplicationFactory::toPlainsBox)
                 .collect(toList());
 
-        List<MountainBox> mountains = plainsBoxes.stream()
-                .filter(box -> box instanceof MountainBox)
-                .map(box -> (MountainBox) box)
-                .collect(toList());
+        List<MountainBox> mountains = buildMountainBoxesFrom(plainsBoxes);
 
-        List<TreasureBox> treasures = plainsBoxes.stream()
-                .filter(box -> box instanceof TreasureBox)
-                .map(box -> (TreasureBox) box)
-                .collect(toList());
+        List<TreasureBox> treasures = buildTreasureBoxes(plainsBoxes);
 
         Map treasureMap = new Map(dimension, mountains, treasures);
         return new TreasureQuest(treasureMap);
+    }
+
+    private static List<TreasureBox> buildTreasureBoxes(List<PlainsBox> plainsBoxes) {
+        return plainsBoxes.stream()
+                    .filter(box -> box instanceof TreasureBox)
+                    .map(box -> (TreasureBox) box)
+                    .collect(toList());
+    }
+
+    private static List<MountainBox> buildMountainBoxesFrom(List<PlainsBox> plainsBoxes) {
+        return plainsBoxes.stream()
+                    .filter(box -> box instanceof MountainBox)
+                    .map(box -> (MountainBox) box)
+                    .collect(toList());
     }
 
     private static String[] splittedConfiguration(String row) {
