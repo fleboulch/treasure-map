@@ -1,5 +1,6 @@
 package com.fleboulch.treasuremap.explorer.domain;
 
+import com.fleboulch.treasuremap.kernel.domain.Domain;
 import com.fleboulch.treasuremap.map.domain.HorizontalAxis;
 import com.fleboulch.treasuremap.map.domain.VerticalAxis;
 
@@ -15,11 +16,11 @@ public class Explorer {
     private final Movements movements;
 
     private Explorer(Name name, HorizontalAxis x, VerticalAxis y, Orientation orientation, Movements movements) {
-        this.name = name;
-        this.x = x;
-        this.y = y;
-        this.orientation = orientation;
-        this.movements = movements;
+        this.name = Domain.validateNotNull(name, "Name should be not null");
+        this.x = Domain.validateNotNull(x, "Horizontal axis should be not null");
+        this.y = Domain.validateNotNull(y, "Vertical axis should be not null");
+        this.orientation = Domain.validateNotNull(orientation, "Orientation should be not null");
+        this.movements = Domain.validateNotNull(movements, "Movements should be not null");;
     }
 
     public static Explorer of(Name name, HorizontalAxis x, VerticalAxis y, Orientation orientation, String rawMovements) {
