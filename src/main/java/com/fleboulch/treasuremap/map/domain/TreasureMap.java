@@ -6,14 +6,14 @@ import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Map {
+public class TreasureMap {
 
     public static final String BR_CHARACTER = "\n";
     private final Dimension dimension;
     private final List<MountainBox> mountainBoxes;
     private final List<TreasureBox> treasureBoxes;
 
-    public Map(Dimension dimension, List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
+    public TreasureMap(Dimension dimension, List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
         this.dimension = Domain.validateNotNull(dimension, "A map should have a dimension");
         checkValidBoxes(mountainBoxes, treasureBoxes);
         this.mountainBoxes = Domain.validateNotNull(mountainBoxes, "A map should not have null mountains");

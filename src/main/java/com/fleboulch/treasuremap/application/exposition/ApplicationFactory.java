@@ -26,7 +26,7 @@ public class ApplicationFactory {
         List<MountainBox> mountains = buildMountainBoxesFrom(plainsBoxes);
         List<TreasureBox> treasures = buildTreasureBoxes(plainsBoxes);
 
-        Map treasureMap = new Map(dimension, mountains, treasures);
+        TreasureMap treasureMap = new TreasureMap(dimension, mountains, treasures);
         return new TreasureQuest(treasureMap);
     }
 

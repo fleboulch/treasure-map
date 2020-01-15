@@ -17,12 +17,12 @@ class MapTest {
     void create_simple_map_with_valid_dimension() {
         int width = 2;
         int height = 3;
-        Map validMap = buildSimpleMap(width, height);
+        TreasureMap validTreasureMap = buildSimpleMap(width, height);
 
-        assertThat(validMap.dimension().width().value()).isEqualTo(width);
-        assertThat(validMap.dimension().height().value()).isEqualTo(height);
-        assertThat(validMap.mountainBoxes()).isEmpty();
-        assertThat(validMap.treasureBoxes()).isEmpty();
+        assertThat(validTreasureMap.dimension().width().value()).isEqualTo(width);
+        assertThat(validTreasureMap.dimension().height().value()).isEqualTo(height);
+        assertThat(validTreasureMap.mountainBoxes()).isEmpty();
+        assertThat(validTreasureMap.treasureBoxes()).isEmpty();
     }
 
     @ParameterizedTest
@@ -32,12 +32,12 @@ class MapTest {
     })
     void create_a_map_with_valid_treasure_coordinates(int x, int y, int width, int height) {
         TreasureBox treasure = buildTreasure(x, y);
-        Map validMap = buildMapWithTreasures(width, height, List.of(treasure));
+        TreasureMap validTreasureMap = buildMapWithTreasures(width, height, List.of(treasure));
 
-        assertThat(validMap.dimension().width().value()).isEqualTo(width);
-        assertThat(validMap.dimension().height().value()).isEqualTo(height);
-        assertThat(validMap.mountainBoxes()).isEmpty();
-        assertThat(validMap.treasureBoxes().size()).isOne();
+        assertThat(validTreasureMap.dimension().width().value()).isEqualTo(width);
+        assertThat(validTreasureMap.dimension().height().value()).isEqualTo(height);
+        assertThat(validTreasureMap.mountainBoxes()).isEmpty();
+        assertThat(validTreasureMap.treasureBoxes().size()).isOne();
     }
 
     @ParameterizedTest
@@ -74,15 +74,15 @@ class MapTest {
         return new TreasureBox(new HorizontalAxis(x), new VerticalAxis(y), 1);
     }
 
-    private Map buildSimpleMap(int width, int height) {
-        return new Map(new Dimension(new Width(width), new Height(height)), emptyList(), emptyList());
+    private TreasureMap buildSimpleMap(int width, int height) {
+        return new TreasureMap(new Dimension(new Width(width), new Height(height)), emptyList(), emptyList());
     }
 
-    private Map buildMapWithTreasures(int width, int height, List<TreasureBox> treasures) {
-        return new Map(new Dimension(new Width(width), new Height(height)), emptyList(), treasures);
+    private TreasureMap buildMapWithTreasures(int width, int height, List<TreasureBox> treasures) {
+        return new TreasureMap(new Dimension(new Width(width), new Height(height)), emptyList(), treasures);
     }
 
-    private Map buildMapWithMountains(int width, int height, List<MountainBox> mountains) {
-        return new Map(new Dimension(new Width(width), new Height(height)), mountains, emptyList());
+    private TreasureMap buildMapWithMountains(int width, int height, List<MountainBox> mountains) {
+        return new TreasureMap(new Dimension(new Width(width), new Height(height)), mountains, emptyList());
     }
 }

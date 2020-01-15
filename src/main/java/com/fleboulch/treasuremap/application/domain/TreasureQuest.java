@@ -1,16 +1,16 @@
 package com.fleboulch.treasuremap.application.domain;
 
-import com.fleboulch.treasuremap.map.domain.Map;
+import com.fleboulch.treasuremap.map.domain.TreasureMap;
 
 public class TreasureQuest {
 
-    private final Map treasureMap;
+    private final TreasureMap treasureMap;
 
-    public TreasureQuest(Map treasureMap) {
+    public TreasureQuest(TreasureMap treasureMap) {
         this.treasureMap = treasureMap;
     }
 
-    public Map treasureMap() {
+    public TreasureMap treasureMap() {
         return treasureMap;
     }
 
