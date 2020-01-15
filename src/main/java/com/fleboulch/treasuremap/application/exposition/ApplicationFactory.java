@@ -2,6 +2,7 @@ package com.fleboulch.treasuremap.application.exposition;
 
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
+import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputRowException;
 import com.fleboulch.treasuremap.kernel.utils.ConverterUtils;
 import com.fleboulch.treasuremap.map.domain.*;
 
@@ -45,12 +46,20 @@ class ApplicationFactory {
 
     private static MountainBox toMountain(String[] line) {
 
+        validateLine(line, 3);
         int x = ConverterUtils.toInt(line[1]);
         int y = ConverterUtils.toInt(line[2]);
         return new MountainBox(new HorizontalAxis(x), new VerticalAxis(y));
     }
 
+    private static void validateLine(String[] line, int expectedNumberOfProperties) {
+        if (line.length != expectedNumberOfProperties) {
+            throw new InvalidInputRowException(line);
+        }
+    }
+
     private static TreasureBox toTreasure(String[] line) {
+        validateLine(line, 4);
 
         int x = ConverterUtils.toInt(line[1]);
         int y = ConverterUtils.toInt(line[2]);
@@ -59,6 +68,7 @@ class ApplicationFactory {
     }
 
     private static Dimension toDimension(String[] line) {
+        validateLine(line, 3);
 
         int width = ConverterUtils.toInt(line[1]);
         int height = ConverterUtils.toInt(line[2]);

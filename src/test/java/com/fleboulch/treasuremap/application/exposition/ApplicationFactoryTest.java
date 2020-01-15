@@ -2,6 +2,7 @@ package com.fleboulch.treasuremap.application.exposition;
 
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
+import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputRowException;
 import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,14 @@ class ApplicationFactoryTest {
     // invalid mountain and treasure coordinates
     private static final String OUT_OF_MAP_MOUNTAIN_1 = "M - 3 - 4";
     private static final String OUT_OF_MAP_TREASURE_1 = "T - 3 - 4 - 3";
+
+    // invalid rows
+    private static final String INCORRECT_TREASURE_1 = "T";
+    private static final String INCORRECT_TREASURE_2 = "T - 3 - 4";
+    private static final String INCORRECT_MOUNTAIN_1 = "M";
+    private static final String INCORRECT_MOUNTAIN_2 = "M - 3";
+    private static final String INCORRECT_DIMENSION_1 = "C";
+    private static final String INCORRECT_DIMENSION_2 = "C - 1";
 
     @Test
     void it_should_successfully_convert_configuration_without_mountain_and_treasure_to_treasure_quest() {
@@ -76,14 +85,28 @@ class ApplicationFactoryTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-            OUT_OF_MAP_MOUNTAIN_1,
-            OUT_OF_MAP_TREASURE_1
+            INCORRECT_MOUNTAIN_1,
+            INCORRECT_TREASURE_1,
+            INCORRECT_MOUNTAIN_2,
+            INCORRECT_TREASURE_2
     })
-    void it_should_failed_to_convert_configuration_to_treasure_quest(String invalidConfig) {
+    void it_should_failed_to_convert_configuration_to_treasure_quest_when_mountain_or_treasure_is_invalid(String invalidConfig) {
         List<String> validConfiguration = buildConfiguration(List.of(DIMENSION, invalidConfig));
         assertThatThrownBy(() ->
                 ApplicationFactory.toDomain(validConfiguration)
-        ).isInstanceOf(BoxIsOutOfMapException.class);
+        ).isInstanceOf(InvalidInputRowException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            INCORRECT_DIMENSION_1,
+            INCORRECT_DIMENSION_2
+    })
+    void it_should_failed_to_convert_configuration_to_treasure_quest_when_dimension_is_invalid(String invalidConfig) {
+        List<String> validConfiguration = buildConfiguration(List.of(invalidConfig));
+        assertThatThrownBy(() ->
+                ApplicationFactory.toDomain(validConfiguration)
+        ).isInstanceOf(InvalidInputRowException.class);
     }
 
     @Test
@@ -92,6 +115,18 @@ class ApplicationFactoryTest {
         assertThatThrownBy(() ->
                 ApplicationFactory.toDomain(validConfiguration)
         ).isInstanceOf(DimensionConfigurationNotDefinedException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            OUT_OF_MAP_MOUNTAIN_1,
+            OUT_OF_MAP_TREASURE_1
+    })
+    void it_should_failed_to_convert_configuration_to_treasure_quest(String invalidConfig) {
+        List<String> validConfiguration = buildConfiguration(List.of(DIMENSION, invalidConfig));
+        assertThatThrownBy(() ->
+                ApplicationFactory.toDomain(validConfiguration)
+        ).isInstanceOf(BoxIsOutOfMapException.class);
     }
 
     private TreasureBox buildTreasure(int x, int y, int nbTreasures) {
