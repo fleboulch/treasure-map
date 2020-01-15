@@ -9,12 +9,14 @@ import com.fleboulch.treasuremap.map.domain.Height;
 import com.fleboulch.treasuremap.map.domain.TreasureMap;
 import com.fleboulch.treasuremap.map.domain.Width;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 
 import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class TreasureQuestTest {
@@ -32,6 +34,13 @@ class TreasureQuestTest {
         assertThatThrownBy(() ->
                 buildQuest(x, y)
         ).isInstanceOf(ExplorerIsOutOfMapException.class);
+    }
+
+    @Test
+    void it_should_succeed_to_create_quest_with_valid_coordinates_for_explorer() {
+        TreasureQuest treasureQuest = buildQuest(0, 0);
+
+        assertThat(treasureQuest.explorers().explorers()).hasSize(1);
     }
 
     private TreasureQuest buildQuest(int x, int y) {
