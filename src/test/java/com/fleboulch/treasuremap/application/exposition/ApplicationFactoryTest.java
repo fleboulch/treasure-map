@@ -23,8 +23,8 @@ class ApplicationFactoryTest {
     private static final String TREASURE_2 = "T - 2 - 3 - 1";
 
     // invalid mountain and treasure coordinates
-    private static final String INVALID_MOUNTAIN_1 = "M - 3 - 4";
-    private static final String INVALID_TREASURE_1 = "T - 3 - 4 - 3";
+    private static final String OUT_OF_MAP_MOUNTAIN_1 = "M - 3 - 4";
+    private static final String OUT_OF_MAP_TREASURE_1 = "T - 3 - 4 - 3";
 
     @Test
     void it_should_successfully_convert_configuration_without_mountain_and_treasure_to_treasure_quest() {
@@ -75,8 +75,8 @@ class ApplicationFactoryTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-            INVALID_MOUNTAIN_1,
-            INVALID_TREASURE_1
+            OUT_OF_MAP_MOUNTAIN_1,
+            OUT_OF_MAP_TREASURE_1
     })
     void it_should_failed_to_convert_configuration_to_treasure_quest(String invalidConfig) {
         List<String> validConfiguration = buildConfiguration(List.of(DIMENSION, invalidConfig));
