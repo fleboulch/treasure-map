@@ -9,9 +9,8 @@ import com.fleboulch.treasuremap.map.domain.*;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 class ApplicationFactory {
 
@@ -36,12 +35,12 @@ class ApplicationFactory {
 
         List<MountainBox> mountains = plainsBoxes.stream()
                 .filter(box -> box instanceof MountainBox)
-                .map(box -> (MountainBox)box)
+                .map(box -> (MountainBox) box)
                 .collect(toList());
 
         List<TreasureBox> treasures = plainsBoxes.stream()
                 .filter(box -> box instanceof TreasureBox)
-                .map(box -> (TreasureBox)box)
+                .map(box -> (TreasureBox) box)
                 .collect(toList());
 
         Map treasureMap = new Map(dimension, mountains, treasures);
