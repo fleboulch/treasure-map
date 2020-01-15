@@ -2,6 +2,8 @@ package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 
+import java.util.Objects;
+
 public abstract class PlainsBox {
 
     private final HorizontalAxis x;
@@ -23,5 +25,19 @@ public abstract class PlainsBox {
 
     public VerticalAxis y() {
         return y;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlainsBox plainsBox = (PlainsBox) o;
+        return x.equals(plainsBox.x) &&
+                y.equals(plainsBox.y);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

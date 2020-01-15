@@ -8,9 +8,9 @@ import com.fleboulch.treasuremap.map.domain.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ApplicationFactory {
+class ApplicationFactory {
 
-    public static final String DELIMITER = " - ";
+    public static final String CARET_DELIMITER = " - ";
 
     private ApplicationFactory() {
     }
@@ -37,7 +37,7 @@ public class ApplicationFactory {
     }
 
     private static MountainBox toMountain(String row) {
-        String[] line = row.split(DELIMITER);// a CSV has comma separated lines
+        String[] line = row.split(CARET_DELIMITER);// a CSV has comma separated lines
 
         int x = ConverterUtils.toInt(line[1]);
         int y = ConverterUtils.toInt(line[2]);
@@ -45,7 +45,7 @@ public class ApplicationFactory {
     }
 
     private static TreasureBox toTreasure(String row) {
-        String[] line = row.split(DELIMITER);// a CSV has comma separated lines
+        String[] line = row.split(CARET_DELIMITER);// a CSV has comma separated lines
 
         int x = ConverterUtils.toInt(line[1]);
         int y = ConverterUtils.toInt(line[2]);
@@ -54,7 +54,7 @@ public class ApplicationFactory {
     }
 
     private static Dimension toDimension(String row) {
-        String[] line = row.split(DELIMITER);// a CSV has comma separated lines
+        String[] line = row.split(CARET_DELIMITER);// a CSV has comma separated lines
 
         int width = ConverterUtils.toInt(line[1]);
         int height = ConverterUtils.toInt(line[2]);
