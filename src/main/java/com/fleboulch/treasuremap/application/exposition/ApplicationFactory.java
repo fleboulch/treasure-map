@@ -12,7 +12,7 @@ import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 
-class ApplicationFactory {
+public class ApplicationFactory {
 
     public static final String CARET_DELIMITER = " - ";
 
