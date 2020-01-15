@@ -10,13 +10,13 @@ class InputReaderTest {
 
     @BeforeEach
     void init() {
-        inputReader = new InputReader();
+        inputReader = new InputReader(treasureQuestRunner);
     }
 
     @Test
     void it() {
         String basePath = "/home/florent/dev/personal/technical-tests/carbon-it/treasure-map/src/test/resources/com/fleboulch/treasuremap/application/exposition/";
-        TreasureQuest treasureQuest = inputReader.readFile(basePath + "simple-quest.csv");
+        TreasureQuest treasureQuest = inputReader.process(basePath + "simple-quest.csv");
 
         System.out.println(treasureQuest);
     }
