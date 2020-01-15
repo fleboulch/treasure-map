@@ -20,25 +20,31 @@ public class ApplicationFactory {
     }
 
     public static TreasureQuest toDomain(List<String> treasureQuestConfigurations) {
-        Dimension dimension = treasureQuestConfigurations.stream()
-                .filter(rowAsString -> rowAsString.startsWith(InputType.C.name()))
-                .map(ApplicationFactory::splittedConfiguration)
-                .map(ApplicationFactory::toDimension)
-                .findFirst()
-                .orElseThrow(DimensionConfigurationNotDefinedException::new);
+        Dimension dimension = buildDimension(treasureQuestConfigurations);
 
-        List<PlainsBox> plainsBoxes = treasureQuestConfigurations.stream()
-                .filter(rowAsString -> !rowAsString.startsWith(InputType.C.name()))
-                .map(ApplicationFactory::splittedConfiguration)
-                .map(ApplicationFactory::toPlainsBox)
-                .collect(toList());
-
+        List<PlainsBox> plainsBoxes = buildPlainsBoxes(treasureQuestConfigurations);
         List<MountainBox> mountains = buildMountainBoxesFrom(plainsBoxes);
-
         List<TreasureBox> treasures = buildTreasureBoxes(plainsBoxes);
 
         Map treasureMap = new Map(dimension, mountains, treasures);
         return new TreasureQuest(treasureMap);
+    }
+
+    private static List<PlainsBox> buildPlainsBoxes(List<String> treasureQuestConfigurations) {
+        return treasureQuestConfigurations.stream()
+                    .filter(rowAsString -> !rowAsString.startsWith(InputType.C.name()))
+                    .map(ApplicationFactory::splittedConfiguration)
+                    .map(ApplicationFactory::toPlainsBox)
+                    .collect(toList());
+    }
+
+    private static Dimension buildDimension(List<String> treasureQuestConfigurations) {
+        return treasureQuestConfigurations.stream()
+                    .filter(rowAsString -> rowAsString.startsWith(InputType.C.name()))
+                    .map(ApplicationFactory::splittedConfiguration)
+                    .map(ApplicationFactory::toDimension)
+                    .findFirst()
+                    .orElseThrow(DimensionConfigurationNotDefinedException::new);
     }
 
     private static List<TreasureBox> buildTreasureBoxes(List<PlainsBox> plainsBoxes) {

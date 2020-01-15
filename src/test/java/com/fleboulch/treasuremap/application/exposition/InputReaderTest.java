@@ -16,7 +16,7 @@ class InputReaderTest {
     @Test
     void it() {
         String basePath = "/home/florent/dev/personal/technical-tests/carbon-it/treasure-map/src/test/resources/com/fleboulch/treasuremap/application/exposition/";
-        TreasureQuest treasureQuest = inputReader.readFile(basePath + "simple-map.csv");
+        TreasureQuest treasureQuest = inputReader.readFile(basePath + "simple-quest.csv");
 
         System.out.println(treasureQuest);
     }
