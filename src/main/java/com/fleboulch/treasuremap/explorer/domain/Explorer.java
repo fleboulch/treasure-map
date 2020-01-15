@@ -1,10 +1,12 @@
 package com.fleboulch.treasuremap.explorer.domain;
 
 import com.fleboulch.treasuremap.kernel.domain.Domain;
+import com.fleboulch.treasuremap.kernel.exceptions.DomainException;
 import com.fleboulch.treasuremap.map.domain.HorizontalAxis;
 import com.fleboulch.treasuremap.map.domain.VerticalAxis;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Explorer {
@@ -24,6 +26,7 @@ public class Explorer {
     }
 
     public static Explorer of(Name name, HorizontalAxis x, VerticalAxis y, Orientation orientation, String rawMovements) {
+        Domain.validateNotNull(rawMovements, "Raw movements should not be null");
         return new Explorer(name, x, y, orientation, buildMovements(rawMovements));
     }
 

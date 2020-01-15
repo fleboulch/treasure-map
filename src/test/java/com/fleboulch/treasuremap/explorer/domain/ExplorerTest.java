@@ -1,5 +1,6 @@
 package com.fleboulch.treasuremap.explorer.domain;
 
+import com.fleboulch.treasuremap.kernel.exceptions.DomainException;
 import com.fleboulch.treasuremap.map.domain.HorizontalAxis;
 import com.fleboulch.treasuremap.map.domain.VerticalAxis;
 import org.assertj.core.data.Index;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ExplorerTest {
 
@@ -29,6 +31,34 @@ class ExplorerTest {
         assertThat(createdMovements).contains(MovementType.G, Index.atIndex(6));
         assertThat(createdMovements).contains(MovementType.G, Index.atIndex(7));
         assertThat(createdMovements).contains(MovementType.A, Index.atIndex(8));
+    }
+
+    @Test
+    void create_empty_movement_sequence_for_an_explorer() {
+        String rawMovements = "";
+        Explorer explorer = buildExplorer(rawMovements);
+
+        List<MovementType> createdMovements = explorer.movements().movementTypes();
+
+        assertThat(createdMovements).isEmpty();
+    }
+
+    @Test
+    void fail_to_create_null_movement_sequence_for_an_explorer() {
+        String rawMovements = null;
+
+        assertThatThrownBy(() ->
+                buildExplorer(rawMovements)
+        ).isInstanceOf(DomainException.class);
+    }
+
+    @Test
+    void fail_to_create_movement_sequence_with_invalid_instructions_for_an_explorer() {
+        String rawMovements = "ADGW";
+
+        assertThatThrownBy(() ->
+                buildExplorer(rawMovements)
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
     private Explorer buildExplorer(String rawMovements) {
