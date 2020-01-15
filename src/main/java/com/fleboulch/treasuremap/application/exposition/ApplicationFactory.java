@@ -5,6 +5,7 @@ import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
 import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputRowException;
 import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputTypeRowException;
+import com.fleboulch.treasuremap.explorer.domain.*;
 import com.fleboulch.treasuremap.kernel.utils.ConverterUtils;
 import com.fleboulch.treasuremap.map.domain.*;
 
@@ -25,26 +26,39 @@ public class ApplicationFactory {
         List<PlainsBox> plainsBoxes = buildPlainsBoxes(treasureQuestConfigurations);
         List<MountainBox> mountains = buildMountainBoxesFrom(plainsBoxes);
         List<TreasureBox> treasures = buildTreasureBoxes(plainsBoxes);
+        List<Explorer> explorers = buildExplorers(treasureQuestConfigurations);
 
         TreasureMap treasureMap = new TreasureMap(dimension, mountains, treasures);
         return new TreasureQuest(treasureMap);
     }
 
+    private static List<Explorer> buildExplorers(List<String> treasureQuestConfigurations) {
+        return treasureQuestConfigurations.stream()
+                .filter(rowAsString -> rowAsString.startsWith(InputType.A.name()))
+                .map(ApplicationFactory::splittedConfiguration)
+                .map(ApplicationFactory::toExplorer)
+                .collect(toList());
+    }
+
+
     private static List<PlainsBox> buildPlainsBoxes(List<String> treasureQuestConfigurations) {
         return treasureQuestConfigurations.stream()
-                    .filter(rowAsString -> !rowAsString.startsWith(InputType.C.name()))
-                    .map(ApplicationFactory::splittedConfiguration)
-                    .map(ApplicationFactory::toPlainsBox)
-                    .collect(toList());
+                .filter(rowAsString ->
+                        !rowAsString.startsWith(InputType.C.name()) &&
+                                !rowAsString.startsWith(InputType.A.name())
+                )
+                .map(ApplicationFactory::splittedConfiguration)
+                .map(ApplicationFactory::toPlainsBox)
+                .collect(toList());
     }
 
     private static Dimension buildDimension(List<String> treasureQuestConfigurations) {
         return treasureQuestConfigurations.stream()
-                    .filter(rowAsString -> rowAsString.startsWith(InputType.C.name()))
-                    .map(ApplicationFactory::splittedConfiguration)
-                    .map(ApplicationFactory::toDimension)
-                    .findFirst()
-                    .orElseThrow(DimensionConfigurationNotDefinedException::new);
+                .filter(rowAsString -> rowAsString.startsWith(InputType.C.name()))
+                .map(ApplicationFactory::splittedConfiguration)
+                .map(ApplicationFactory::toDimension)
+                .findFirst()
+                .orElseThrow(DimensionConfigurationNotDefinedException::new);
     }
 
     private static List<TreasureBox> buildTreasureBoxes(List<PlainsBox> plainsBoxes) {
@@ -102,6 +116,25 @@ public class ApplicationFactory {
         int width = ConverterUtils.toInt(line[1]);
         int height = ConverterUtils.toInt(line[2]);
         return new Dimension(new Width(width), new Height(height));
+    }
+
+    private static Explorer toExplorer(String[] line) {
+        validateLine(line, 6);
+
+        String name = line[1];
+        int horizontalAxis = ConverterUtils.toInt(line[2]);
+        int verticalAxis = ConverterUtils.toInt(line[3]);
+        String orientation = line[4];
+        String rawMovements = line[5];
+
+        return Explorer.of(
+                new Name(name),
+                new HorizontalAxis(horizontalAxis),
+                new VerticalAxis(verticalAxis),
+                new Orientation(OrientationType.valueOf(orientation)),
+                rawMovements
+        );
+
     }
 
     private static void validateLine(String[] line, int expectedNumberOfProperties) {

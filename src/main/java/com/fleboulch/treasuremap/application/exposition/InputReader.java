@@ -18,8 +18,8 @@ public class InputReader {
 
     public TreasureQuest process(String filePath) {
 
-        List<String> configurations = CsvConverter.toConfigurationList(filePath);
-        TreasureQuest treasureQuest = ApplicationFactory.toDomain(configurations);
+        List<String> configurationsWithoutComments = CsvConverter.toConfigurationList(filePath);
+        TreasureQuest treasureQuest = ApplicationFactory.toDomain(configurationsWithoutComments);
         treasureQuestRunner.start(treasureQuest);
 
         return treasureQuest;
