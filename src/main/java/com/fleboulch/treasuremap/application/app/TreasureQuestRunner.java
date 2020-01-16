@@ -13,14 +13,14 @@ public class TreasureQuestRunner {
 
     public TreasureQuest start(TreasureQuest treasureQuest) {
 
-        Explorer firstExplorer = getFirstExplorer(treasureQuest);// 1 explorer (need an orchestrator to handle multiple explorers)
+        Explorer firstExplorer = getExplorerByIndex(treasureQuest, 0);// 1 explorer (need an orchestrator to handle multiple explorers)
         firstExplorer.movements().movementTypes().forEach(movement -> doAction(movement, treasureQuest, firstExplorer));
 
         return treasureQuest;
     }
 
-    private Explorer getFirstExplorer(TreasureQuest treasureQuest) {
-        return treasureQuest.explorers().explorers().get(0);
+    private Explorer getExplorerByIndex(TreasureQuest treasureQuest, int index) {
+        return treasureQuest.explorers().explorers().get(index);
     }
 
     private TreasureQuest doAction(MovementType movementType, TreasureQuest treasureQuest, Explorer currentExplorer) {
@@ -41,14 +41,15 @@ public class TreasureQuestRunner {
 
         switch (currentExplorer.orientation().orientationType()) {
             case S:
-                return goForwardSouth(treasureQuest, currentExplorer);
+                return goForwardSouth(treasureQuest);
             default:
                 throw new RuntimeException("");
         }
     }
 
-    private TreasureQuest goForwardSouth(TreasureQuest treasureQuest, Explorer currentExplorer) {
-        return treasureQuest.updateExplorer(currentExplorer);
+    private TreasureQuest goForwardSouth(TreasureQuest treasureQuest) {
+        treasureQuest.explorers().explorers().get(0).goForwardSouth();
+        return treasureQuest;
     }
 
     private TreasureQuest Dturn(TreasureQuest treasureQuest, Explorer currentExplorer) {

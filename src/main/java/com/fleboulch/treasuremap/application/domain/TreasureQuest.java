@@ -31,16 +31,6 @@ public class TreasureQuest {
         explorer.isOnMountain(treasureMap);
     }
 
-    public TreasureQuest updateExplorer(Explorer newExplorer) {
-        List<Explorer> explorersSaved = explorers.explorers();
-        List<Explorer> explorersWithoutOld = explorersSaved.stream()
-                .filter(exp -> Objects.equals(exp.name(), newExplorer.name()))
-                .collect(Collectors.toList());
-
-        explorersWithoutOld.add(newExplorer);
-        return this;
-    }
-
     public TreasureMap treasureMap() {
         return treasureMap;
     }
