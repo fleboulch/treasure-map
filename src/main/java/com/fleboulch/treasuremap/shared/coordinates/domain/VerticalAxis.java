@@ -6,4 +6,16 @@ public class VerticalAxis extends Axis {
         super(index);
     }
 
+    @Override
+    public Axis increment() {
+        int newIndex = index + 1;
+        return new VerticalAxis(newIndex);
+    }
+
+    @Override
+    public Axis decrement() {
+        int newIndex = index - 1;
+        return new VerticalAxis(newIndex);
+    }
+
 }

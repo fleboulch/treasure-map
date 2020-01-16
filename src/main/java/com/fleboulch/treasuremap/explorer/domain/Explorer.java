@@ -12,7 +12,7 @@ public class Explorer {
     // Add an UUID
 
     private final Name name;
-    private Coordinates coordinates;
+    private final Coordinates coordinates;
     private final Orientation orientation;
     private final Movements movements;
     private int nbCollectedTreasures = 0;
@@ -107,7 +107,31 @@ public class Explorer {
                 '}';
     }
 
-    public void goForwardSouth() {
-        coordinates.goForwardSouth();
+    public Explorer goForward() {
+        switch (orientation.orientationType()) {
+            case S:
+                return goForwardSouth();
+            case N:
+                return goForwardNorth();
+            case E:
+                return goForwardEast();
+            default:
+                throw new RuntimeException("");
+        }
+    }
+
+    private Explorer goForwardNorth() {
+        Coordinates newCoordinates = coordinates.goForwardNorth();
+        return new Explorer(name, newCoordinates, orientation, movements);
+    }
+
+    private Explorer goForwardEast() {
+        Coordinates newCoordinates = this.coordinates.goForwardEast();
+        return new Explorer(name, newCoordinates, orientation, movements);
+    }
+
+    private Explorer goForwardSouth() {
+        Coordinates newCoordinates = coordinates.goForwardSouth();
+        return new Explorer(name, newCoordinates, orientation, movements);
     }
 }

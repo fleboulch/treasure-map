@@ -1,20 +1,20 @@
 package com.fleboulch.treasuremap.application.domain;
 
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
+import com.fleboulch.treasuremap.kernel.domain.Domain;
 import com.fleboulch.treasuremap.map.domain.Dimension;
 import com.fleboulch.treasuremap.map.domain.TreasureMap;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class TreasureQuest {
 
     private final TreasureMap treasureMap;
-    private Explorers explorers;
+    private final Explorers explorers;
 
     public TreasureQuest(TreasureMap treasureMap, Explorers explorers) {
-        this.treasureMap = treasureMap;
+        this.treasureMap = Domain.validateNotNull(treasureMap, "Quest should have a not null treasure map");
+        Domain.validateNotNull(explorers, "Quest should have not null explorers");
         validateStartingCoordinatesFor(explorers.explorers());
         this.explorers = explorers;
     }

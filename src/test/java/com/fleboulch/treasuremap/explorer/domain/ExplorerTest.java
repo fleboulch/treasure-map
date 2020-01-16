@@ -14,12 +14,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ExplorerTest {
 
-    private static final Coordinates VALID_COORDINATES = Coordinates.of(1, 1);
+    private static final Coordinates ONE_ONE_COORDINATES = Coordinates.of(1, 1);
+    private static final Coordinates ONE_TWO_COORDINATES = Coordinates.of(1, 2);
+    private static final Coordinates ONE_ZERO_COORDINATES = Coordinates.of(1, 0);
+    private static final Coordinates TWO_ONE_COORDINATES = Coordinates.of(2, 1);
 
     @Test
     void create_movement_sequence_for_an_explorer() {
         String rawMovements = "AADADAGGA";
-        Explorer explorer = buildExplorer(rawMovements);
+        Explorer explorer = buildExplorer(rawMovements, OrientationType.S);
 
         List<MovementType> createdMovements = explorer.movements().movementTypes();
 
@@ -39,7 +42,7 @@ class ExplorerTest {
     @Test
     void create_empty_movement_sequence_for_an_explorer() {
         String rawMovements = "";
-        Explorer explorer = buildExplorer(rawMovements);
+        Explorer explorer = buildExplorer(rawMovements, OrientationType.S);
 
         List<MovementType> createdMovements = explorer.movements().movementTypes();
 
@@ -51,7 +54,7 @@ class ExplorerTest {
         String rawMovements = null;
 
         assertThatThrownBy(() ->
-                buildExplorer(rawMovements)
+                buildExplorer(rawMovements, OrientationType.S)
         ).isInstanceOf(DomainException.class);
     }
 
@@ -60,13 +63,13 @@ class ExplorerTest {
         String rawMovements = "ADGW";
 
         assertThatThrownBy(() ->
-                buildExplorer(rawMovements)
+                buildExplorer(rawMovements, OrientationType.S)
         ).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void explorer_cannot_be_on_a_mountain() {
-        Explorer explorer = buildExplorer("");
+        Explorer explorer = buildExplorer("", OrientationType.S);
         TreasureMap treasureMap = buildMapWithOneMountain();
         assertThatThrownBy(() ->
                 explorer.isOnMountain(treasureMap)
@@ -76,7 +79,7 @@ class ExplorerTest {
 
     @Test
     void check_explorer_is_not_on_a_mountain() {
-        Explorer explorer = buildExplorer("");
+        Explorer explorer = buildExplorer("", OrientationType.S);
         TreasureMap treasureMap = buildSimpleMap();
         boolean onMountain = explorer.isOnMountain(treasureMap);
 
@@ -85,7 +88,7 @@ class ExplorerTest {
 
     @Test
     void check_explorer_is_on_a_treasure() {
-        Explorer explorer = buildExplorer("");
+        Explorer explorer = buildExplorer("", OrientationType.S);
         TreasureMap treasureMap = buildMapWithOneTreasure();
         boolean onTreasure = explorer.isOnTreasure(treasureMap);
 
@@ -94,7 +97,7 @@ class ExplorerTest {
 
     @Test
     void check_explorer_is_not_on_a_treasure() {
-        Explorer explorer = buildExplorer("");
+        Explorer explorer = buildExplorer("", OrientationType.S);
         TreasureMap treasureMap = buildSimpleMap();
         boolean onTreasure = explorer.isOnTreasure(treasureMap);
 
@@ -104,19 +107,42 @@ class ExplorerTest {
 
     @Test
     void check_explorer_is_on_a_plains() {
-        Explorer explorer = buildExplorer("");
+        Explorer explorer = buildExplorer("", OrientationType.S);
         TreasureMap treasureMap = buildSimpleMap();
         boolean onPlains = explorer.isOnPlains(treasureMap);
 
         assertThat(onPlains).isTrue();
     }
 
+    @Test
+    void explorer_go_forward_south() {
+        Explorer explorer = buildExplorer("A", OrientationType.S);
+        Explorer explorerAfterAction = explorer.goForward();
 
-    private Explorer buildExplorer(String rawMovements) {
+        assertThat(explorerAfterAction.coordinates()).isEqualTo(ONE_TWO_COORDINATES);
+    }
+
+    @Test
+    void explorer_go_forward_north() {
+        Explorer explorer = buildExplorer("A", OrientationType.N);
+        Explorer explorerAfterAction = explorer.goForward();
+
+        assertThat(explorerAfterAction.coordinates()).isEqualTo(ONE_ZERO_COORDINATES);
+    }
+
+    @Test
+    void explorer_go_forward_east() {
+        Explorer explorer = buildExplorer("A", OrientationType.E);
+        Explorer explorerAfterAction = explorer.goForward();
+
+        assertThat(explorerAfterAction.coordinates()).isEqualTo(TWO_ONE_COORDINATES);
+    }
+
+    private Explorer buildExplorer(String rawMovements, OrientationType orientation) {
         return Explorer.of(
                 new Name("Lara"),
-                VALID_COORDINATES,
-                new Orientation(OrientationType.S),
+                ONE_ONE_COORDINATES,
+                new Orientation(orientation),
                 rawMovements
         );
     }
@@ -137,11 +163,11 @@ class ExplorerTest {
     }
 
     private MountainBox buildMountain() {
-        return new MountainBox(VALID_COORDINATES);
+        return new MountainBox(ONE_ONE_COORDINATES);
     }
 
     private TreasureBox buildTreasure() {
-        return new TreasureBox(VALID_COORDINATES, 1);
+        return new TreasureBox(ONE_ONE_COORDINATES, 1);
     }
 
 }

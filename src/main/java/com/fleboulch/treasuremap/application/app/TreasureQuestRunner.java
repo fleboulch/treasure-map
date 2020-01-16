@@ -1,5 +1,6 @@
 package com.fleboulch.treasuremap.application.app;
 
+import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.MovementType;
@@ -11,12 +12,13 @@ public class TreasureQuestRunner {
     public TreasureQuestRunner() {
     }
 
-    public TreasureQuest start(TreasureQuest treasureQuest) {
+    public HistoryTreasureQuest start(TreasureQuest treasureQuest) {
+        HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(treasureQuest);
 
         Explorer firstExplorer = getExplorerByIndex(treasureQuest, 0);// 1 explorer (need an orchestrator to handle multiple explorers)
         firstExplorer.movements().movementTypes().forEach(movement -> doAction(movement, treasureQuest, firstExplorer));
 
-        return treasureQuest;
+        return historyTreasureQuest;
     }
 
     private Explorer getExplorerByIndex(TreasureQuest treasureQuest, int index) {
@@ -27,10 +29,10 @@ public class TreasureQuestRunner {
         switch (movementType) {
             case A:
                 return goForward(treasureQuest, currentExplorer);
-            case D:
-                return Dturn(treasureQuest, currentExplorer);
-            case G:
-                return Gturn(treasureQuest, currentExplorer);
+//            case D:
+//                return Dturn(treasureQuest, currentExplorer);
+//            case G:
+//                return Gturn(treasureQuest, currentExplorer);
             default:
                 throw new IllegalArgumentException("Unknown movement type"); // should never occured
         }
@@ -38,27 +40,18 @@ public class TreasureQuestRunner {
     }
 
     private TreasureQuest goForward(TreasureQuest treasureQuest, Explorer currentExplorer) {
-
-        switch (currentExplorer.orientation().orientationType()) {
-            case S:
-                return goForwardSouth(treasureQuest);
-            default:
-                throw new RuntimeException("");
-        }
-    }
-
-    private TreasureQuest goForwardSouth(TreasureQuest treasureQuest) {
-        getExplorerByIndex(treasureQuest, 0).goForwardSouth();
+        getExplorerByIndex(treasureQuest, 0).goForward();
         return treasureQuest;
+
     }
 
-    private TreasureQuest Dturn(TreasureQuest treasureQuest, Explorer currentExplorer) {
-        return null;
-    }
-
-    private TreasureQuest Gturn(TreasureQuest treasureQuest, Explorer currentExplorer) {
-        return null;
-    }
+//    private TreasureQuest Dturn(TreasureQuest treasureQuest, Explorer currentExplorer) {
+//        return null;
+//    }
+//
+//    private TreasureQuest Gturn(TreasureQuest treasureQuest, Explorer currentExplorer) {
+//        return null;
+//    }
 
 
 }

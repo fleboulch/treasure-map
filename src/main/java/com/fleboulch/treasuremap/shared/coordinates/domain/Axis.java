@@ -6,16 +6,15 @@ import java.util.Objects;
 
 public abstract class Axis {
 
-    private int index;
+    protected final int index;
 
     protected Axis(int index) {
         this.index = Domain.validatePositiveOrZero(index, "The index for an axis should be positive");
     }
 
-    public Axis increment() {
-        index++;
-        return this;
-    }
+    public abstract Axis increment();
+
+    public abstract Axis decrement();
 
     public int index() {
         return index;
@@ -40,6 +39,5 @@ public abstract class Axis {
                 "index=" + index +
                 '}';
     }
-
 
 }

@@ -18,9 +18,13 @@ public class TreasureMap {
 
     public TreasureMap(Dimension dimension, List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
         this.dimension = Domain.validateNotNull(dimension, "A map should have a dimension");
+
+        Domain.validateNotNull(mountainBoxes, "Treasure map should have not null mountains");
+        Domain.validateNotNull(treasureBoxes, "Treasure map should have not null treasures");
+
         checkValidBoxes(mountainBoxes, treasureBoxes);
-        this.mountainBoxes = Domain.validateNotNull(mountainBoxes, "A map should not have null mountains");
-        this.treasureBoxes = Domain.validateNotNull(treasureBoxes, "A map should not have null treasures");
+        this.mountainBoxes = mountainBoxes;
+        this.treasureBoxes = treasureBoxes;
     }
 
     // TODO: need to refacto this method

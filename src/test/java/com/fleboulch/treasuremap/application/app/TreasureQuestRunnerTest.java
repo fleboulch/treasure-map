@@ -1,6 +1,7 @@
 package com.fleboulch.treasuremap.application.app;
 
 import com.fleboulch.treasuremap.application.domain.Explorers;
+import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.Name;
@@ -33,20 +34,28 @@ class TreasureQuestRunnerTest {
     }
 
     @Test
-    void simple_quest() {
+    void simple_quest_with_one_explorer() {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(ZERO_ZERO_COORDINATES, "");
-        TreasureQuest finalQuest = runner.start(inputTreasureQuest);
+        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        assertThat(inputTreasureQuest).isEqualTo(finalQuest);
+        Explorer explorer = inputTreasureQuest.explorers().explorers().get(0);
+        List<Explorer> historyExplorers = finalQuest.historyMovementsPerExplorer().get(explorer.name());
+
+        assertThat(historyExplorers).containsExactly(explorer);
 
     }
 
     @Test
-    void simple_quest_with_go_forward() {
+    void simple_quest_with_one_explorer_and_go_forward_mouvement() {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(ZERO_ZERO_COORDINATES, "A");
-        TreasureQuest finalQuest = runner.start(inputTreasureQuest);
+        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        assertThat(finalQuest.explorers().explorers().get(0).coordinates()).isEqualTo(ZERO_ONE_COORDINATES);
+        Explorer explorer = inputTreasureQuest.explorers().explorers().get(0);
+        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(explorer.name());
+
+        Explorer finalExplorer = explorer.goForward();
+
+        assertThat(explorerMovements).containsExactly(explorer, finalExplorer);
 
     }
 

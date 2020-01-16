@@ -1,5 +1,6 @@
 package com.fleboulch.treasuremap.map.domain;
 
+import com.fleboulch.treasuremap.kernel.exceptions.DomainException;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.api.Test;
@@ -116,6 +117,27 @@ class MapTest {
         assertThatThrownBy(() ->
                 treasureMap.from(coordinates)
         ).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void it_should_fail_to_create_treasure_map_with_null_dimension() {
+        assertThatThrownBy(() ->
+                new TreasureMap(null, emptyList(), emptyList())
+        ).isInstanceOf(DomainException.class);
+    }
+
+    @Test
+    void it_should_fail_to_create_treasure_map_with_null_mountains() {
+        assertThatThrownBy(() ->
+                buildMapWithMountains(1,1, null)
+        ).isInstanceOf(DomainException.class);
+    }
+
+    @Test
+    void it_should_fail_to_create_treasure_map_with_null_treasures() {
+        assertThatThrownBy(() ->
+                buildMapWithTreasures(1,1, null)
+        ).isInstanceOf(DomainException.class);
     }
 
     private MountainBox buildMountain(Coordinates coordinates) {
