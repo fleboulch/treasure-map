@@ -6,8 +6,8 @@ import com.fleboulch.treasuremap.map.domain.Dimension;
 import java.util.Objects;
 
 public class Coordinates {
-    private final HorizontalAxis x;
-    private final VerticalAxis y;
+    private HorizontalAxis x;
+    private VerticalAxis y;
 
     private Coordinates(HorizontalAxis x, VerticalAxis y) {
         this.x = Domain.validateNotNull(x, "Horizontal axis should be not null");
@@ -24,6 +24,11 @@ public class Coordinates {
 
     public VerticalAxis y() {
         return y;
+    }
+
+    public Coordinates goForwardSouth() {
+        y.increment();
+        return this;
     }
 
     public boolean hasValidCoordinates(Dimension dimension) {

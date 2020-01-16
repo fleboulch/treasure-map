@@ -5,11 +5,13 @@ import com.fleboulch.treasuremap.map.domain.Dimension;
 import com.fleboulch.treasuremap.map.domain.TreasureMap;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class TreasureQuest {
 
     private final TreasureMap treasureMap;
-    private final Explorers explorers;
+    private Explorers explorers;
 
     public TreasureQuest(TreasureMap treasureMap, Explorers explorers) {
         this.treasureMap = treasureMap;
@@ -27,6 +29,16 @@ public class TreasureQuest {
             throw new ExplorerIsOutOfMapException(explorer, dimension);
         }
         explorer.isOnMountain(treasureMap);
+    }
+
+    public TreasureQuest updateExplorer(Explorer newExplorer) {
+        List<Explorer> explorersSaved = explorers.explorers();
+        List<Explorer> explorersWithoutOld = explorersSaved.stream()
+                .filter(exp -> Objects.equals(exp.name(), newExplorer.name()))
+                .collect(Collectors.toList());
+
+        explorersWithoutOld.add(newExplorer);
+        return this;
     }
 
     public TreasureMap treasureMap() {

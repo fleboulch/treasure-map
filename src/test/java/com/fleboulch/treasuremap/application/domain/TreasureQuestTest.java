@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class TreasureQuestTest {
 
     private static final Dimension DIMENSION = new Dimension(new Width(3), new Height(4));
+    public static final Coordinates ZERO_ZERO_COORDINATES = Coordinates.of(0, 0);
 
     @ParameterizedTest
     @CsvSource(value = {
@@ -26,14 +27,15 @@ class TreasureQuestTest {
             "8,9"
     })
     void it_should_fail_to_create_quest_with_out_of_map_coordinates_for_explorer(int x, int y) {
+        Coordinates coordinates = Coordinates.of(x, y);
         assertThatThrownBy(() ->
-                buildQuest(x, y, false)
+                buildQuest(coordinates, false)
         ).isInstanceOf(ExplorerIsOutOfMapException.class);
     }
 
     @Test
     void it_should_succeed_to_create_quest_with_valid_coordinates_for_explorer() {
-        TreasureQuest treasureQuest = buildQuest(0, 0, false);
+        TreasureQuest treasureQuest = buildQuest(ZERO_ZERO_COORDINATES, false);
 
         assertThat(treasureQuest.explorers().explorers()).hasSize(1);
     }
@@ -41,22 +43,33 @@ class TreasureQuestTest {
     @Test
     void impossible_for_an_explorer_to_begin_quest_on_a_mountain() {
         assertThatThrownBy(() ->
-                buildQuest(0, 0, true)
+                buildQuest(ZERO_ZERO_COORDINATES, true)
         ).isInstanceOf(InvalidCurrentPositionException.class);
 
     }
 
-    private TreasureQuest buildQuest(int x, int y, boolean startOnMountain) {
+    @Test
+    void explorer_go_forward_south() {
+        Coordinates beginExplorerCoordinates = ZERO_ZERO_COORDINATES;
+        TreasureQuest treasureQuest = buildQuest(beginExplorerCoordinates, false);
+        Explorer explorer = treasureQuest.explorers().explorers().get(0);
+        explorer.goForwardSouth();
+
+        assertThat(explorer.coordinates()).isEqualTo(Coordinates.of(0, 1));
+
+    }
+
+    private TreasureQuest buildQuest(Coordinates explorerCoordinates, boolean startOnMountain) {
         List<MountainBox> mountains = new ArrayList<>();
         if (startOnMountain) {
-            mountains.add(new MountainBox(Coordinates.of(x, y)));
+            mountains.add(new MountainBox(explorerCoordinates));
         }
         return new TreasureQuest(
                 new TreasureMap(DIMENSION, mountains, emptyList()),
                 new Explorers(List.of(
                         Explorer.of(
                                 new Name("Laura"),
-                                Coordinates.of(x, y),
+                                explorerCoordinates,
                                 new Orientation(OrientationType.E),
                                 ""
                         )

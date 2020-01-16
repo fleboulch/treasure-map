@@ -3,7 +3,6 @@ package com.fleboulch.treasuremap.application.app;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.MovementType;
-import jdk.jshell.spi.ExecutionControl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,10 +25,14 @@ public class TreasureQuestRunner {
 
     private TreasureQuest doAction(MovementType movementType, TreasureQuest treasureQuest, Explorer currentExplorer) {
         switch (movementType) {
-            case A: return goForward(treasureQuest, currentExplorer);
-            case D: return Dturn(treasureQuest, currentExplorer);
-            case G: return Gturn(treasureQuest, currentExplorer);
-            default: throw new IllegalArgumentException("Unknown movement type"); // should never occured
+            case A:
+                return goForward(treasureQuest, currentExplorer);
+            case D:
+                return Dturn(treasureQuest, currentExplorer);
+            case G:
+                return Gturn(treasureQuest, currentExplorer);
+            default:
+                throw new IllegalArgumentException("Unknown movement type"); // should never occured
         }
 
     }
@@ -37,13 +40,15 @@ public class TreasureQuestRunner {
     private TreasureQuest goForward(TreasureQuest treasureQuest, Explorer currentExplorer) {
 
         switch (currentExplorer.orientation().orientationType()) {
-            case S: return goForwardSouth(treasureQuest, currentExplorer);
-            default: throw new RuntimeException("");
+            case S:
+                return goForwardSouth(treasureQuest, currentExplorer);
+            default:
+                throw new RuntimeException("");
         }
     }
 
     private TreasureQuest goForwardSouth(TreasureQuest treasureQuest, Explorer currentExplorer) {
-        return null;
+        return treasureQuest.updateExplorer(currentExplorer);
     }
 
     private TreasureQuest Dturn(TreasureQuest treasureQuest, Explorer currentExplorer) {
@@ -53,7 +58,6 @@ public class TreasureQuestRunner {
     private TreasureQuest Gturn(TreasureQuest treasureQuest, Explorer currentExplorer) {
         return null;
     }
-
 
 
 }

@@ -9,8 +9,10 @@ import java.util.stream.Collectors;
 
 public class Explorer {
 
+    // Add an UUID
+
     private final Name name;
-    private final Coordinates coordinates;
+    private Coordinates coordinates;
     private final Orientation orientation;
     private final Movements movements;
     private int nbCollectedTreasures = 0;
@@ -74,7 +76,7 @@ public class Explorer {
         return coordinates.hasValidCoordinates(dimension);
     }
 
-        public Name name() {
+    public Name name() {
         return name;
     }
 
@@ -103,5 +105,9 @@ public class Explorer {
                 ", movements=" + movements +
                 ", nbCollectedTreasures=" + nbCollectedTreasures +
                 '}';
+    }
+
+    public void goForwardSouth() {
+        coordinates.goForwardSouth();
     }
 }
