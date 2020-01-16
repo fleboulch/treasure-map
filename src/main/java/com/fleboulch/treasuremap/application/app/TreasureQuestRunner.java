@@ -48,7 +48,7 @@ public class TreasureQuestRunner {
     }
 
     private TreasureQuest goForwardSouth(TreasureQuest treasureQuest) {
-        treasureQuest.explorers().explorers().get(0).goForwardSouth();
+        getExplorerByIndex(treasureQuest, 0).goForwardSouth();
         return treasureQuest;
     }
 
