@@ -1,15 +1,15 @@
 package com.fleboulch.treasuremap.application.domain;
 
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
-import com.fleboulch.treasuremap.explorer.domain.Name;
-import com.fleboulch.treasuremap.explorer.domain.Orientation;
-import com.fleboulch.treasuremap.explorer.domain.OrientationType;
 import com.fleboulch.treasuremap.map.domain.Dimension;
 import com.fleboulch.treasuremap.map.domain.Height;
 import com.fleboulch.treasuremap.map.domain.TreasureMap;
 import com.fleboulch.treasuremap.map.domain.Width;
-import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
+import com.fleboulch.treasuremap.resolvers.ExplorerAlbertoWithZeroOneCoordinates;
+import com.fleboulch.treasuremap.resolvers.ExplorerMichelWithOneOneCoordinates;
+import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 
@@ -17,63 +17,49 @@ import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@ExtendWith(ExplorerResolver.class)
 class HistoryTreasureQuestTest {
 
-    public static final Explorer EXPLORER_1 = Explorer.of(
-            new Name("Laura"),
-            Coordinates.of(1, 2),
-            new Orientation(OrientationType.E),
-            ""
-    );
-    public static final Explorer EXPLORER_2 = Explorer.of(
-            new Name("Michel"),
-            Coordinates.of(1, 1),
-            new Orientation(OrientationType.E),
-            ""
-    );
-    public static final Explorer EXPLORER_3 = Explorer.of(
-            new Name("Alberto"),
-            Coordinates.of(0, 1),
-            new Orientation(OrientationType.E),
-            ""
-    );
-
     @Test
-    void build_history_quest() {
+    void build_history_quest(
+            Explorer explorer1,
+            @ExplorerMichelWithOneOneCoordinates Explorer explorer2,
+            @ExplorerAlbertoWithZeroOneCoordinates Explorer explorer3
+    ) {
         HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(buildQuest(List.of(
-                EXPLORER_1,
-                EXPLORER_2,
-                EXPLORER_3
+                explorer1,
+                explorer2,
+                explorer3
         )));
 
         assertThat(historyTreasureQuest.historyMovementsPerExplorer()).hasSize(3);
 
         assertThat(historyTreasureQuest.historyMovementsPerExplorer()).containsOnlyKeys(
-                EXPLORER_1.name(),
-                EXPLORER_2.name(),
-                EXPLORER_3.name()
+                explorer1.name(),
+                explorer2.name(),
+                explorer3.name()
         );
 
-        assertThat(historyTreasureQuest.historyMovementsPerExplorer()).containsValues(List.of(EXPLORER_1));
-        assertThat(historyTreasureQuest.historyMovementsPerExplorer()).containsValues(List.of(EXPLORER_2));
-        assertThat(historyTreasureQuest.historyMovementsPerExplorer()).containsValues(List.of(EXPLORER_3));
+        assertThat(historyTreasureQuest.historyMovementsPerExplorer()).containsValues(List.of(explorer1));
+        assertThat(historyTreasureQuest.historyMovementsPerExplorer()).containsValues(List.of(explorer2));
+        assertThat(historyTreasureQuest.historyMovementsPerExplorer()).containsValues(List.of(explorer3));
     }
 
     @Test
-    void register_move_for_existing_explorer_doing_the_quest() {
-        HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(buildQuest(List.of(EXPLORER_1)));
-        historyTreasureQuest.registerMove(EXPLORER_1);
+    void register_move_for_existing_explorer_doing_the_quest(Explorer explorer) {
+        HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(buildQuest(List.of(explorer)));
+        historyTreasureQuest.registerMove(explorer);
 
-        assertThat(historyTreasureQuest.historyMovementsPerExplorer()).containsOnlyKeys(EXPLORER_1.name());
-        assertThat(historyTreasureQuest.historyMovementsPerExplorer()).containsValues(List.of(EXPLORER_1, EXPLORER_1));
+        assertThat(historyTreasureQuest.historyMovementsPerExplorer()).containsOnlyKeys(explorer.name());
+        assertThat(historyTreasureQuest.historyMovementsPerExplorer()).containsValues(List.of(explorer, explorer));
     }
 
     @Test
-    void register_move_for_an_unknown_explorer_is_forbidden() {
-        HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(buildQuest(List.of(EXPLORER_1)));
+    void register_move_for_an_unknown_explorer_is_forbidden(Explorer explorer, @ExplorerMichelWithOneOneCoordinates Explorer explorer2) {
+        HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(buildQuest(List.of(explorer)));
 
         assertThatThrownBy(() ->
-                historyTreasureQuest.registerMove(EXPLORER_2)
+                historyTreasureQuest.registerMove(explorer2)
         ).isInstanceOf(ExplorerIsNotAllowedToDoThisQuest.class);
 
     }
