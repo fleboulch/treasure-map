@@ -13,8 +13,6 @@ import com.fleboulch.treasuremap.explorer.domain.OrientationType;
 import com.fleboulch.treasuremap.kernel.utils.ConverterUtils;
 import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
-import com.fleboulch.treasuremap.shared.coordinates.domain.HorizontalAxis;
-import com.fleboulch.treasuremap.shared.coordinates.domain.VerticalAxis;
 
 import java.util.List;
 
@@ -23,6 +21,11 @@ import static java.util.stream.Collectors.toList;
 public class ApplicationFactory {
 
     public static final String CARET_DELIMITER = " - ";
+    public static final int EXPECTED_NUMBER_OF_DIMENSION_PROPERTIES = 3;
+    public static final int EXPECTED_NUMBER_OF_TREASURE_PROPERTIES = 4;
+    public static final int EXPECTED_NUMBER_OF_MOUNTAIN_PROPERTIES = 3;
+    public static final int INCLUSIVE_NUMBER_OF_EXPLORER_PROPERTIES_MIN = 5;
+    public static final int INCLUSIVE_NUMBER_OF_EXPLORER_PROPERTIES_MAX = 6;
 
     private ApplicationFactory() {
     }
@@ -101,14 +104,14 @@ public class ApplicationFactory {
 
     private static MountainBox toMountain(String[] line) {
 
-        validateLine(line, 3);
+        validateLine(line, EXPECTED_NUMBER_OF_MOUNTAIN_PROPERTIES);
         int x = ConverterUtils.toInt(line[1]);
         int y = ConverterUtils.toInt(line[2]);
         return new MountainBox(Coordinates.of(x, y));
     }
 
     private static TreasureBox toTreasure(String[] line) {
-        validateLine(line, 4);
+        validateLine(line, EXPECTED_NUMBER_OF_TREASURE_PROPERTIES);
 
         int x = ConverterUtils.toInt(line[1]);
         int y = ConverterUtils.toInt(line[2]);
@@ -118,7 +121,7 @@ public class ApplicationFactory {
 
 
     private static Dimension toDimension(String[] line) {
-        validateLine(line, 3);
+        validateLine(line, EXPECTED_NUMBER_OF_DIMENSION_PROPERTIES);
 
         int width = ConverterUtils.toInt(line[1]);
         int height = ConverterUtils.toInt(line[2]);
@@ -126,21 +129,36 @@ public class ApplicationFactory {
     }
 
     private static Explorer toExplorer(String[] line) {
-        validateLine(line, 6);
+        validateLineWithNumberOfPropertiesBetween(line, INCLUSIVE_NUMBER_OF_EXPLORER_PROPERTIES_MIN, INCLUSIVE_NUMBER_OF_EXPLORER_PROPERTIES_MAX);
 
         String name = line[1];
         int horizontalAxis = ConverterUtils.toInt(line[2]);
         int verticalAxis = ConverterUtils.toInt(line[3]);
         String orientation = line[4];
-        String rawMovements = line[5];
 
         return Explorer.of(
                 new Name(name),
                 Coordinates.of(horizontalAxis, verticalAxis),
                 new Orientation(OrientationType.valueOf(orientation)),
-                rawMovements
+                buildRawMovementsFrom(line)
         );
 
+    }
+
+    private static String buildRawMovementsFrom(String[] line) {
+        int numberOfProperties = line.length;
+        if (numberOfProperties == INCLUSIVE_NUMBER_OF_EXPLORER_PROPERTIES_MIN) {
+            return "";
+        }
+        return line[5];
+
+    }
+
+    private static void validateLineWithNumberOfPropertiesBetween(String[] line, int inclusiveNumberOfPropertiesMin, int inclusiveNumberOfPropertiesMax) {
+        int numberOfProperties = line.length;
+        if (numberOfProperties < inclusiveNumberOfPropertiesMin && numberOfProperties > inclusiveNumberOfPropertiesMax) {
+            throw new InvalidInputRowException(line);
+        }
     }
 
     private static void validateLine(String[] line, int expectedNumberOfProperties) {

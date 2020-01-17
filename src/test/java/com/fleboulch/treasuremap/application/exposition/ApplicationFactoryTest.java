@@ -3,20 +3,25 @@ package com.fleboulch.treasuremap.application.exposition;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
 import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputRowException;
+import com.fleboulch.treasuremap.explorer.domain.Explorer;
+import com.fleboulch.treasuremap.explorer.domain.MovementType;
 import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
+import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
+import com.fleboulch.treasuremap.resolvers.ExplorerZeroZeroCoordinates;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
-import com.fleboulch.treasuremap.shared.coordinates.domain.HorizontalAxis;
-import com.fleboulch.treasuremap.shared.coordinates.domain.VerticalAxis;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@ExtendWith(ExplorerResolver.class)
 class ApplicationFactoryTest {
 
     private static final String DIMENSION = "C - 3 - 4";
@@ -44,8 +49,10 @@ class ApplicationFactoryTest {
     private static final String UNKNOWN_ROW_TYPE_2 = "K - 3 - 4 - 1";
 
     @Test
-    void it_should_successfully_convert_configuration_without_mountain_and_treasure_to_treasure_quest() {
-        List<String> validConfiguration = buildConfiguration(List.of(DIMENSION));
+    void it_should_successfully_convert_configuration_without_mountain_and_treasure_to_treasure_quest(Explorer explorer) {
+        String explorerInput = convertToInput(explorer);
+
+        List<String> validConfiguration = buildConfiguration(List.of(DIMENSION, explorerInput));
         TreasureQuest treasureQuest = ApplicationFactory.toDomain(validConfiguration);
 
         assertThat(treasureQuest.treasureMap().dimension()).isEqualTo(buildDimension());
@@ -54,8 +61,10 @@ class ApplicationFactoryTest {
     }
 
     @Test
-    void it_should_successfully_convert_configuration_with_one_mountain_to_treasure_quest() {
-        List<String> validConfiguration = buildConfiguration(List.of(DIMENSION, MOUNTAIN_1));
+    void it_should_successfully_convert_configuration_with_one_mountain_to_treasure_quest(@ExplorerZeroZeroCoordinates Explorer explorer) {
+        String explorerInput = convertToInput(explorer);
+
+        List<String> validConfiguration = buildConfiguration(List.of(DIMENSION, MOUNTAIN_1, explorerInput));
         TreasureQuest treasureQuest = ApplicationFactory.toDomain(validConfiguration);
 
         assertThat(treasureQuest.treasureMap().dimension()).isEqualTo(buildDimension());
@@ -65,8 +74,9 @@ class ApplicationFactoryTest {
     }
 
     @Test
-    void it_should_successfully_convert_configuration_with_one_treasure_to_treasure_quest() {
-        List<String> validConfiguration = buildConfiguration(List.of(DIMENSION, TREASURE_1));
+    void it_should_convert_configuration_with_one_treasure_to_treasure_quest(Explorer explorer) {
+        String explorerInput = convertToInput(explorer);
+        List<String> validConfiguration = buildConfiguration(List.of(DIMENSION, TREASURE_1, explorerInput));
         TreasureQuest treasureQuest = ApplicationFactory.toDomain(validConfiguration);
 
         assertThat(treasureQuest.treasureMap().dimension()).isEqualTo(buildDimension());
@@ -75,9 +85,28 @@ class ApplicationFactoryTest {
         assertThat(treasureQuest.treasureMap().mountainBoxes()).isEmpty();
     }
 
+    private String convertToInput(Explorer explorer) {
+        String rawMovements = buildRawMovements(explorer.movements().movementTypes());
+
+        return String.format("A - %s - %s - %s - %s",
+                explorer.name().value(),
+                explorer.coordinates(),
+                explorer.orientation().orientationType(),
+                rawMovements
+        );
+    }
+
+    private String buildRawMovements(List<MovementType> movementTypes) {
+        return movementTypes.stream()
+                .map(Enum::name)
+                .collect(Collectors.joining(""));
+
+    }
+
     @Test
-    void it_should_successfully_convert_complex_configuration_to_treasure_quest() {
-        List<String> validConfiguration = buildConfiguration(List.of(DIMENSION, TREASURE_1, TREASURE_2, MOUNTAIN_2, MOUNTAIN_1));
+    void it_should_successfully_convert_complex_configuration_to_treasure_quest(@ExplorerZeroZeroCoordinates Explorer explorer) {
+        String explorerInput = convertToInput(explorer);
+        List<String> validConfiguration = buildConfiguration(List.of(DIMENSION, TREASURE_1, TREASURE_2, MOUNTAIN_2, MOUNTAIN_1, explorerInput));
         TreasureQuest treasureQuest = ApplicationFactory.toDomain(validConfiguration);
 
         assertThat(treasureQuest.treasureMap().dimension()).isEqualTo(buildDimension());
@@ -87,7 +116,6 @@ class ApplicationFactoryTest {
         assertThat(treasureQuest.treasureMap().mountainBoxes()).hasSize(2);
         assertThat(treasureQuest.treasureMap().mountainBoxes().get(0)).isEqualTo(buildMountain(0, 2));
         assertThat(treasureQuest.treasureMap().mountainBoxes().get(1)).isEqualTo(buildMountain(1, 2));
-
     }
 
     @ParameterizedTest

@@ -53,8 +53,7 @@ public class Explorer {
     }
 
     private PlainsBox currentBox(TreasureMap treasureMap) {
-        Coordinates explorerCoordinates = coordinates;
-        return treasureMap.from(explorerCoordinates);
+        return treasureMap.from(coordinates);
     }
 
     private static Movements buildMovements(String rawMovements) {

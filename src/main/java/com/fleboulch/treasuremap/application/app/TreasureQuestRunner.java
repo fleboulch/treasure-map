@@ -1,5 +1,6 @@
 package com.fleboulch.treasuremap.application.app;
 
+import com.fleboulch.treasuremap.application.domain.ExplorerOrchestrator;
 import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
@@ -15,8 +16,10 @@ public class TreasureQuestRunner {
     public HistoryTreasureQuest start(TreasureQuest treasureQuest) {
         HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(treasureQuest);
 
-        Explorer firstExplorer = getExplorerByIndex(treasureQuest, 0);// 1 explorer (need an orchestrator to handle multiple explorers)
-        firstExplorer.movements().movementTypes().forEach(movement -> doAction(movement, treasureQuest, firstExplorer));
+//        ExplorerOrchestrator explorerOrchestrator =
+//
+//        Explorer firstExplorer = getExplorerByIndex(treasureQuest, 0);// 1 explorer (need an orchestrator to handle multiple explorers)
+//        firstExplorer.movements().movementTypes().forEach(movement -> doAction(movement, treasureQuest, firstExplorer));
 
         return historyTreasureQuest;
     }
