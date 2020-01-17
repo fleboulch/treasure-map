@@ -5,9 +5,7 @@ import com.fleboulch.treasuremap.map.domain.Dimension;
 import com.fleboulch.treasuremap.map.domain.Height;
 import com.fleboulch.treasuremap.map.domain.TreasureMap;
 import com.fleboulch.treasuremap.map.domain.Width;
-import com.fleboulch.treasuremap.resolvers.ExplorerAlbertoWithZeroOneCoordinates;
-import com.fleboulch.treasuremap.resolvers.ExplorerMichelWithOneOneCoordinates;
-import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
+import com.fleboulch.treasuremap.resolvers.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -23,8 +21,8 @@ class HistoryTreasureQuestTest {
     @Test
     void build_history_quest(
             Explorer explorer1,
-            @ExplorerMichelWithOneOneCoordinates Explorer explorer2,
-            @ExplorerAlbertoWithZeroOneCoordinates Explorer explorer3
+            @ExplorerMichel @ExplorerOneOneCoordinates Explorer explorer2,
+            @ExplorerAlberto @ExplorerZeroOneCoordinates Explorer explorer3
     ) {
         HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(buildQuest(List.of(
                 explorer1,
@@ -55,7 +53,7 @@ class HistoryTreasureQuestTest {
     }
 
     @Test
-    void register_move_for_an_unknown_explorer_is_forbidden(Explorer explorer, @ExplorerMichelWithOneOneCoordinates Explorer explorer2) {
+    void register_move_for_an_unknown_explorer_is_forbidden(Explorer explorer, @ExplorerMichel Explorer explorer2) {
         HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(buildQuest(List.of(explorer)));
 
         assertThatThrownBy(() ->

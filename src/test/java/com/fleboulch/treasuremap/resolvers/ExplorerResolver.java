@@ -26,17 +26,41 @@ public class ExplorerResolver implements ParameterResolver {
         Coordinates coordinates = ONE_TWO_COORDINATES;
         String name = LAURA;
 
-        if (parameterContext.isAnnotated(ExplorerWithOneGoForward.class)) {
-            return buildExplorer(MovementType.A, ONE_TWO_COORDINATES, LAURA);
-        } else if (parameterContext.isAnnotated(ExplorerZeroZeroCoordinates.class)) {
-            return buildExplorer(null, ZERO_ZERO_COORDINATES, LAURA);
-        } else if (parameterContext.isAnnotated(ExplorerMichelWithOneOneCoordinates.class)) {
-            return buildExplorer(null, ONE_ONE_COORDINATES, "Michel");
-        } else if (parameterContext.isAnnotated(ExplorerAlbertoWithZeroOneCoordinates.class)) {
-            return buildExplorer(null, ZERO_ONE_COORDINATES, "Alberto");
-        }
+        movementType = buildMovementType(parameterContext, movementType);
+        name = buildCustomName(parameterContext, name);
+        coordinates = buildCustomCoordinates(parameterContext, coordinates);
 
         return buildExplorer(movementType, coordinates, name);
+    }
+
+    private MovementType buildMovementType(ParameterContext parameterContext, MovementType movementType) {
+        if (parameterContext.isAnnotated(ExplorerWithOneGoForward.class)) {
+            movementType = MovementType.A;
+        }
+        return movementType;
+    }
+
+    private String buildCustomName(ParameterContext parameterContext, String name) {
+        if (parameterContext.isAnnotated(ExplorerMichel.class)) {
+            name = "Michel";
+        }
+        if (parameterContext.isAnnotated(ExplorerAlberto.class)) {
+            name = "Alberto";
+        }
+        return name;
+    }
+
+    private Coordinates buildCustomCoordinates(ParameterContext parameterContext, Coordinates coordinates) {
+        if (parameterContext.isAnnotated(ExplorerOneOneCoordinates.class)) {
+            coordinates = ONE_ONE_COORDINATES;
+        }
+        if (parameterContext.isAnnotated(ExplorerZeroZeroCoordinates.class)) {
+            coordinates = ZERO_ZERO_COORDINATES;
+        }
+        if (parameterContext.isAnnotated(ExplorerZeroOneCoordinates.class)) {
+            coordinates = ZERO_ONE_COORDINATES;
+        }
+        return coordinates;
     }
 
     private Explorer buildExplorer(MovementType movementType, Coordinates coordinates, String name) {
