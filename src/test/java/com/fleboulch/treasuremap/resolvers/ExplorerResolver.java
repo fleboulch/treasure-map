@@ -26,11 +26,19 @@ public class ExplorerResolver implements ParameterResolver {
         Coordinates coordinates = ONE_TWO_COORDINATES;
         String name = LAURA;
 
+        OrientationType orientationType = buildOrientationType(parameterContext);
         movementType = buildMovementType(parameterContext, movementType);
         name = buildCustomName(parameterContext, name);
         coordinates = buildCustomCoordinates(parameterContext, coordinates);
 
-        return buildExplorer(movementType, coordinates, name);
+        return buildExplorer(movementType, coordinates, name, orientationType);
+    }
+
+    private OrientationType buildOrientationType(ParameterContext parameterContext) {
+        if (parameterContext.isAnnotated(ExplorerSouthOrientation.class)) {
+            return OrientationType.S;
+        }
+        return OrientationType.E;
     }
 
     private MovementType buildMovementType(ParameterContext parameterContext, MovementType movementType) {
@@ -63,11 +71,11 @@ public class ExplorerResolver implements ParameterResolver {
         return coordinates;
     }
 
-    private Explorer buildExplorer(MovementType movementType, Coordinates coordinates, String name) {
+    private Explorer buildExplorer(MovementType movementType, Coordinates coordinates, String name, OrientationType orientationType) {
         return Explorer.of(
                 new Name(name),
                 coordinates,
-                new Orientation(OrientationType.E),
+                new Orientation(orientationType),
                 buildRawMovements(movementType)
         );
     }

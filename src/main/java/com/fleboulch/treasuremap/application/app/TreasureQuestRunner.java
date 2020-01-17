@@ -18,25 +18,21 @@ public class TreasureQuestRunner {
 
         ExplorerOrchestrator explorerOrchestrator = new ExplorerOrchestrator(treasureQuest.explorers());
 
-//        explorerOrchestrator.explorers().explorers().stream()
-//                .forEach(explorerAction -> {
-//                    Explorer explorerNext = doAction(explorerAction.movements().movementTypes().get(0), treasureQuest, explorerAction, explorerOrchestrator);
-//                    historyTreasureQuest.
-//                }
-//                })
-//                .;
-//
-//        Explorer firstExplorer = getExplorerByIndex(treasureQuest, 0);// 1 explorer (need an orchestrator to handle multiple explorers)
-//        firstExplorer.movements().movementTypes().forEach(movement -> doAction(movement, treasureQuest, firstExplorer));
+        explorerOrchestrator.explorers().explorers()
+                .forEach(explorer -> saveAction(historyTreasureQuest, explorer));
 
         return historyTreasureQuest;
     }
 
-    private Explorer getExplorerByIndex(TreasureQuest treasureQuest, int index) {
-        return treasureQuest.explorers().explorers().get(index);
+    private void saveAction(HistoryTreasureQuest historyTreasureQuest, Explorer explorer) {
+        if (explorer.canPerformMovements()) {
+            Explorer explorerNext = doAction(explorer);
+            historyTreasureQuest.registerMove(explorerNext);
+        }
     }
 
-    private Explorer doAction(MovementType movementType, TreasureQuest treasureQuest, Explorer currentExplorer, ExplorerOrchestrator explorerOrchestrator) {
+    private Explorer doAction(Explorer currentExplorer) {
+        MovementType movementType = currentExplorer.movements().movementTypes().get(0);
         switch (movementType) {
             case A:
                 return currentExplorer.goForward();

@@ -40,6 +40,10 @@ public class Explorer {
         }
     }
 
+    public boolean canPerformMovements() {
+        return !movements().movementTypes().isEmpty();
+    }
+
     public boolean isOnTreasure(TreasureMap treasureMap) {
         PlainsBox plainsBox = currentBox(treasureMap);
 
