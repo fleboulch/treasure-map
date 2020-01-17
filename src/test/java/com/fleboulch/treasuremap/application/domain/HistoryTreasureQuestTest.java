@@ -15,6 +15,7 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class HistoryTreasureQuestTest {
 
@@ -39,7 +40,11 @@ class HistoryTreasureQuestTest {
 
     @Test
     void build_history_quest() {
-        HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(buildQuest());
+        HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(buildQuest(List.of(
+                EXPLORER_1,
+                EXPLORER_2,
+                EXPLORER_3
+        )));
 
         assertThat(historyTreasureQuest.historyMovementsPerExplorer()).hasSize(3);
 
@@ -54,14 +59,29 @@ class HistoryTreasureQuestTest {
         assertThat(historyTreasureQuest.historyMovementsPerExplorer()).containsValues(List.of(EXPLORER_3));
     }
 
-    private TreasureQuest buildQuest() {
+    @Test
+    void register_move_for_existing_explorer_doing_the_quest() {
+        HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(buildQuest(List.of(EXPLORER_1)));
+        historyTreasureQuest.registerMove(EXPLORER_1);
+
+        assertThat(historyTreasureQuest.historyMovementsPerExplorer()).containsOnlyKeys(EXPLORER_1.name());
+        assertThat(historyTreasureQuest.historyMovementsPerExplorer()).containsValues(List.of(EXPLORER_1, EXPLORER_1));
+    }
+
+    @Test
+    void register_move_for_an_unknown_explorer_is_forbidden() {
+        HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(buildQuest(List.of(EXPLORER_1)));
+
+        assertThatThrownBy(() ->
+                historyTreasureQuest.registerMove(EXPLORER_2)
+        ).isInstanceOf(ExplorerIsNotAllowedToDoThisQuest.class);
+
+    }
+
+    private TreasureQuest buildQuest(List<Explorer> explorers) {
         return new TreasureQuest(
                 new TreasureMap(new Dimension(new Width(4), new Height(5)), emptyList(), emptyList()),
-                new Explorers(List.of(
-                        EXPLORER_1,
-                        EXPLORER_2,
-                        EXPLORER_3
-                ))
+                new Explorers(explorers)
         );
     }
 

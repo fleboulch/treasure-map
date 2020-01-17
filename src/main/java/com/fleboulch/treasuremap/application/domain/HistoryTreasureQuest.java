@@ -4,6 +4,7 @@ import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.Name;
 import com.fleboulch.treasuremap.map.domain.TreasureMap;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,24 @@ public class HistoryTreasureQuest {
 
     public static HistoryTreasureQuest of(TreasureQuest treasureQuest) {
         return new HistoryTreasureQuest(treasureQuest.treasureMap(), treasureQuest.explorers().explorers());
+    }
+
+    public void registerMove(Explorer explorerAfterAction) {
+        checkValidExplorer(explorerAfterAction);
+
+        Name explorerName = explorerAfterAction.name();
+        List<Explorer> explorerHistory = historyMovementsPerExplorer.get(explorerName);
+
+        historyMovementsPerExplorer.compute(
+                explorerName,
+                (e, f) -> new ArrayList<>(explorerHistory)).add(explorerAfterAction);
+
+    }
+
+    private void checkValidExplorer(Explorer explorer) {
+        if (!historyMovementsPerExplorer.containsKey(explorer.name())) {
+            throw new ExplorerIsNotAllowedToDoThisQuest(explorer);
+        }
     }
 
     public TreasureMap treasureMap() {
