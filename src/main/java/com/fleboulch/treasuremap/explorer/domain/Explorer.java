@@ -104,6 +104,10 @@ public class Explorer {
         return nbCollectedTreasures;
     }
 
+    public boolean hasCollectedANewTreasure(Explorer oldExplorer) {
+        return nbCollectedTreasures == oldExplorer.nbCollectedTreasures + 1;
+    }
+
     public int collectTreasure() {
         return nbCollectedTreasures++;
     }

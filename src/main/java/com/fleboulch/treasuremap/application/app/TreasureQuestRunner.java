@@ -33,6 +33,10 @@ public class TreasureQuestRunner {
 
         Explorer explorerNext = executeAction(currentExplorer, treasureMap);
         historyTreasureQuest.registerMove(explorerNext);
+
+        if (explorerNext.hasCollectedANewTreasure(currentExplorer)) {
+            historyTreasureQuest.removeOneTreasure(explorerNext.coordinates());
+        }
     }
 
     private Explorer executeAction(Explorer currentExplorer, TreasureMap treasureMap) {

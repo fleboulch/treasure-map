@@ -96,16 +96,33 @@ class TreasureQuestRunnerTest {
     }
 
     @Test
-    void an_explorer_should_collect_one_treasure_on_treasure_box(
+    void an_explorer_should_collect_one_treasure_on_treasure_box_and_box_should_be_deleted(
             @ExplorerZeroZeroCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer beginExplorer,
             @ExplorerZeroOneCoordinates @ExplorerSouthOrientation @ExplorerWithOneTreasure Explorer finalExplorer
     ) {
-        TreasureQuest inputTreasureQuest = buildQuestWithOneTreasure(beginExplorer);
+        TreasureQuest inputTreasureQuest = buildQuestWithOneTreasure(beginExplorer, 1);
         HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
         List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
+        assertThat(finalQuest.treasureMap().treasureBoxes()).isEmpty();
+
+    }
+
+    @Test
+    void an_explorer_should_collect_one_treasure_on_treasure_box(
+            @ExplorerZeroZeroCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer beginExplorer,
+            @ExplorerZeroOneCoordinates @ExplorerSouthOrientation @ExplorerWithOneTreasure Explorer finalExplorer
+    ) {
+        TreasureQuest inputTreasureQuest = buildQuestWithOneTreasure(beginExplorer, 2);
+        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+
+        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+
+        assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
+        assertThat(finalQuest.treasureMap().treasureBoxes()).containsExactly(new TreasureBox(ZERO_ONE_COORDINATES, 1));
+
     }
 
 
@@ -143,8 +160,8 @@ class TreasureQuestRunnerTest {
         );
     }
 
-    private TreasureQuest buildQuestWithOneTreasure(Explorer beginExplorer) {
-        TreasureBox treasure1 = new TreasureBox(ZERO_ONE_COORDINATES, 1);
+    private TreasureQuest buildQuestWithOneTreasure(Explorer beginExplorer, int nbTreasures) {
+        TreasureBox treasure1 = new TreasureBox(ZERO_ONE_COORDINATES, nbTreasures);
         return new TreasureQuest(
                 new TreasureMap(DIMENSION, emptyList(), List.of(treasure1)),
                 new Explorers(List.of(

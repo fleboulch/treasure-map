@@ -2,7 +2,9 @@ package com.fleboulch.treasuremap.application.domain;
 
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.Name;
+import com.fleboulch.treasuremap.kernel.domain.Domain;
 import com.fleboulch.treasuremap.map.domain.TreasureMap;
+import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,11 +14,11 @@ import java.util.stream.Collectors;
 
 public class HistoryTreasureQuest {
 
-    private final TreasureMap treasureMap;
+    private TreasureMap treasureMap;
     private Map<Name, List<Explorer>> historyMovementsPerExplorer = new HashMap<>();
 
     private HistoryTreasureQuest(TreasureMap treasureMap, List<Explorer> explorers) {
-        this.treasureMap = treasureMap;
+        this.treasureMap = Domain.validateNotNull(treasureMap, "Treasure map should not be null");
         this.historyMovementsPerExplorer = buildMapPerExplorer(explorers);
     }
 
@@ -29,7 +31,13 @@ public class HistoryTreasureQuest {
                 );
     }
 
+    public void removeOneTreasure(Coordinates coordinates) {
+        treasureMap = treasureMap.removeOneTreasure(coordinates);
+    }
+
     public static HistoryTreasureQuest of(TreasureQuest treasureQuest) {
+        Domain.validateNotNull(treasureQuest, "History quest should have a not null treasure quest");
+
         return new HistoryTreasureQuest(treasureQuest.treasureMap(), treasureQuest.explorers().explorers());
     }
 
@@ -47,7 +55,7 @@ public class HistoryTreasureQuest {
 
     public Explorer getLastState(Name explorerName) {
         List<Explorer> explorersHistory = historyMovementsPerExplorer.get(explorerName);
-        return explorersHistory.get(explorersHistory.size() -1);
+        return explorersHistory.get(explorersHistory.size() - 1);
     }
 
     private void checkValidExplorer(Explorer explorer) {

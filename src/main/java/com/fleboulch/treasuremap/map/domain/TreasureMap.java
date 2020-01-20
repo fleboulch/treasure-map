@@ -30,17 +30,13 @@ public class TreasureMap {
     // TODO: need to refacto this method
     public PlainsBox from(Coordinates coordinates) {
         if (coordinates.hasValidCoordinates(dimension)) {
-            Optional<MountainBox> mountain = mountainBoxes.stream()
-                    .filter(mountainBox -> Objects.equals(mountainBox.coordinates(), coordinates))
-                    .findFirst();
+            Optional<MountainBox> mountain = findMountainBoxByCoordinates(coordinates);
 
             if (mountain.isPresent()) {
                 return mountain.get();
             }
 
-            Optional<TreasureBox> treasure = treasureBoxes.stream()
-                    .filter(treasureBox -> Objects.equals(treasureBox.coordinates(), coordinates))
-                    .findFirst();
+            Optional<TreasureBox> treasure = findTreasureBoxByCoordinates(coordinates);
 
             if (treasure.isPresent()) {
                 return treasure.get();
@@ -52,6 +48,40 @@ public class TreasureMap {
             // return a custom exception instead of generic one
             throw new IllegalArgumentException(String.format("'%s' are out of map with dimensions %s", coordinates, dimension));
         }
+    }
+
+    private Optional<MountainBox> findMountainBoxByCoordinates(Coordinates coordinates) {
+        return mountainBoxes.stream()
+                        .filter(mountainBox -> Objects.equals(mountainBox.coordinates(), coordinates))
+                        .findFirst();
+    }
+
+    private Optional<TreasureBox> findTreasureBoxByCoordinates(Coordinates coordinates) {
+        return treasureBoxes.stream()
+                        .filter(treasureBox -> Objects.equals(treasureBox.coordinates(), coordinates))
+                        .findFirst();
+    }
+
+    public TreasureMap removeOneTreasure(Coordinates coordinates) {
+        Optional<TreasureBox> optionalTreasureBoxToUpdate = findTreasureBoxByCoordinates(coordinates);
+        if (optionalTreasureBoxToUpdate.isPresent()) {
+            TreasureBox treasureBoxToUpdate = optionalTreasureBoxToUpdate.get();
+            if (treasureBoxToUpdate.nbTreasures() == 1) {
+                List<TreasureBox> treasures = treasureBoxes.stream()
+                        .filter(treasureBox -> !Objects.equals(treasureBox, treasureBoxToUpdate))
+                        .collect(Collectors.toList());
+                return new TreasureMap(dimension, mountainBoxes, treasures);
+            } else {
+                List<TreasureBox> treasures = treasureBoxes.stream()
+                        .filter(treasureBox -> Objects.equals(treasureBox, treasureBoxToUpdate))
+                        .map(TreasureBox::decrementNbTreasures)
+                        .collect(Collectors.toList());
+                return new TreasureMap(dimension, mountainBoxes, treasures);
+
+            }
+
+        }
+        throw new RuntimeException("");
     }
 
     public boolean containsMountainOn(Coordinates coordinates) {

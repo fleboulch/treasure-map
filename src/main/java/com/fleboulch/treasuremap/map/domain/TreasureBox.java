@@ -14,6 +14,10 @@ public class TreasureBox extends PlainsBox {
         this.nbTreasures = Domain.validatePositive(nbTreasures, "The number of treasures should be positive");
     }
 
+    public TreasureBox decrementNbTreasures() {
+        return new TreasureBox(coordinates(), nbTreasures - 1);
+    }
+
     public int nbTreasures() {
         return nbTreasures;
     }
