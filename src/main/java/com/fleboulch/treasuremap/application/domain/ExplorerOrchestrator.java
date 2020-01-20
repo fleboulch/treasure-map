@@ -1,25 +1,36 @@
 package com.fleboulch.treasuremap.application.domain;
 
+import com.fleboulch.treasuremap.explorer.domain.Explorer;
+import com.fleboulch.treasuremap.explorer.domain.Name;
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ExplorerOrchestrator {
 
-    private final Explorers explorers;
+    private final List<Name> explorerNames;
 
     public ExplorerOrchestrator(Explorers explorers) {
         Domain.validateNotNull(explorers, "Explorers should not be null");
-        this.explorers = buildExplorers(explorers);
+        this.explorerNames = buildExplorerNamesFrom(explorers);
     }
 
-    private Explorers buildExplorers(Explorers explorers) {
-        return new Explorers(List.of(
-                explorers.explorers().get(0)
-        ));
+    private List<Name> buildExplorerNamesFrom(Explorers explorers) {
+        return explorers.explorers().stream()
+                .map(this::buildNamesForEachExplorer)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
-    public Explorers explorers() {
-        return explorers;
+    private List<Name> buildNamesForEachExplorer(Explorer explorer) {
+        return explorer.movements().movementTypes().stream()
+                .map(movementType -> explorer.name())
+                .collect(Collectors.toList());
+    }
+
+    public List<Name> explorerNames() {
+        return explorerNames;
     }
 }

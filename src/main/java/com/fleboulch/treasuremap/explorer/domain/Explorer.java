@@ -42,10 +42,6 @@ public class Explorer {
         }
     }
 
-    public boolean canPerformMovements() {
-        return !movements().movementTypes().isEmpty();
-    }
-
     public boolean isOnTreasure(TreasureMap treasureMap) {
         PlainsBox plainsBox = currentBox(treasureMap);
 
@@ -143,7 +139,7 @@ public class Explorer {
                 default: throw new IllegalArgumentException("Unknown orientation");
             }
         }
-        throw new IllegalArgumentException("Unknown direction");
+        throw new IllegalArgumentException("Unknown direction for turn");
     }
 
     private Explorer buildExplorerAfterAction(OrientationType newOrientationType, Coordinates newCoordinates) {

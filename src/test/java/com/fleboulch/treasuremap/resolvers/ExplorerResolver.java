@@ -26,6 +26,7 @@ public class ExplorerResolver implements ParameterResolver {
     private static final Coordinates TWO_ONE_COORDINATES = Coordinates.of(2, 1);
     private static final Coordinates ONE_TWO_COORDINATES = Coordinates.of(1, 2);
     private static final Coordinates ONE_ZERO_COORDINATES = Coordinates.of(1, 0);
+    private static final Coordinates ZERO_TWO_COORDINATES = Coordinates.of(0, 2);
 
     // orientations
     private static final OrientationType SOUTH_ORIENTATION = OrientationType.S;
@@ -97,6 +98,9 @@ public class ExplorerResolver implements ParameterResolver {
         if (parameterContext.isAnnotated(ExplorerTurnRight.class)) {
             movements.add(TURN_RIGHT_MOVEMENT);
         }
+        if (parameterContext.isAnnotated(ExplorerWithTwoGoForward.class)) {
+            movements.addAll(List.of(GO_FORWARD_MOVEMENT, GO_FORWARD_MOVEMENT));
+        }
         if (parameterContext.isAnnotated(ExplorerWithExampleSequenceMovements.class)) {
             movements.addAll(EXAMPLE_SEQUENCE_MOVEMENT);
         }
@@ -134,6 +138,9 @@ public class ExplorerResolver implements ParameterResolver {
         }
         else if (parameterContext.isAnnotated(ExplorerTwoOneCoordinates.class)) {
             return TWO_ONE_COORDINATES;
+        }
+        else if (parameterContext.isAnnotated(ExplorerZeroTwoCoordinates.class)) {
+            return ZERO_TWO_COORDINATES;
         }
 
         return DEFAULT_ONE_TWO_COORDINATES;

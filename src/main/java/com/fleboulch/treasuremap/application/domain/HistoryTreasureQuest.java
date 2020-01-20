@@ -45,6 +45,11 @@ public class HistoryTreasureQuest {
 
     }
 
+    public Explorer getLastState(Name explorerName) {
+        List<Explorer> explorersHistory = historyMovementsPerExplorer.get(explorerName);
+        return explorersHistory.get(explorersHistory.size() -1);
+    }
+
     private void checkValidExplorer(Explorer explorer) {
         if (!historyMovementsPerExplorer.containsKey(explorer.name())) {
             throw new ExplorerIsNotAllowedToDoThisQuest(explorer);

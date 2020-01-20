@@ -5,6 +5,7 @@ import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.MovementType;
+import com.fleboulch.treasuremap.explorer.domain.Name;
 import com.fleboulch.treasuremap.map.domain.TreasureMap;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.springframework.stereotype.Component;
@@ -21,18 +22,17 @@ public class TreasureQuestRunner {
         ExplorerOrchestrator explorerOrchestrator = new ExplorerOrchestrator(treasureQuest.explorers());
 
         // TODO: replace this stream with collectors
-        explorerOrchestrator.explorers().explorers()
-                .forEach(explorer -> saveAction(historyTreasureQuest, explorer, treasureQuest.treasureMap()));
+        explorerOrchestrator.explorerNames()
+                .forEach(explorerName -> saveAction(historyTreasureQuest, explorerName, treasureQuest.treasureMap()));
 
         return historyTreasureQuest;
     }
 
-    private void saveAction(HistoryTreasureQuest historyTreasureQuest, Explorer explorer, TreasureMap treasureMap) {
-        // if explorer movements is empty then skip
-        if (explorer.canPerformMovements()) {
-            Explorer explorerNext = doAction(explorer, treasureMap);
-            historyTreasureQuest.registerMove(explorerNext);
-        }
+    private void saveAction(HistoryTreasureQuest historyTreasureQuest, Name explorerName, TreasureMap treasureMap) {
+        Explorer currentExplorer = historyTreasureQuest.getLastState(explorerName);
+
+        Explorer explorerNext = doAction(currentExplorer, treasureMap);
+        historyTreasureQuest.registerMove(explorerNext);
     }
 
     private Explorer doAction(Explorer currentExplorer, TreasureMap treasureMap) {

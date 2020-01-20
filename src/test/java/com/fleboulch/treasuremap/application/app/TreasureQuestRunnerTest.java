@@ -108,6 +108,22 @@ class TreasureQuestRunnerTest {
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
     }
 
+
+    @Test
+    void simple_quest_with_one_explorer_and_two_go_forward_movement(
+            @ExplorerZeroZeroCoordinates @ExplorerWithTwoGoForward @ExplorerSouthOrientation Explorer beginExplorer,
+            @ExplorerZeroOneCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer firstMoveExplorer,
+            @ExplorerZeroTwoCoordinates @ExplorerSouthOrientation Explorer finalExplorer
+    ) {
+        TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
+        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+
+        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+
+        assertThat(explorerMovements).containsExactly(beginExplorer, firstMoveExplorer, finalExplorer);
+
+    }
+
     private TreasureQuest buildSimpleQuest(Explorer beginExplorer) {
         return new TreasureQuest(
                 new TreasureMap(DIMENSION, emptyList(), emptyList()),
