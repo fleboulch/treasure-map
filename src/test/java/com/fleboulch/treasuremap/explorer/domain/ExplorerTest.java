@@ -18,18 +18,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ExplorerTest {
 
     private static final Coordinates ONE_ONE_COORDINATES = Coordinates.of(1, 1);
-    private static final Coordinates ONE_TWO_COORDINATES = Coordinates.of(1, 2);
-    private static final Coordinates ONE_ZERO_COORDINATES = Coordinates.of(1, 0);
-    private static final Coordinates TWO_ONE_COORDINATES = Coordinates.of(2, 1);
 
     @Test
-    void create_movement_sequence_for_an_explorer() {
-        String rawMovements = "AADADAGGA";
-        Explorer explorer = buildExplorer(rawMovements);
+    void create_movement_sequence_for_an_explorer(
+            @ExplorerOneOneCoordinates @ExplorerSouthOrientation @ExplorerWithExampleSequenceMovements Explorer explorer
 
+    ) {
         List<MovementType> createdMovements = explorer.movements().movementTypes();
 
-        assertThat(createdMovements).hasSize(rawMovements.length());
+        assertThat(createdMovements).hasSize(9);
 
         assertThat(createdMovements).contains(MovementType.A, Index.atIndex(0));
         assertThat(createdMovements).contains(MovementType.A, Index.atIndex(1));
@@ -124,29 +121,32 @@ class ExplorerTest {
 
     @Test
     void explorer_go_forward_south(
-            @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer explorer
+            @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer beginExplorer,
+            @ExplorerOneTwoCoordinates @ExplorerSouthOrientation Explorer expectedEndExplorer
     ) {
-        Explorer explorerAfterAction = explorer.goForward();
+        Explorer explorerAfterAction = beginExplorer.goForward();
 
-        assertThat(explorerAfterAction.coordinates()).isEqualTo(ONE_TWO_COORDINATES);
+        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
     }
 
     @Test
     void explorer_go_forward_north(
-            @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerNorthOrientation Explorer explorer
+            @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerNorthOrientation Explorer beginExplorer,
+            @ExplorerOneZeroCoordinates @ExplorerNorthOrientation Explorer expectedEndExplorer
     ) {
-        Explorer explorerAfterAction = explorer.goForward();
+        Explorer explorerAfterAction = beginExplorer.goForward();
 
-        assertThat(explorerAfterAction.coordinates()).isEqualTo(ONE_ZERO_COORDINATES);
+        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
     }
 
     @Test
     void explorer_go_forward_east(
-            @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerEastOrientation Explorer explorer
+            @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerEastOrientation Explorer beginExplorer,
+            @ExplorerTwoOneCoordinates @ExplorerEastOrientation Explorer expectedEndExplorer
     ) {
-        Explorer explorerAfterAction = explorer.goForward();
+        Explorer explorerAfterAction = beginExplorer.goForward();
 
-        assertThat(explorerAfterAction.coordinates()).isEqualTo(TWO_ONE_COORDINATES);
+        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
     }
 
     private Explorer buildExplorer(String rawMovements) {

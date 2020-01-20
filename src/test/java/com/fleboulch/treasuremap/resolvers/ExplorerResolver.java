@@ -7,18 +7,24 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ExplorerResolver implements ParameterResolver {
 
     // default values
     private static final Name DEFAULT_NAME = new Name("Laura");
     private static final OrientationType DEFAULT_ORIENTATION = OrientationType.E;
     private static final Coordinates DEFAULT_ONE_TWO_COORDINATES = Coordinates.of(1, 2);
-    private static final MovementType DEFAULT_EMPTY_MOVEMENT = null;
 
     // coordinates
     private static final Coordinates ZERO_ZERO_COORDINATES = Coordinates.of(0, 0);
     private static final Coordinates ONE_ONE_COORDINATES = Coordinates.of(1, 1);
     private static final Coordinates ZERO_ONE_COORDINATES = Coordinates.of(0, 1);
+    private static final Coordinates TWO_ONE_COORDINATES = Coordinates.of(2, 1);
+    private static final Coordinates ONE_TWO_COORDINATES = Coordinates.of(1, 2);
+    private static final Coordinates ONE_ZERO_COORDINATES = Coordinates.of(1, 0);
 
     // orientations
     private static final OrientationType SOUTH_ORIENTATION = OrientationType.S;
@@ -27,6 +33,19 @@ public class ExplorerResolver implements ParameterResolver {
 
     // movements
     private static final MovementType GO_FORWARD_MOVEMENT = MovementType.A;
+    private static final MovementType TURN_RIGHT_MOVEMENT = MovementType.D;
+    private static final MovementType TURN_LEFT_MOVEMENT = MovementType.G;
+    private static final List<MovementType> EXAMPLE_SEQUENCE_MOVEMENT = List.of(
+            GO_FORWARD_MOVEMENT,
+            GO_FORWARD_MOVEMENT,
+            TURN_RIGHT_MOVEMENT,
+            GO_FORWARD_MOVEMENT,
+            TURN_RIGHT_MOVEMENT,
+            GO_FORWARD_MOVEMENT,
+            TURN_LEFT_MOVEMENT,
+            TURN_LEFT_MOVEMENT,
+            GO_FORWARD_MOVEMENT
+    );
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -36,7 +55,7 @@ public class ExplorerResolver implements ParameterResolver {
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
 
-        MovementType movementType = buildMovementType(parameterContext);
+        List<MovementType> movementType = buildMovementsType(parameterContext);
         Coordinates coordinates = buildCustomCoordinates(parameterContext);
         Name name = buildCustomName(parameterContext);
         OrientationType orientationType = buildOrientationType(parameterContext);
@@ -57,11 +76,22 @@ public class ExplorerResolver implements ParameterResolver {
         return DEFAULT_ORIENTATION;
     }
 
-    private MovementType buildMovementType(ParameterContext parameterContext) {
+    private List<MovementType> buildMovementsType(ParameterContext parameterContext) {
+        List<MovementType> movements = new ArrayList<>();
         if (parameterContext.isAnnotated(ExplorerWithOneGoForward.class)) {
-            return GO_FORWARD_MOVEMENT;
+            movements.add(GO_FORWARD_MOVEMENT);
         }
-        return DEFAULT_EMPTY_MOVEMENT;
+        if (parameterContext.isAnnotated(ExplorerTurnLeft.class)) {
+            movements.add(TURN_LEFT_MOVEMENT);
+        }
+        if (parameterContext.isAnnotated(ExplorerTurnRight.class)) {
+            movements.add(TURN_RIGHT_MOVEMENT);
+        }
+        if (parameterContext.isAnnotated(ExplorerWithExampleSequenceMovements.class)) {
+            movements.addAll(EXAMPLE_SEQUENCE_MOVEMENT);
+        }
+
+        return movements;
     }
 
 
@@ -86,23 +116,35 @@ public class ExplorerResolver implements ParameterResolver {
         else if (parameterContext.isAnnotated(ExplorerZeroOneCoordinates.class)) {
             return ZERO_ONE_COORDINATES;
         }
+        else if (parameterContext.isAnnotated(ExplorerOneTwoCoordinates.class)) {
+            return ONE_TWO_COORDINATES;
+        }
+        else if (parameterContext.isAnnotated(ExplorerOneZeroCoordinates.class)) {
+            return ONE_ZERO_COORDINATES;
+        }
+        else if (parameterContext.isAnnotated(ExplorerTwoOneCoordinates.class)) {
+            return TWO_ONE_COORDINATES;
+        }
+
         return DEFAULT_ONE_TWO_COORDINATES;
     }
 
-    private Explorer buildExplorer(MovementType movementType, Coordinates coordinates, Name name, OrientationType orientationType) {
+    private Explorer buildExplorer(List<MovementType> movementsType, Coordinates coordinates, Name name, OrientationType orientationType) {
         return Explorer.of(
                 name,
                 coordinates,
                 new Orientation(orientationType),
-                buildRawMovements(movementType)
+                buildRawMovements(movementsType)
         );
     }
 
-    private String buildRawMovements(MovementType movementType) {
-        if (movementType == null) {
+    private String buildRawMovements(List<MovementType> movementsType) {
+        if (movementsType.isEmpty()) {
             return "";
         }
-        return movementType.name();
+        return movementsType.stream()
+                .map(MovementType::name)
+                .collect(Collectors.joining());
     }
 
 }
