@@ -31,12 +31,12 @@ public class TreasureQuestRunner {
     private void saveAction(HistoryTreasureQuest historyTreasureQuest, Name explorerName, TreasureMap treasureMap) {
         Explorer currentExplorer = historyTreasureQuest.getLastState(explorerName);
 
-        Explorer explorerNext = doAction(currentExplorer, treasureMap);
+        Explorer explorerNext = executeAction(currentExplorer, treasureMap);
         historyTreasureQuest.registerMove(explorerNext);
     }
 
-    private Explorer doAction(Explorer currentExplorer, TreasureMap treasureMap) {
-        MovementType movementType = currentExplorer.movements().movementTypes().get(0);
+    private Explorer executeAction(Explorer currentExplorer, TreasureMap treasureMap) {
+        MovementType movementType = currentExplorer.nextMovement();
         Explorer explorerAfterAction = null;
         switch (movementType) {
             case A:
@@ -57,11 +57,11 @@ public class TreasureQuestRunner {
     }
 
     private Explorer goForwardAction(Explorer currentExplorer, TreasureMap treasureMap) {
-        Coordinates nextPosition = currentExplorer.checkNextPosition();
-        if (treasureMap.containsMountainOn(nextPosition)) {
+        Coordinates nextCoordinates = currentExplorer.checkNextPosition();
+        if (treasureMap.containsMountainOn(nextCoordinates)) {
             return currentExplorer;
         }
-        if (treasureMap.containsTreasureOn(nextPosition)) {
+        if (treasureMap.containsTreasureOn(nextCoordinates)) {
             return currentExplorer.goForwardAndCollect();
         }
         return currentExplorer.goForward();

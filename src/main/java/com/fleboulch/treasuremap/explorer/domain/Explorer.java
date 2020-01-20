@@ -68,6 +68,13 @@ public class Explorer {
                 .collect(Collectors.toList());
     }
 
+    public MovementType nextMovement() {
+        if (movements.movementTypes().isEmpty()) {
+            throw new ExplorerHasNoMoreMovementException(this);
+        }
+        return movements.movementTypes().get(0);
+    }
+
     private static MovementType toMovementType(int indexMovement, String rawMovements) {
         char movementAsChar = (char) indexMovement;
         return MovementType.valueOf(String.valueOf(movementAsChar));
