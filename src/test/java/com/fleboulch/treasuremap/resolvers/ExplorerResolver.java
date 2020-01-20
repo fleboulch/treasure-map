@@ -9,11 +9,22 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 
 public class ExplorerResolver implements ParameterResolver {
 
-    private static final Coordinates ONE_TWO_COORDINATES = Coordinates.of(1, 2);
+    // default values
+    private static final Name DEFAULT_NAME = new Name("Laura");
+    public static final OrientationType DEFAULT_ORIENTATION = OrientationType.E;
+    private static final Coordinates DEFAULT_ONE_TWO_COORDINATES = Coordinates.of(1, 2);
+    public static final MovementType DEFAULT_EMPTY_MOVEMENT = null;
+
+    // coordinates
     private static final Coordinates ZERO_ZERO_COORDINATES = Coordinates.of(0, 0);
     private static final Coordinates ONE_ONE_COORDINATES = Coordinates.of(1, 1);
     private static final Coordinates ZERO_ONE_COORDINATES = Coordinates.of(0, 1);
-    private static final String LAURA = "Laura";
+
+    // orientations
+    public static final OrientationType SOUTH_ORIENTATION = OrientationType.S;
+
+    // movements
+    public static final MovementType GO_FORWARD_MOVEMENT = MovementType.A;
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -22,58 +33,57 @@ public class ExplorerResolver implements ParameterResolver {
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        MovementType movementType = null;
-        Coordinates coordinates = ONE_TWO_COORDINATES;
-        String name = LAURA;
 
+        MovementType movementType = buildMovementType(parameterContext);
+        Coordinates coordinates = buildCustomCoordinates(parameterContext);
+        Name name = buildCustomName(parameterContext);
         OrientationType orientationType = buildOrientationType(parameterContext);
-        movementType = buildMovementType(parameterContext, movementType);
-        name = buildCustomName(parameterContext, name);
-        coordinates = buildCustomCoordinates(parameterContext, coordinates);
 
         return buildExplorer(movementType, coordinates, name, orientationType);
     }
 
     private OrientationType buildOrientationType(ParameterContext parameterContext) {
         if (parameterContext.isAnnotated(ExplorerSouthOrientation.class)) {
-            return OrientationType.S;
+            return SOUTH_ORIENTATION;
         }
-        return OrientationType.E;
+        return DEFAULT_ORIENTATION;
     }
 
-    private MovementType buildMovementType(ParameterContext parameterContext, MovementType movementType) {
+    private MovementType buildMovementType(ParameterContext parameterContext) {
         if (parameterContext.isAnnotated(ExplorerWithOneGoForward.class)) {
-            movementType = MovementType.A;
+            return GO_FORWARD_MOVEMENT;
         }
-        return movementType;
+        return DEFAULT_EMPTY_MOVEMENT;
     }
 
-    private String buildCustomName(ParameterContext parameterContext, String name) {
+
+    private Name buildCustomName(ParameterContext parameterContext) {
+        String name = DEFAULT_NAME.value();
         if (parameterContext.isAnnotated(ExplorerMichel.class)) {
             name = "Michel";
         }
-        if (parameterContext.isAnnotated(ExplorerAlberto.class)) {
+        else if (parameterContext.isAnnotated(ExplorerAlberto.class)) {
             name = "Alberto";
         }
-        return name;
+        return new Name(name);
     }
 
-    private Coordinates buildCustomCoordinates(ParameterContext parameterContext, Coordinates coordinates) {
+    private Coordinates buildCustomCoordinates(ParameterContext parameterContext) {
         if (parameterContext.isAnnotated(ExplorerOneOneCoordinates.class)) {
-            coordinates = ONE_ONE_COORDINATES;
+            return ONE_ONE_COORDINATES;
         }
-        if (parameterContext.isAnnotated(ExplorerZeroZeroCoordinates.class)) {
-            coordinates = ZERO_ZERO_COORDINATES;
+        else if (parameterContext.isAnnotated(ExplorerZeroZeroCoordinates.class)) {
+            return ZERO_ZERO_COORDINATES;
         }
-        if (parameterContext.isAnnotated(ExplorerZeroOneCoordinates.class)) {
-            coordinates = ZERO_ONE_COORDINATES;
+        else if (parameterContext.isAnnotated(ExplorerZeroOneCoordinates.class)) {
+            return ZERO_ONE_COORDINATES;
         }
-        return coordinates;
+        return DEFAULT_ONE_TWO_COORDINATES;
     }
 
-    private Explorer buildExplorer(MovementType movementType, Coordinates coordinates, String name, OrientationType orientationType) {
+    private Explorer buildExplorer(MovementType movementType, Coordinates coordinates, Name name, OrientationType orientationType) {
         return Explorer.of(
-                new Name(name),
+                name,
                 coordinates,
                 new Orientation(orientationType),
                 buildRawMovements(movementType)
@@ -86,4 +96,5 @@ public class ExplorerResolver implements ParameterResolver {
         }
         return movementType.name();
     }
+
 }

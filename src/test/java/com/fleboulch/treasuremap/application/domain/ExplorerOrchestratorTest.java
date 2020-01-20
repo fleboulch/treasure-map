@@ -21,7 +21,9 @@ class ExplorerOrchestratorTest {
     }
 
     @Test
-    void should_create_orchestrator_from_one_explorer_with_one_go_forward_movement(@ExplorerWithOneGoForward Explorer explorer) {
+    void should_create_orchestrator_from_one_explorer_with_one_go_forward_movement(
+            @ExplorerWithOneGoForward Explorer explorer
+    ) {
         ExplorerOrchestrator orchestrator = new ExplorerOrchestrator(buildExplorersWith(explorer));
 
         assertThat(orchestrator.explorers().explorers()).containsExactly(explorer);

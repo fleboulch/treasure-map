@@ -18,6 +18,7 @@ public class TreasureQuestRunner {
 
         ExplorerOrchestrator explorerOrchestrator = new ExplorerOrchestrator(treasureQuest.explorers());
 
+        // TODO: replace this stream with collectors
         explorerOrchestrator.explorers().explorers()
                 .forEach(explorer -> saveAction(historyTreasureQuest, explorer));
 
@@ -25,6 +26,7 @@ public class TreasureQuestRunner {
     }
 
     private void saveAction(HistoryTreasureQuest historyTreasureQuest, Explorer explorer) {
+        // if explorer movements is empty then skip
         if (explorer.canPerformMovements()) {
             Explorer explorerNext = doAction(explorer);
             historyTreasureQuest.registerMove(explorerNext);

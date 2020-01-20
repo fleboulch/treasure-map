@@ -44,7 +44,7 @@ class TreasureQuestRunnerTest {
     }
 
     @Test
-    void simple_quest_with_one_explorer_and_go_forward_mouvement(
+    void simple_quest_with_one_explorer_and_go_forward_movement(
             @ExplorerWithOneGoForward @ExplorerZeroZeroCoordinates @ExplorerSouthOrientation Explorer beginExplorer,
             @ExplorerZeroOneCoordinates @ExplorerSouthOrientation Explorer finalExplorer
     ) {
@@ -54,8 +54,6 @@ class TreasureQuestRunnerTest {
         List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
-
-        // TODO: remove actions when executed
 
     }
 

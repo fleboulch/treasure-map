@@ -5,6 +5,7 @@ import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Explorer {
@@ -125,16 +126,40 @@ public class Explorer {
 
     private Explorer goForwardNorth() {
         Coordinates newCoordinates = coordinates.goForwardNorth();
-        return new Explorer(name, newCoordinates, orientation, movements);
+        Movements movementsAfterAction = popMovement();
+        return new Explorer(name, newCoordinates, orientation, movementsAfterAction);
     }
 
     private Explorer goForwardEast() {
-        Coordinates newCoordinates = this.coordinates.goForwardEast();
-        return new Explorer(name, newCoordinates, orientation, movements);
+        Coordinates newCoordinates = coordinates.goForwardEast();
+        Movements movementsAfterAction = popMovement();
+        return new Explorer(name, newCoordinates, orientation, movementsAfterAction);
     }
 
     private Explorer goForwardSouth() {
         Coordinates newCoordinates = coordinates.goForwardSouth();
-        return new Explorer(name, newCoordinates, orientation, movements);
+        Movements movementsAfterAction = popMovement();
+        return new Explorer(name, newCoordinates, orientation, movementsAfterAction);
+    }
+
+    private Movements popMovement() {
+        return movements().popMovement();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Explorer explorer = (Explorer) o;
+        return nbCollectedTreasures == explorer.nbCollectedTreasures &&
+                name.equals(explorer.name) &&
+                coordinates.equals(explorer.coordinates) &&
+                orientation.equals(explorer.orientation) &&
+                movements.equals(explorer.movements);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, coordinates, orientation, movements, nbCollectedTreasures);
     }
 }
