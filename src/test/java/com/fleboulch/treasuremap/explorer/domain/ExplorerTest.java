@@ -5,7 +5,6 @@ import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.resolvers.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.assertj.core.data.Index;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -55,7 +54,7 @@ class ExplorerTest {
         String rawMovements = null;
 
         assertThatThrownBy(() ->
-                buildExplorer(rawMovements)
+                buildInvalidExplorer(rawMovements)
         ).isInstanceOf(DomainException.class);
     }
 
@@ -64,7 +63,7 @@ class ExplorerTest {
         String rawMovements = "ADGW";
 
         assertThatThrownBy(() ->
-                buildExplorer(rawMovements)
+                buildInvalidExplorer(rawMovements)
         ).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -160,8 +159,8 @@ class ExplorerTest {
         assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
     }
 
-    private Explorer buildExplorer(String rawMovements) {
-        return Explorer.of(
+    private void buildInvalidExplorer(String rawMovements) {
+        Explorer.of(
                 new Name("Lara"),
                 ONE_ONE_COORDINATES,
                 new Orientation(OrientationType.S),
