@@ -111,6 +111,27 @@ public class Explorer {
                 '}';
     }
 
+    public Explorer turn(MovementType direction) {
+        if (Objects.equals(direction, MovementType.D)) {
+            switch (orientation.orientationType()) {
+                case S:
+                    return buildExplorerAfterAction(OrientationType.W);
+                case N:
+                    return buildExplorerAfterAction(OrientationType.E);
+                case E:
+                    return buildExplorerAfterAction(OrientationType.S);
+                case W:
+                    return buildExplorerAfterAction(OrientationType.N);
+            }
+        }
+        throw new RuntimeException("");
+    }
+
+    private Explorer buildExplorerAfterAction(OrientationType newOrientationType) {
+        Movements movementsAfterAction = popMovement();
+        return new Explorer(name, coordinates, new Orientation(newOrientationType), movementsAfterAction);
+    }
+
     public Explorer goForward() {
         switch (orientation.orientationType()) {
             case S:

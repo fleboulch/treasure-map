@@ -38,8 +38,8 @@ public class TreasureQuestRunner {
         switch (movementType) {
             case A:
                 return currentExplorer.goForward();
-//            case D:
-//                return Dturn(treasureQuest, currentExplorer);
+            case D:
+                return currentExplorer.turn(MovementType.D);
 //            case G:
 //                return Gturn(treasureQuest, currentExplorer);
             default:

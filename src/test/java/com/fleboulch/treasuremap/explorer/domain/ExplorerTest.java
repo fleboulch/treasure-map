@@ -159,6 +159,16 @@ class ExplorerTest {
         assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
     }
 
+    @Test
+    void explorer_turn_D_from_north(
+            @ExplorerZeroZeroCoordinates @ExplorerTurnRight @ExplorerNorthOrientation Explorer beginExplorer,
+            @ExplorerZeroZeroCoordinates Explorer expectedEndExplorer
+    ) {
+        Explorer explorerAfterAction = beginExplorer.turn(MovementType.D);
+
+        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
+    }
+
     private void buildInvalidExplorer(String rawMovements) {
         Explorer.of(
                 new Name("Lara"),
