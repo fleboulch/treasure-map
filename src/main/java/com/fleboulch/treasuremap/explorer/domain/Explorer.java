@@ -34,7 +34,7 @@ public class Explorer {
     public boolean isOnMountain(TreasureMap treasureMap) {
         PlainsBox plainsBox = currentBox(treasureMap);
 
-        if (plainsBox instanceof MountainBox) {
+        if (plainsBox.isMountainType()) {
             throw new InvalidCurrentPositionException(name.value(), coordinates);
         } else {
             return false;
@@ -122,7 +122,7 @@ public class Explorer {
                     return buildExplorerAfterAction(OrientationType.W, null);
                 case W:
                     return buildExplorerAfterAction(OrientationType.N, null);
-                default: throw new RuntimeException("Unknown orientation");
+                default: throw new IllegalArgumentException("Unknown orientation");
 
             }
         } else if (Objects.equals(direction, MovementType.G)) {
@@ -135,28 +135,33 @@ public class Explorer {
                     return buildExplorerAfterAction(OrientationType.E, null);
                 case W:
                     return buildExplorerAfterAction(OrientationType.S, null);
-                default: throw new RuntimeException("Unknown orientation");
+                default: throw new IllegalArgumentException("Unknown orientation");
             }
         }
-        throw new RuntimeException("Unknown direction");
+        throw new IllegalArgumentException("Unknown direction");
     }
 
     private Explorer buildExplorerAfterAction(OrientationType newOrientationType, Coordinates newCoordinates) {
-        Orientation orientation = orientation();
-        Coordinates coordinates = coordinates();
+        Orientation updatedOrientation = orientation();
+        Coordinates updatedCoordinates = coordinates();
 
         if (!Objects.isNull(newOrientationType)) {
-            orientation = new Orientation(newOrientationType);
+            updatedOrientation = new Orientation(newOrientationType);
         }
         if (!Objects.isNull(newCoordinates)) {
-            coordinates = newCoordinates;
+            updatedCoordinates = newCoordinates;
         }
 
-        Movements movementsAfterAction = popMovement();
-        return new Explorer(name, coordinates, orientation, movementsAfterAction);
+        return new Explorer(name, updatedCoordinates, updatedOrientation, movements);
     }
 
     public Explorer goForward() {
+        Coordinates newCoordinates = checkNextPosition();
+
+        return buildExplorerAfterAction(null, newCoordinates);
+    }
+
+    public Coordinates checkNextPosition() {
         switch (orientation.orientationType()) {
             case N:
                 return goForwardNorth();
@@ -167,32 +172,30 @@ public class Explorer {
             case W:
                 return goForwardWest();
             default:
-                throw new RuntimeException("Unknown orientation"); // replace with custom exception
+                throw new IllegalArgumentException("Unknown orientation"); // replace with custom exception
         }
     }
 
-    private Explorer goForwardWest() {
-        Coordinates newCoordinates = coordinates.goForwardWest();
-        return buildExplorerAfterAction(null, newCoordinates);
+    private Coordinates goForwardWest() {
+        return coordinates.goForwardWest();
     }
 
-    private Explorer goForwardNorth() {
-        Coordinates newCoordinates = coordinates.goForwardNorth();
-        return buildExplorerAfterAction(null, newCoordinates);
+    private Coordinates goForwardNorth() {
+        return coordinates.goForwardNorth();
     }
 
-    private Explorer goForwardEast() {
-        Coordinates newCoordinates = coordinates.goForwardEast();
-        return buildExplorerAfterAction(null, newCoordinates);
+    private Coordinates goForwardEast() {
+        return coordinates.goForwardEast();
     }
 
-    private Explorer goForwardSouth() {
-        Coordinates newCoordinates = coordinates.goForwardSouth();
-        return buildExplorerAfterAction(null, newCoordinates);
+    private Coordinates goForwardSouth() {
+        return coordinates.goForwardSouth();
     }
 
-    private Movements popMovement() {
-        return movements().popMovement();
+    public Explorer popMovement() {
+        Movements movementsAfterAction = movements().popMovement();
+        return new Explorer(name, coordinates, orientation, movementsAfterAction);
+
     }
 
     @Override

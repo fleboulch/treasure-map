@@ -17,6 +17,10 @@ public class PlainsBox {
         return coordinates.hasValidCoordinates(dimension);
     }
 
+    public boolean isMountainType() {
+        return this instanceof MountainBox;
+    }
+
     public Coordinates coordinates() {
         return coordinates;
     }

@@ -122,7 +122,7 @@ class ExplorerTest {
     @Test
     void explorer_go_forward_south(
             @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer beginExplorer,
-            @ExplorerOneTwoCoordinates @ExplorerSouthOrientation Explorer expectedEndExplorer
+            @ExplorerOneTwoCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 
@@ -132,7 +132,7 @@ class ExplorerTest {
     @Test
     void explorer_go_forward_north(
             @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerNorthOrientation Explorer beginExplorer,
-            @ExplorerOneZeroCoordinates @ExplorerNorthOrientation Explorer expectedEndExplorer
+            @ExplorerOneZeroCoordinates @ExplorerWithOneGoForward@ExplorerNorthOrientation Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 
@@ -142,7 +142,7 @@ class ExplorerTest {
     @Test
     void explorer_go_forward_east(
             @ExplorerOneOneCoordinates @ExplorerWithOneGoForward Explorer beginExplorer,
-            @ExplorerTwoOneCoordinates Explorer expectedEndExplorer
+            @ExplorerTwoOneCoordinates @ExplorerWithOneGoForward Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 
@@ -152,7 +152,7 @@ class ExplorerTest {
     @Test
     void explorer_go_forward_west(
             @ExplorerOneZeroCoordinates @ExplorerWithOneGoForward @ExplorerWestOrientation Explorer beginExplorer,
-            @ExplorerZeroZeroCoordinates @ExplorerWestOrientation Explorer expectedEndExplorer
+            @ExplorerZeroZeroCoordinates @ExplorerWithOneGoForward @ExplorerWestOrientation Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 
@@ -162,7 +162,7 @@ class ExplorerTest {
     @Test
     void explorer_turn_D_from_north(
             @ExplorerZeroZeroCoordinates @ExplorerTurnRight @ExplorerNorthOrientation Explorer beginExplorer,
-            @ExplorerZeroZeroCoordinates Explorer expectedEndExplorer
+            @ExplorerZeroZeroCoordinates @ExplorerTurnRight Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.turn(MovementType.D);
 
@@ -171,7 +171,7 @@ class ExplorerTest {
     @Test
     void explorer_turn_L_from_north(
             @ExplorerZeroZeroCoordinates @ExplorerTurnLeft @ExplorerNorthOrientation Explorer beginExplorer,
-            @ExplorerZeroZeroCoordinates @ExplorerWestOrientation Explorer expectedEndExplorer
+            @ExplorerZeroZeroCoordinates @ExplorerTurnLeft @ExplorerWestOrientation Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.turn(MovementType.G);
 

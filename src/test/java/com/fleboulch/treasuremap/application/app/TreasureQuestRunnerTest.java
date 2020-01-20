@@ -4,11 +4,9 @@ import com.fleboulch.treasuremap.application.domain.Explorers;
 import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
-import com.fleboulch.treasuremap.map.domain.Dimension;
-import com.fleboulch.treasuremap.map.domain.Height;
-import com.fleboulch.treasuremap.map.domain.TreasureMap;
-import com.fleboulch.treasuremap.map.domain.Width;
+import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.resolvers.*;
+import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TreasureQuestRunnerTest {
 
     private static final Dimension DIMENSION = new Dimension(new Width(3), new Height(4));
+    private static final Coordinates ZERO_ONE_COORDINATES = Coordinates.of(0, 1);
 
     private TreasureQuestRunner runner;
 
@@ -83,9 +82,32 @@ class TreasureQuestRunnerTest {
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
     }
 
+    @Test
+    void an_explorer_should_be_blocked_by_a_mountain(
+            @ExplorerZeroZeroCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer beginExplorer,
+            @ExplorerZeroZeroCoordinates @ExplorerSouthOrientation Explorer finalExplorer
+    ) {
+        TreasureQuest inputTreasureQuest = buildQuestWithOneMountain(beginExplorer);
+        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+
+        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+
+        assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
+    }
+
     private TreasureQuest buildSimpleQuest(Explorer beginExplorer) {
         return new TreasureQuest(
                 new TreasureMap(DIMENSION, emptyList(), emptyList()),
+                new Explorers(List.of(
+                        beginExplorer
+                ))
+        );
+    }
+
+    private TreasureQuest buildQuestWithOneMountain(Explorer beginExplorer) {
+        MountainBox mountain1 = new MountainBox(ZERO_ONE_COORDINATES);
+        return new TreasureQuest(
+                new TreasureMap(DIMENSION, List.of(mountain1), emptyList()),
                 new Explorers(List.of(
                         beginExplorer
                 ))

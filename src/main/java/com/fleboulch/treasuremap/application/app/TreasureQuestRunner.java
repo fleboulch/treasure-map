@@ -5,6 +5,8 @@ import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.MovementType;
+import com.fleboulch.treasuremap.map.domain.TreasureMap;
+import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,32 +22,46 @@ public class TreasureQuestRunner {
 
         // TODO: replace this stream with collectors
         explorerOrchestrator.explorers().explorers()
-                .forEach(explorer -> saveAction(historyTreasureQuest, explorer));
+                .forEach(explorer -> saveAction(historyTreasureQuest, explorer, treasureQuest.treasureMap()));
 
         return historyTreasureQuest;
     }
 
-    private void saveAction(HistoryTreasureQuest historyTreasureQuest, Explorer explorer) {
+    private void saveAction(HistoryTreasureQuest historyTreasureQuest, Explorer explorer, TreasureMap treasureMap) {
         // if explorer movements is empty then skip
         if (explorer.canPerformMovements()) {
-            Explorer explorerNext = doAction(explorer);
+            Explorer explorerNext = doAction(explorer, treasureMap);
             historyTreasureQuest.registerMove(explorerNext);
         }
     }
 
-    private Explorer doAction(Explorer currentExplorer) {
+    private Explorer doAction(Explorer currentExplorer, TreasureMap treasureMap) {
         MovementType movementType = currentExplorer.movements().movementTypes().get(0);
+        Explorer explorerAfterAction = null;
         switch (movementType) {
             case A:
-                return currentExplorer.goForward();
+                explorerAfterAction = goForwardAction(currentExplorer, treasureMap);
+                break;
             case D:
-                return currentExplorer.turn(MovementType.D);
+                explorerAfterAction = currentExplorer.turn(MovementType.D);
+                break;
             case G:
-                return currentExplorer.turn(MovementType.G);
+                explorerAfterAction = currentExplorer.turn(MovementType.G);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown movement type"); // should never occured
         }
 
+        return explorerAfterAction.popMovement();
+
+    }
+
+    private Explorer goForwardAction(Explorer currentExplorer, TreasureMap treasureMap) {
+        Coordinates nextPosition = currentExplorer.checkNextPosition();
+        if (treasureMap.containsMountainOn(nextPosition)) {
+            return currentExplorer;
+        }
+        return currentExplorer.goForward();
     }
 
 }
