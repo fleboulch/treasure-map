@@ -59,6 +59,11 @@ public class TreasureMap {
         return box.isMountainType();
     }
 
+    public boolean containsTreasureOn(Coordinates coordinates) {
+        PlainsBox box = from(coordinates);
+        return box.isTreasureType();
+    }
+
     private void checkValidBoxes(List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
         mountainBoxes.forEach(this::checkValidBox);
         treasureBoxes.forEach(this::checkValidBox);

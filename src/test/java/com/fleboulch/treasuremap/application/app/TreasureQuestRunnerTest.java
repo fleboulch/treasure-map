@@ -95,6 +95,19 @@ class TreasureQuestRunnerTest {
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
     }
 
+    @Test
+    void an_explorer_should_collect_one_treasure_on_treasure_box(
+            @ExplorerZeroZeroCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer beginExplorer,
+            @ExplorerZeroOneCoordinates @ExplorerSouthOrientation @ExplorerWithOneTreasure Explorer finalExplorer
+    ) {
+        TreasureQuest inputTreasureQuest = buildQuestWithOneTreasure(beginExplorer);
+        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+
+        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+
+        assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
+    }
+
     private TreasureQuest buildSimpleQuest(Explorer beginExplorer) {
         return new TreasureQuest(
                 new TreasureMap(DIMENSION, emptyList(), emptyList()),
@@ -108,6 +121,16 @@ class TreasureQuestRunnerTest {
         MountainBox mountain1 = new MountainBox(ZERO_ONE_COORDINATES);
         return new TreasureQuest(
                 new TreasureMap(DIMENSION, List.of(mountain1), emptyList()),
+                new Explorers(List.of(
+                        beginExplorer
+                ))
+        );
+    }
+
+    private TreasureQuest buildQuestWithOneTreasure(Explorer beginExplorer) {
+        TreasureBox treasure1 = new TreasureBox(ZERO_ONE_COORDINATES, 1);
+        return new TreasureQuest(
+                new TreasureMap(DIMENSION, emptyList(), List.of(treasure1)),
                 new Explorers(List.of(
                         beginExplorer
                 ))

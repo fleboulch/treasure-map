@@ -16,19 +16,20 @@ public class Explorer {
     private final Coordinates coordinates;
     private final Orientation orientation;
     private final Movements movements;
-    private int nbCollectedTreasures = 0;
+    private int nbCollectedTreasures;
 
-    private Explorer(Name name, Coordinates coordinates, Orientation orientation, Movements movements) {
+    private Explorer(Name name, Coordinates coordinates, Orientation orientation, Movements movements, int nbCollectedTreasures) {
         this.name = Domain.validateNotNull(name, "Name should be not null");
         this.coordinates = Domain.validateNotNull(coordinates, "Coordinates should be not null");
 
         this.orientation = Domain.validateNotNull(orientation, "Orientation should be not null");
         this.movements = Domain.validateNotNull(movements, "Movements should be not null");
+        this.nbCollectedTreasures = nbCollectedTreasures;
     }
 
     public static Explorer of(Name name, Coordinates coordinates, Orientation orientation, String rawMovements) {
         Domain.validateNotNull(rawMovements, "Raw movements should not be null");
-        return new Explorer(name, coordinates, orientation, buildMovements(rawMovements));
+        return new Explorer(name, coordinates, orientation, buildMovements(rawMovements), 0);
     }
 
     public boolean isOnMountain(TreasureMap treasureMap) {
@@ -100,6 +101,10 @@ public class Explorer {
         return nbCollectedTreasures;
     }
 
+    public int collectTreasure() {
+        return nbCollectedTreasures++;
+    }
+
     @Override
     public String toString() {
         return "Explorer{" +
@@ -152,13 +157,19 @@ public class Explorer {
             updatedCoordinates = newCoordinates;
         }
 
-        return new Explorer(name, updatedCoordinates, updatedOrientation, movements);
+        return new Explorer(name, updatedCoordinates, updatedOrientation, movements, nbCollectedTreasures);
     }
 
     public Explorer goForward() {
         Coordinates newCoordinates = checkNextPosition();
 
         return buildExplorerAfterAction(null, newCoordinates);
+    }
+
+    public Explorer goForwardAndCollect() {
+        Explorer explorerAfterAction = goForward();
+        explorerAfterAction.collectTreasure();
+        return explorerAfterAction;
     }
 
     public Coordinates checkNextPosition() {
@@ -194,7 +205,7 @@ public class Explorer {
 
     public Explorer popMovement() {
         Movements movementsAfterAction = movements().popMovement();
-        return new Explorer(name, coordinates, orientation, movementsAfterAction);
+        return new Explorer(name, coordinates, orientation, movementsAfterAction, nbCollectedTreasures);
 
     }
 

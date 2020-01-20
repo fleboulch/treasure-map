@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ExplorerResolver implements ParameterResolver {
 
@@ -59,8 +60,17 @@ public class ExplorerResolver implements ParameterResolver {
         Coordinates coordinates = buildCustomCoordinates(parameterContext);
         Name name = buildCustomName(parameterContext);
         OrientationType orientationType = buildOrientationType(parameterContext);
+        int nbTreasures = buildNbTreasures(parameterContext);
 
-        return buildExplorer(movementType, coordinates, name, orientationType);
+        return buildExplorer(movementType, coordinates, name, orientationType, nbTreasures);
+    }
+
+
+    private int buildNbTreasures(ParameterContext parameterContext) {
+        if (parameterContext.isAnnotated(ExplorerWithOneTreasure.class)) {
+            return 1;
+        }
+        return 0;
     }
 
     private OrientationType buildOrientationType(ParameterContext parameterContext) {
@@ -129,14 +139,19 @@ public class ExplorerResolver implements ParameterResolver {
         return DEFAULT_ONE_TWO_COORDINATES;
     }
 
-    private Explorer buildExplorer(List<MovementType> movementsType, Coordinates coordinates, Name name, OrientationType orientationType) {
-        return Explorer.of(
+    private Explorer buildExplorer(List<MovementType> movementsType, Coordinates coordinates, Name name, OrientationType orientationType, int nbTreasures) {
+        Explorer explorer = Explorer.of(
                 name,
                 coordinates,
                 new Orientation(orientationType),
                 buildRawMovements(movementsType)
         );
+
+        IntStream.range(0,nbTreasures).forEach(index -> explorer.collectTreasure());
+
+        return explorer;
     }
+
 
     private String buildRawMovements(List<MovementType> movementsType) {
         if (movementsType.isEmpty()) {

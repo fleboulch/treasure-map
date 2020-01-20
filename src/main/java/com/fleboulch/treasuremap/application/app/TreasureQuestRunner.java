@@ -61,6 +61,9 @@ public class TreasureQuestRunner {
         if (treasureMap.containsMountainOn(nextPosition)) {
             return currentExplorer;
         }
+        if (treasureMap.containsTreasureOn(nextPosition)) {
+            return currentExplorer.goForwardAndCollect();
+        }
         return currentExplorer.goForward();
     }
 

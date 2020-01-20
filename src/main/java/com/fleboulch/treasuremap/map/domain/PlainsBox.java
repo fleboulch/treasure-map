@@ -21,6 +21,10 @@ public class PlainsBox {
         return this instanceof MountainBox;
     }
 
+    public boolean isTreasureType() {
+        return this instanceof TreasureBox;
+    }
+
     public Coordinates coordinates() {
         return coordinates;
     }
