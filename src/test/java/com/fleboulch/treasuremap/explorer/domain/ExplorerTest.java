@@ -5,6 +5,7 @@ import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.resolvers.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.assertj.core.data.Index;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -141,8 +142,18 @@ class ExplorerTest {
 
     @Test
     void explorer_go_forward_east(
-            @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerEastOrientation Explorer beginExplorer,
-            @ExplorerTwoOneCoordinates @ExplorerEastOrientation Explorer expectedEndExplorer
+            @ExplorerOneOneCoordinates @ExplorerWithOneGoForward Explorer beginExplorer,
+            @ExplorerTwoOneCoordinates Explorer expectedEndExplorer
+    ) {
+        Explorer explorerAfterAction = beginExplorer.goForward();
+
+        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
+    }
+
+    @Test
+    void explorer_go_forward_west(
+            @ExplorerOneZeroCoordinates @ExplorerWithOneGoForward @ExplorerWestOrientation Explorer beginExplorer,
+            @ExplorerZeroZeroCoordinates @ExplorerWestOrientation Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 

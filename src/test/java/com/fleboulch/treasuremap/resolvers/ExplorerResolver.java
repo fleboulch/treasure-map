@@ -29,7 +29,7 @@ public class ExplorerResolver implements ParameterResolver {
     // orientations
     private static final OrientationType SOUTH_ORIENTATION = OrientationType.S;
     private static final OrientationType NORTH_ORIENTATION = OrientationType.N;
-    private static final OrientationType EAST_ORIENTATION = OrientationType.E;
+    private static final OrientationType WEST_ORIENTATION = OrientationType.W;
 
     // movements
     private static final MovementType GO_FORWARD_MOVEMENT = MovementType.A;
@@ -70,8 +70,8 @@ public class ExplorerResolver implements ParameterResolver {
         else if (parameterContext.isAnnotated(ExplorerNorthOrientation.class)) {
             return NORTH_ORIENTATION;
         }
-        else if (parameterContext.isAnnotated(ExplorerEastOrientation.class)) {
-            return EAST_ORIENTATION;
+        else if (parameterContext.isAnnotated(ExplorerWestOrientation.class)) {
+            return WEST_ORIENTATION;
         }
         return DEFAULT_ORIENTATION;
     }

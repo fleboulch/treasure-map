@@ -119,9 +119,17 @@ public class Explorer {
                 return goForwardNorth();
             case E:
                 return goForwardEast();
+            case W:
+                return goForwardWest();
             default:
-                throw new RuntimeException("");
+                throw new RuntimeException("Unknown orientation"); // replace with custom exception
         }
+    }
+
+    private Explorer goForwardWest() {
+        Coordinates newCoordinates = coordinates.goForwardWest();
+        Movements movementsAfterAction = popMovement();
+        return new Explorer(name, newCoordinates, orientation, movementsAfterAction);
     }
 
     private Explorer goForwardNorth() {

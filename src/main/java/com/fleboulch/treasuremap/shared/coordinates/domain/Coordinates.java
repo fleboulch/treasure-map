@@ -36,6 +36,11 @@ public class Coordinates {
         return new Coordinates(x, (VerticalAxis) newY);
     }
 
+    public Coordinates goForwardWest() {
+        Axis newX = x.decrement();
+        return new Coordinates((HorizontalAxis) newX, y);
+    }
+
     public Coordinates goForwardEast() {
         Axis newX = x.increment();
         return new Coordinates((HorizontalAxis) newX, y);
