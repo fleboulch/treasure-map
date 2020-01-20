@@ -57,6 +57,32 @@ class TreasureQuestRunnerTest {
 
     }
 
+    @Test
+    void simple_quest_with_one_explorer_and_turn_right_movement(
+            @ExplorerZeroZeroCoordinates @ExplorerTurnRight @ExplorerSouthOrientation Explorer beginExplorer,
+            @ExplorerZeroZeroCoordinates @ExplorerWestOrientation Explorer finalExplorer
+    ) {
+        TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
+        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+
+        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+
+        assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
+    }
+
+    @Test
+    void simple_quest_with_one_explorer_and_turn_left_movement(
+            @ExplorerZeroZeroCoordinates @ExplorerTurnLeft @ExplorerSouthOrientation Explorer beginExplorer,
+            @ExplorerZeroZeroCoordinates Explorer finalExplorer
+    ) {
+        TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
+        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+
+        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+
+        assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
+    }
+
     private TreasureQuest buildSimpleQuest(Explorer beginExplorer) {
         return new TreasureQuest(
                 new TreasureMap(DIMENSION, emptyList(), emptyList()),
@@ -65,14 +91,5 @@ class TreasureQuestRunnerTest {
                 ))
         );
     }
-
-//    private Explorer buildLauraExplorer(Coordinates explorerCoordinates, String rawMovements) {
-//        return Explorer.of(
-//                new Name("Laura"),
-//                explorerCoordinates,
-//                new Orientation(OrientationType.S),
-//                rawMovements
-//        );
-//    }
 
 }

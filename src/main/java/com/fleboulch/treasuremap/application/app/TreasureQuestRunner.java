@@ -40,27 +40,12 @@ public class TreasureQuestRunner {
                 return currentExplorer.goForward();
             case D:
                 return currentExplorer.turn(MovementType.D);
-//            case G:
-//                return Gturn(treasureQuest, currentExplorer);
+            case G:
+                return currentExplorer.turn(MovementType.G);
             default:
                 throw new IllegalArgumentException("Unknown movement type"); // should never occured
         }
 
     }
-
-//    private TreasureQuest goForward(TreasureQuest treasureQuest, Explorer currentExplorer) {
-//        getExplorerByIndex(treasureQuest, 0).goForward();
-//        return treasureQuest;
-//
-//    }
-
-//    private TreasureQuest Dturn(TreasureQuest treasureQuest, Explorer currentExplorer) {
-//        return null;
-//    }
-//
-//    private TreasureQuest Gturn(TreasureQuest treasureQuest, Explorer currentExplorer) {
-//        return null;
-//    }
-
 
 }
