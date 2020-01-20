@@ -23,7 +23,7 @@ I mainly used it for :
 - testing
 - DI (it could be done manually but SB do it well for me) 
 
-## What could be improve
+## What could be improved?
 
 - Treasure quest with multiple users (handle collisions) + check unique name for explorers
 - Add additionnal checks on treasure map configuration (a same box should have only one type)

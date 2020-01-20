@@ -4,6 +4,7 @@ import com.fleboulch.treasuremap.kernel.domain.Domain;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class TreasureBox extends PlainsBox {
 
@@ -14,7 +15,17 @@ public class TreasureBox extends PlainsBox {
         this.nbTreasures = Domain.validatePositive(nbTreasures, "The number of treasures should be positive");
     }
 
+//    public Optional<TreasureBox> decrementNbTreasures() {
+//        if (nbTreasures == 1) {
+//            return Optional.empty();
+//        }
+//        return Optional.of(new TreasureBox(coordinates(), nbTreasures - 1));
+//    }
+
     public TreasureBox decrementNbTreasures() {
+        if (nbTreasures == 1) {
+            return null;
+        }
         return new TreasureBox(coordinates(), nbTreasures - 1);
     }
 

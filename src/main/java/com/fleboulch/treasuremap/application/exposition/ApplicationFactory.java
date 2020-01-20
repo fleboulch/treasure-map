@@ -1,6 +1,7 @@
 package com.fleboulch.treasuremap.application.exposition;
 
 import com.fleboulch.treasuremap.application.domain.Explorers;
+import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.InputType;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
@@ -14,7 +15,9 @@ import com.fleboulch.treasuremap.kernel.utils.ConverterUtils;
 import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
@@ -165,5 +168,61 @@ public class ApplicationFactory {
         if (line.length != expectedNumberOfProperties) {
             throw new InvalidInputRowException(line);
         }
+    }
+
+    public static List<String> toExposition(HistoryTreasureQuest historyTreasureQuest) {
+        List<String> expositionDimension = buildExpositionDimension(historyTreasureQuest.treasureMap().dimension());
+        List<String> expositionMountains = buildExpositionMountains(historyTreasureQuest.treasureMap().mountainBoxes());
+        List<String> expositionTreasures = buildExpositionTreasures(historyTreasureQuest.treasureMap().treasureBoxes());
+
+        List<String> expositionExplorers = buildExpositionExplorers(historyTreasureQuest.historyMovementsPerExplorer());
+
+        List<String> result = new ArrayList<>();
+        result.addAll(expositionDimension);
+        result.addAll(expositionMountains);
+        result.addAll(expositionTreasures);
+        result.addAll(expositionExplorers);
+        return result;
+    }
+
+    private static List<String> buildExpositionExplorers(Map<Name, List<Explorer>> historyMovementsPerExplorer) {
+        return historyMovementsPerExplorer.values().stream()
+                .map(explorers -> explorers.get(explorers.size() - 1))
+                .map(ApplicationFactory::explorerToString)
+                .collect(toList());
+    }
+
+    private static String explorerToString(Explorer explorer) {
+        return String.format("A - %s - %s - %s - %s - %s",
+                explorer.name().value(),
+                explorer.coordinates().x().index(),
+                explorer.coordinates().y().index(),
+                explorer.orientation().orientationType(),
+                explorer.nbCollectedTreasures()
+        );
+    }
+
+    private static List<String> buildExpositionTreasures(List<TreasureBox> treasureBoxes) {
+        return treasureBoxes.stream()
+                .map(ApplicationFactory::buildExpositionTreasure)
+                .collect(toList());
+    }
+
+    private static String buildExpositionTreasure(TreasureBox treasureBox) {
+        return String.format("T - %s - %s - %s", treasureBox.coordinates().x().index(), treasureBox.coordinates().y().index(), treasureBox.nbTreasures());
+    }
+
+    private static List<String> buildExpositionMountains(List<MountainBox> mountainBoxes) {
+        return mountainBoxes.stream()
+                .map(ApplicationFactory::buildExpositionMountain)
+                .collect(toList());
+    }
+
+    private static String buildExpositionMountain(MountainBox mountainBox) {
+        return String.format("M - %s - %s", mountainBox.coordinates().x().index(), mountainBox.coordinates().y().index());
+    }
+
+    private static List<String> buildExpositionDimension(Dimension dimension) {
+        return List.of(String.format("C - %s - %s", dimension.width().value(), dimension.height().value()));
     }
 }

@@ -52,36 +52,29 @@ public class TreasureMap {
 
     private Optional<MountainBox> findMountainBoxByCoordinates(Coordinates coordinates) {
         return mountainBoxes.stream()
-                        .filter(mountainBox -> Objects.equals(mountainBox.coordinates(), coordinates))
-                        .findFirst();
+                .filter(mountainBox -> Objects.equals(mountainBox.coordinates(), coordinates))
+                .findFirst();
     }
 
     private Optional<TreasureBox> findTreasureBoxByCoordinates(Coordinates coordinates) {
         return treasureBoxes.stream()
-                        .filter(treasureBox -> Objects.equals(treasureBox.coordinates(), coordinates))
-                        .findFirst();
+                .filter(treasureBox -> Objects.equals(treasureBox.coordinates(), coordinates))
+                .findFirst();
     }
 
     public TreasureMap removeOneTreasure(Coordinates coordinates) {
         Optional<TreasureBox> optionalTreasureBoxToUpdate = findTreasureBoxByCoordinates(coordinates);
         if (optionalTreasureBoxToUpdate.isPresent()) {
             TreasureBox treasureBoxToUpdate = optionalTreasureBoxToUpdate.get();
-            if (treasureBoxToUpdate.nbTreasures() == 1) {
-                List<TreasureBox> treasures = treasureBoxes.stream()
-                        .filter(treasureBox -> !Objects.equals(treasureBox, treasureBoxToUpdate))
-                        .collect(Collectors.toList());
-                return new TreasureMap(dimension, mountainBoxes, treasures);
-            } else {
-                List<TreasureBox> treasures = treasureBoxes.stream()
-                        .filter(treasureBox -> Objects.equals(treasureBox, treasureBoxToUpdate))
-                        .map(TreasureBox::decrementNbTreasures)
-                        .collect(Collectors.toList());
-                return new TreasureMap(dimension, mountainBoxes, treasures);
 
-            }
+            List<TreasureBox> treasures = treasureBoxes.stream()
+                    .map(treasureBox -> Objects.equals(treasureBox, treasureBoxToUpdate) ? treasureBox.decrementNbTreasures() : treasureBox)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
 
+            return new TreasureMap(dimension, mountainBoxes, treasures);
         }
-        throw new RuntimeException("");
+        throw new IllegalArgumentException("These coordinates does not represent a treasure box");
     }
 
     public boolean containsMountainOn(Coordinates coordinates) {

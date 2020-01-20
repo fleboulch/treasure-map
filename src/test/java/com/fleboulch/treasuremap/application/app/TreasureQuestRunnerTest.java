@@ -125,7 +125,6 @@ class TreasureQuestRunnerTest {
 
     }
 
-
     @Test
     void simple_quest_with_one_explorer_and_two_go_forward_movement(
             @ExplorerZeroZeroCoordinates @ExplorerWithTwoGoForward @ExplorerSouthOrientation Explorer beginExplorer,
@@ -138,6 +137,20 @@ class TreasureQuestRunnerTest {
         List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
 
         assertThat(explorerMovements).containsExactly(beginExplorer, firstMoveExplorer, finalExplorer);
+
+    }
+
+    @Test
+    void execute_example_test(
+            @ExplorerOneOneCoordinates @ExplorerWithExampleSequenceMovements @ExplorerSouthOrientation Explorer beginExplorer,
+            @ExplorerZeroThreeCoordinates @ExplorerSouthOrientation @ExplorerWithThreeTreasures Explorer finalExplorer
+    ) {
+        TreasureQuest inputTreasureQuest = buildComplexQuest(beginExplorer);
+        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+
+        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+
+        assertThat(explorerMovements).contains(beginExplorer, finalExplorer);
 
     }
 
@@ -164,6 +177,26 @@ class TreasureQuestRunnerTest {
         TreasureBox treasure1 = new TreasureBox(ZERO_ONE_COORDINATES, nbTreasures);
         return new TreasureQuest(
                 new TreasureMap(DIMENSION, emptyList(), List.of(treasure1)),
+                new Explorers(List.of(
+                        beginExplorer
+                ))
+        );
+    }
+
+    private TreasureQuest buildComplexQuest(Explorer beginExplorer) {
+        Coordinates oneZeroCoordinates = Coordinates.of(1, 0);
+        Coordinates twoOneCoordinates = Coordinates.of(2, 1);
+        Coordinates zeroThreeCoordinates = Coordinates.of(0, 3);
+        Coordinates oneThreeCoordinates = Coordinates.of(1, 3);
+
+        MountainBox mountain1 = new MountainBox(oneZeroCoordinates);
+        MountainBox mountain2 = new MountainBox(twoOneCoordinates);
+
+        TreasureBox treasure1 = new TreasureBox(zeroThreeCoordinates, 2);
+        TreasureBox treasure2 = new TreasureBox(oneThreeCoordinates, 3);
+
+        return new TreasureQuest(
+                new TreasureMap(DIMENSION, List.of(mountain1, mountain2), List.of(treasure1, treasure2)),
                 new Explorers(List.of(
                         beginExplorer
                 ))

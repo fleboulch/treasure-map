@@ -29,7 +29,7 @@ class InputReaderTest {
 
     @Test
     void it_should_process() throws IOException {
-        when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(null);
+        when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(any());
         inputReader.process(buildCsvPath("quest.csv"));
     }
 

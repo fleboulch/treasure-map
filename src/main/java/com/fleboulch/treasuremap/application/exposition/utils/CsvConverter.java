@@ -18,7 +18,6 @@ public class CsvConverter {
 
             return br.lines()
                     .filter(line -> !line.startsWith(SKIPPED_CHARACTER))
-//                    .map(mapToItem)
                     .collect(Collectors.toList());
 
         } catch (IOException e) {
@@ -27,7 +26,4 @@ public class CsvConverter {
         return emptyList();
     }
 
-//    private Function<String, String> mapToItem = (line) -> {
-//
-//    };
 }
