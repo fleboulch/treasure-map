@@ -115,21 +115,31 @@ public class Explorer {
         if (Objects.equals(direction, MovementType.D)) {
             switch (orientation.orientationType()) {
                 case S:
-                    return buildExplorerAfterAction(OrientationType.W);
+                    return buildExplorerAfterAction(OrientationType.W, null);
                 case N:
-                    return buildExplorerAfterAction(OrientationType.E);
+                    return buildExplorerAfterAction(OrientationType.E, null);
                 case E:
-                    return buildExplorerAfterAction(OrientationType.S);
+                    return buildExplorerAfterAction(OrientationType.S, null);
                 case W:
-                    return buildExplorerAfterAction(OrientationType.N);
+                    return buildExplorerAfterAction(OrientationType.N, null);
             }
         }
         throw new RuntimeException("");
     }
 
-    private Explorer buildExplorerAfterAction(OrientationType newOrientationType) {
+    private Explorer buildExplorerAfterAction(OrientationType newOrientationType, Coordinates newCoordinates) {
+        Orientation orientation = orientation();
+        Coordinates coordinates = coordinates();
+
+        if (!Objects.isNull(newOrientationType)) {
+            orientation = new Orientation(newOrientationType);
+        }
+        if (!Objects.isNull(newCoordinates)) {
+            coordinates = newCoordinates;
+        }
+
         Movements movementsAfterAction = popMovement();
-        return new Explorer(name, coordinates, new Orientation(newOrientationType), movementsAfterAction);
+        return new Explorer(name, coordinates, orientation, movementsAfterAction);
     }
 
     public Explorer goForward() {
@@ -149,26 +159,22 @@ public class Explorer {
 
     private Explorer goForwardWest() {
         Coordinates newCoordinates = coordinates.goForwardWest();
-        Movements movementsAfterAction = popMovement();
-        return new Explorer(name, newCoordinates, orientation, movementsAfterAction);
+        return buildExplorerAfterAction(null, newCoordinates);
     }
 
     private Explorer goForwardNorth() {
         Coordinates newCoordinates = coordinates.goForwardNorth();
-        Movements movementsAfterAction = popMovement();
-        return new Explorer(name, newCoordinates, orientation, movementsAfterAction);
+        return buildExplorerAfterAction(null, newCoordinates);
     }
 
     private Explorer goForwardEast() {
         Coordinates newCoordinates = coordinates.goForwardEast();
-        Movements movementsAfterAction = popMovement();
-        return new Explorer(name, newCoordinates, orientation, movementsAfterAction);
+        return buildExplorerAfterAction(null, newCoordinates);
     }
 
     private Explorer goForwardSouth() {
         Coordinates newCoordinates = coordinates.goForwardSouth();
-        Movements movementsAfterAction = popMovement();
-        return new Explorer(name, newCoordinates, orientation, movementsAfterAction);
+        return buildExplorerAfterAction(null, newCoordinates);
     }
 
     private Movements popMovement() {
