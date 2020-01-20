@@ -114,17 +114,31 @@ public class Explorer {
     public Explorer turn(MovementType direction) {
         if (Objects.equals(direction, MovementType.D)) {
             switch (orientation.orientationType()) {
-                case S:
-                    return buildExplorerAfterAction(OrientationType.W, null);
                 case N:
                     return buildExplorerAfterAction(OrientationType.E, null);
                 case E:
                     return buildExplorerAfterAction(OrientationType.S, null);
+                case S:
+                    return buildExplorerAfterAction(OrientationType.W, null);
                 case W:
                     return buildExplorerAfterAction(OrientationType.N, null);
+                default: throw new RuntimeException("Unknown orientation");
+
+            }
+        } else if (Objects.equals(direction, MovementType.G)) {
+            switch (orientation.orientationType()) {
+                case N:
+                    return buildExplorerAfterAction(OrientationType.W, null);
+                case E:
+                    return buildExplorerAfterAction(OrientationType.N, null);
+                case S:
+                    return buildExplorerAfterAction(OrientationType.E, null);
+                case W:
+                    return buildExplorerAfterAction(OrientationType.S, null);
+                default: throw new RuntimeException("Unknown orientation");
             }
         }
-        throw new RuntimeException("");
+        throw new RuntimeException("Unknown direction");
     }
 
     private Explorer buildExplorerAfterAction(OrientationType newOrientationType, Coordinates newCoordinates) {
@@ -144,12 +158,12 @@ public class Explorer {
 
     public Explorer goForward() {
         switch (orientation.orientationType()) {
-            case S:
-                return goForwardSouth();
             case N:
                 return goForwardNorth();
             case E:
                 return goForwardEast();
+            case S:
+                return goForwardSouth();
             case W:
                 return goForwardWest();
             default:
