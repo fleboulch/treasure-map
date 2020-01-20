@@ -11,9 +11,9 @@ public class ExplorerResolver implements ParameterResolver {
 
     // default values
     private static final Name DEFAULT_NAME = new Name("Laura");
-    public static final OrientationType DEFAULT_ORIENTATION = OrientationType.E;
+    private static final OrientationType DEFAULT_ORIENTATION = OrientationType.E;
     private static final Coordinates DEFAULT_ONE_TWO_COORDINATES = Coordinates.of(1, 2);
-    public static final MovementType DEFAULT_EMPTY_MOVEMENT = null;
+    private static final MovementType DEFAULT_EMPTY_MOVEMENT = null;
 
     // coordinates
     private static final Coordinates ZERO_ZERO_COORDINATES = Coordinates.of(0, 0);
@@ -21,10 +21,12 @@ public class ExplorerResolver implements ParameterResolver {
     private static final Coordinates ZERO_ONE_COORDINATES = Coordinates.of(0, 1);
 
     // orientations
-    public static final OrientationType SOUTH_ORIENTATION = OrientationType.S;
+    private static final OrientationType SOUTH_ORIENTATION = OrientationType.S;
+    private static final OrientationType NORTH_ORIENTATION = OrientationType.N;
+    private static final OrientationType EAST_ORIENTATION = OrientationType.E;
 
     // movements
-    public static final MovementType GO_FORWARD_MOVEMENT = MovementType.A;
+    private static final MovementType GO_FORWARD_MOVEMENT = MovementType.A;
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -45,6 +47,12 @@ public class ExplorerResolver implements ParameterResolver {
     private OrientationType buildOrientationType(ParameterContext parameterContext) {
         if (parameterContext.isAnnotated(ExplorerSouthOrientation.class)) {
             return SOUTH_ORIENTATION;
+        }
+        else if (parameterContext.isAnnotated(ExplorerNorthOrientation.class)) {
+            return NORTH_ORIENTATION;
+        }
+        else if (parameterContext.isAnnotated(ExplorerEastOrientation.class)) {
+            return EAST_ORIENTATION;
         }
         return DEFAULT_ORIENTATION;
     }

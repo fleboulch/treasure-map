@@ -2,9 +2,11 @@ package com.fleboulch.treasuremap.explorer.domain;
 
 import com.fleboulch.treasuremap.kernel.exceptions.DomainException;
 import com.fleboulch.treasuremap.map.domain.*;
+import com.fleboulch.treasuremap.resolvers.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.assertj.core.data.Index;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 
@@ -12,6 +14,7 @@ import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@ExtendWith(ExplorerResolver.class)
 class ExplorerTest {
 
     private static final Coordinates ONE_ONE_COORDINATES = Coordinates.of(1, 1);
@@ -22,7 +25,7 @@ class ExplorerTest {
     @Test
     void create_movement_sequence_for_an_explorer() {
         String rawMovements = "AADADAGGA";
-        Explorer explorer = buildExplorer(rawMovements, OrientationType.S);
+        Explorer explorer = buildExplorer(rawMovements);
 
         List<MovementType> createdMovements = explorer.movements().movementTypes();
 
@@ -40,9 +43,9 @@ class ExplorerTest {
     }
 
     @Test
-    void create_empty_movement_sequence_for_an_explorer() {
-        String rawMovements = "";
-        Explorer explorer = buildExplorer(rawMovements, OrientationType.S);
+    void create_empty_movement_sequence_for_an_explorer(
+            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
+    ) {
 
         List<MovementType> createdMovements = explorer.movements().movementTypes();
 
@@ -54,7 +57,7 @@ class ExplorerTest {
         String rawMovements = null;
 
         assertThatThrownBy(() ->
-                buildExplorer(rawMovements, OrientationType.S)
+                buildExplorer(rawMovements)
         ).isInstanceOf(DomainException.class);
     }
 
@@ -63,13 +66,14 @@ class ExplorerTest {
         String rawMovements = "ADGW";
 
         assertThatThrownBy(() ->
-                buildExplorer(rawMovements, OrientationType.S)
+                buildExplorer(rawMovements)
         ).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    void explorer_cannot_be_on_a_mountain() {
-        Explorer explorer = buildExplorer("", OrientationType.S);
+    void explorer_cannot_be_on_a_mountain(
+            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
+    ) {
         TreasureMap treasureMap = buildMapWithOneMountain();
         assertThatThrownBy(() ->
                 explorer.isOnMountain(treasureMap)
@@ -78,8 +82,9 @@ class ExplorerTest {
     }
 
     @Test
-    void check_explorer_is_not_on_a_mountain() {
-        Explorer explorer = buildExplorer("", OrientationType.S);
+    void check_explorer_is_not_on_a_mountain(
+            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
+    ) {
         TreasureMap treasureMap = buildSimpleMap();
         boolean onMountain = explorer.isOnMountain(treasureMap);
 
@@ -87,8 +92,9 @@ class ExplorerTest {
     }
 
     @Test
-    void check_explorer_is_on_a_treasure() {
-        Explorer explorer = buildExplorer("", OrientationType.S);
+    void check_explorer_is_on_a_treasure(
+            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
+    ) {
         TreasureMap treasureMap = buildMapWithOneTreasure();
         boolean onTreasure = explorer.isOnTreasure(treasureMap);
 
@@ -96,8 +102,9 @@ class ExplorerTest {
     }
 
     @Test
-    void check_explorer_is_not_on_a_treasure() {
-        Explorer explorer = buildExplorer("", OrientationType.S);
+    void check_explorer_is_not_on_a_treasure(
+            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
+    ) {
         TreasureMap treasureMap = buildSimpleMap();
         boolean onTreasure = explorer.isOnTreasure(treasureMap);
 
@@ -106,8 +113,9 @@ class ExplorerTest {
 
 
     @Test
-    void check_explorer_is_on_a_plains() {
-        Explorer explorer = buildExplorer("", OrientationType.S);
+    void check_explorer_is_on_a_plains(
+            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
+    ) {
         TreasureMap treasureMap = buildSimpleMap();
         boolean onPlains = explorer.isOnPlains(treasureMap);
 
@@ -115,38 +123,40 @@ class ExplorerTest {
     }
 
     @Test
-    void explorer_go_forward_south() {
-        Explorer explorer = buildExplorer("A", OrientationType.S);
+    void explorer_go_forward_south(
+            @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer explorer
+    ) {
         Explorer explorerAfterAction = explorer.goForward();
 
         assertThat(explorerAfterAction.coordinates()).isEqualTo(ONE_TWO_COORDINATES);
     }
 
     @Test
-    void explorer_go_forward_north() {
-        Explorer explorer = buildExplorer("A", OrientationType.N);
+    void explorer_go_forward_north(
+            @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerNorthOrientation Explorer explorer
+    ) {
         Explorer explorerAfterAction = explorer.goForward();
 
         assertThat(explorerAfterAction.coordinates()).isEqualTo(ONE_ZERO_COORDINATES);
     }
 
     @Test
-    void explorer_go_forward_east() {
-        Explorer explorer = buildExplorer("A", OrientationType.E);
+    void explorer_go_forward_east(
+            @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerEastOrientation Explorer explorer
+    ) {
         Explorer explorerAfterAction = explorer.goForward();
 
         assertThat(explorerAfterAction.coordinates()).isEqualTo(TWO_ONE_COORDINATES);
     }
 
-    private Explorer buildExplorer(String rawMovements, OrientationType orientation) {
+    private Explorer buildExplorer(String rawMovements) {
         return Explorer.of(
                 new Name("Lara"),
                 ONE_ONE_COORDINATES,
-                new Orientation(orientation),
+                new Orientation(OrientationType.S),
                 rawMovements
         );
     }
-
 
     private TreasureMap buildSimpleMap() {
         return new TreasureMap(new Dimension(new Width(5), new Height(5)), emptyList(), emptyList());
