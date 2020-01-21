@@ -11,7 +11,8 @@ import java.util.stream.Collectors;
 
 public class TreasureMap {
 
-    public static final String BR_CHARACTER = "\n";
+    private static final String BR_CHARACTER = "\n";
+
     private final Dimension dimension;
     private final List<MountainBox> mountainBoxes;
     private final List<TreasureBox> treasureBoxes;

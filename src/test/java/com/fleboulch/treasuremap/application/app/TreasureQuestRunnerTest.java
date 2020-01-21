@@ -153,6 +153,16 @@ class TreasureQuestRunnerTest {
         assertThat(explorerMovements).hasSize(10);
         assertThat(explorerMovements).contains(beginExplorer, finalExplorer);
 
+        TreasureMap finalMap = finalQuest.treasureMap();
+
+        assertThat(finalMap.mountainBoxes()).containsExactly(
+                new MountainBox(Coordinates.of(1, 0)),
+                new MountainBox(Coordinates.of(2, 1))
+        );
+        assertThat(finalMap.treasureBoxes()).containsExactly(
+                new TreasureBox(Coordinates.of(1, 3), 2)
+        );
+
     }
 
     private TreasureQuest buildSimpleQuest(Explorer beginExplorer) {
