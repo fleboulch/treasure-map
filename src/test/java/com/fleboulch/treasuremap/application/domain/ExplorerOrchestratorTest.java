@@ -1,6 +1,7 @@
 package com.fleboulch.treasuremap.application.domain;
 
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
+import com.fleboulch.treasuremap.resolvers.ExplorerMichel;
 import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
 import com.fleboulch.treasuremap.resolvers.ExplorerWithOneGoForward;
 import com.fleboulch.treasuremap.resolvers.ExplorerWithTwoGoForward;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(ExplorerResolver.class)
 class ExplorerOrchestratorTest {
@@ -38,6 +40,17 @@ class ExplorerOrchestratorTest {
         ExplorerOrchestrator orchestrator = new ExplorerOrchestrator(buildExplorersWith(beginExplorer));
 
         assertThat(orchestrator.explorerNames()).containsExactly(finalExplorer.name(), finalExplorer.name());
+    }
+
+    @Test
+    void orchestrator_with_multiple_explorers_has_not_been_implemented_yet(
+            Explorer explorer1,
+            @ExplorerMichel Explorer explorer2
+    ) {
+        assertThatThrownBy(() ->
+                new ExplorerOrchestrator(new Explorers(List.of(explorer1, explorer2)))
+        ).isInstanceOf(MultipleExplorersQuestNotImplementedException.class);
+
     }
 
     private Explorers buildExplorersWith(Explorer lauraExplorer) {

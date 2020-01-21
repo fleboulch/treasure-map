@@ -18,6 +18,10 @@ public class ExplorerOrchestrator {
     }
 
     private List<Name> buildExplorerNamesFrom(Explorers explorers) {
+        if (explorers.explorers().size() > 1) {
+            throw new MultipleExplorersQuestNotImplementedException();
+        }
+
         return explorers.explorers().stream()
                 .map(this::buildNamesForEachExplorer)
                 .flatMap(Collection::stream)
