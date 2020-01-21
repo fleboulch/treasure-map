@@ -28,6 +28,9 @@ testlogger {
 
 dependencies {
 
+    // csv writer
+    compile "com.opencsv:opencsv:5.0"
+
     // SB dependencies
     implementation "org.springframework.boot:spring-boot-starter-web"
 

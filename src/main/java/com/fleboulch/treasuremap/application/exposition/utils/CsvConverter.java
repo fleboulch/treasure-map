@@ -8,7 +8,7 @@ import static java.util.Collections.emptyList;
 
 public class CsvConverter {
 
-    public static final String SKIPPED_CHARACTER = "#";
+    static final String SKIPPED_CHARACTER = "#";
 
     private CsvConverter() {
     }

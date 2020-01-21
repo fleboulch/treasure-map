@@ -20,3 +20,5 @@ out/
 # Gradle Wrapper
 ######################
 !gradle/wrapper/gradle-wrapper.jar
+
+output/
