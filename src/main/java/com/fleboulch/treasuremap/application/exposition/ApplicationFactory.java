@@ -15,20 +15,21 @@ import com.fleboulch.treasuremap.kernel.utils.ConverterUtils;
 import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
 public class ApplicationFactory {
 
     public static final String CARET_DELIMITER = " - ";
-    public static final int EXPECTED_NUMBER_OF_DIMENSION_PROPERTIES = 3;
-    public static final int EXPECTED_NUMBER_OF_TREASURE_PROPERTIES = 4;
-    public static final int EXPECTED_NUMBER_OF_MOUNTAIN_PROPERTIES = 3;
-    public static final int INCLUSIVE_NUMBER_OF_EXPLORER_PROPERTIES_MIN = 5;
-    public static final int INCLUSIVE_NUMBER_OF_EXPLORER_PROPERTIES_MAX = 6;
+    private static final int EXPECTED_NUMBER_OF_DIMENSION_PROPERTIES = 3;
+    private static final int EXPECTED_NUMBER_OF_TREASURE_PROPERTIES = 4;
+    private static final int EXPECTED_NUMBER_OF_MOUNTAIN_PROPERTIES = 3;
+    private static final int INCLUSIVE_NUMBER_OF_EXPLORER_PROPERTIES_MIN = 5;
+    private static final int INCLUSIVE_NUMBER_OF_EXPLORER_PROPERTIES_MAX = 6;
 
     private ApplicationFactory() {
     }
@@ -177,12 +178,15 @@ public class ApplicationFactory {
 
         List<String> expositionExplorers = buildExpositionExplorers(historyTreasureQuest.historyMovementsPerExplorer());
 
-        List<String> result = new ArrayList<>();
-        result.addAll(expositionDimension);
-        result.addAll(expositionMountains);
-        result.addAll(expositionTreasures);
-        result.addAll(expositionExplorers);
-        return result;
+        return concatenate(expositionDimension, expositionMountains, expositionTreasures, expositionExplorers);
+    }
+
+    @SafeVarargs
+    private static List<String> concatenate(List<String>... inputLists) {
+
+        return Stream.of(inputLists)
+                .flatMap(Collection::stream)
+                .collect(toList());
     }
 
     private static List<String> buildExpositionExplorers(Map<Name, List<Explorer>> historyMovementsPerExplorer) {

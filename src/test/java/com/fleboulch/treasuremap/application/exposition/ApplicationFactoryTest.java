@@ -1,5 +1,7 @@
 package com.fleboulch.treasuremap.application.exposition;
 
+import com.fleboulch.treasuremap.application.domain.Explorers;
+import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
 import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputRowException;
@@ -7,8 +9,7 @@ import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.MovementType;
 import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
-import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
-import com.fleboulch.treasuremap.resolvers.ExplorerZeroZeroCoordinates;
+import com.fleboulch.treasuremap.resolvers.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -174,6 +175,56 @@ class ApplicationFactoryTest {
         assertThatThrownBy(() ->
                 ApplicationFactory.toDomain(validConfiguration)
         ).isInstanceOf(BoxIsOutOfMapException.class);
+    }
+
+    @Test
+    void it_should_convert_history_treasure_quest_to_exposition(
+            Explorer explorer
+    ) {
+        HistoryTreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer);
+
+        List<String> response = ApplicationFactory.toExposition(historyTreasureQuest);
+
+        String caret = ApplicationFactory.CARET_DELIMITER;
+        assertThat(response).containsExactly(
+                String.format("C%s3%s4", caret, caret),
+                String.format("M%s1%s1", caret, caret),
+                String.format("T%s2%s2%s1", caret, caret, caret),
+                String.format("A%sLaura%s1%s2%sE%s0", caret, caret, caret, caret, caret)
+        );
+    }
+
+    @Test
+    void it_should_convert_history_treasure_quest_to_exposition_and_remove_empty_treasure_box(
+            @ExplorerTwoOneCoordinates @ExplorerSouthOrientation @ExplorerWithThreeTreasures Explorer explorer
+    ) {
+        HistoryTreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer);
+
+        List<String> response = ApplicationFactory.toExposition(historyTreasureQuest);
+
+        String caret = ApplicationFactory.CARET_DELIMITER;
+        assertThat(response).containsExactly(
+                String.format("C%s3%s4", caret, caret),
+                String.format("M%s1%s1", caret, caret),
+                String.format("T%s2%s2%s1", caret, caret, caret),
+                String.format("A%sLaura%s2%s1%sS%s3", caret, caret, caret, caret, caret)
+        );
+    }
+
+    private HistoryTreasureQuest buildHistoryTreasureQuest(Explorer explorer) {
+        return HistoryTreasureQuest.of(buildTreasureQuest(explorer));
+    }
+
+    private TreasureQuest buildTreasureQuest(Explorer explorer) {
+        return new TreasureQuest(buildTreasureMap(), buildExplorers(explorer));
+    }
+
+    private Explorers buildExplorers(Explorer explorer) {
+        return new Explorers(List.of(explorer));
+    }
+
+    private TreasureMap buildTreasureMap() {
+        return new TreasureMap(buildDimension(), List.of(buildMountain(1, 1)), List.of(buildTreasure(2, 2, 1)));
     }
 
     private TreasureBox buildTreasure(int x, int y, int nbTreasures) {
