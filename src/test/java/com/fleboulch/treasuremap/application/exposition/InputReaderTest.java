@@ -31,6 +31,8 @@ class InputReaderTest {
     @Mock
     private TreasureQuestRunner treasureQuestRunner;
 
+    private static final String CARET = ApplicationFactory.CARET_DELIMITER.trim();
+
     @BeforeEach
     void setup() {
         inputReader = new InputReader(treasureQuestRunner);
@@ -41,28 +43,30 @@ class InputReaderTest {
         when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(buildHistoryTreasureQuest(explorer));
         List<String> response = inputReader.process(buildCsvPath("quest.csv"));
 
-        String caret = ApplicationFactory.CARET_DELIMITER;
         assertThat(response).containsExactly(
-                String.format("C%s3%s4", caret, caret),
-                String.format("M%s1%s1", caret, caret),
-                String.format("T%s2%s2%s1", caret, caret, caret),
-                String.format("A%sLaura%s1%s2%sE%s0", caret, caret, caret, caret, caret)
+                String.format("C %s 3 %s 4", CARET, CARET),
+                String.format("M %s 1 %s 1", CARET, CARET),
+                String.format("T %s 2 %s 2 %s 1", CARET, CARET, CARET),
+                String.format("A %s Laura %s 1 %s 2 %s E %s 0", CARET, CARET, CARET, CARET, CARET)
         );
     }
 
     @Test
     void it_should_process_quest_with_one_treasure(
-            @ExplorerTwoOneCoordinates @ExplorerSouthOrientation @ExplorerWithOneGoForward Explorer explorer
+            @ExplorerTwoOneCoordinates @ExplorerSouthOrientation @ExplorerWithOneGoForward Explorer explorer,
+            @ExplorerTwoTwoCoordinates @ExplorerSouthOrientation @ExplorerWithOneTreasure Explorer firstMoveExplorer
     ) throws IOException {
-        when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(buildHistoryTreasureQuest(explorer));
+        HistoryTreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer);
+        historyTreasureQuest.registerMove(firstMoveExplorer);
+        historyTreasureQuest.removeOneTreasure(Coordinates.of(2, 2));
+
+        when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(historyTreasureQuest);
         List<String> response = inputReader.process(buildCsvPath("quest.csv"));
 
-        String caret = ApplicationFactory.CARET_DELIMITER;
         assertThat(response).containsExactly(
-                String.format("C%s3%s4", caret, caret),
-                String.format("M%s1%s1", caret, caret),
-                String.format("T%s2%s2%s1", caret, caret, caret),
-                String.format("A%sLaura%s2%s2%sS%s1", caret, caret, caret, caret, caret)
+                String.format("C %s 3 %s 4", CARET, CARET),
+                String.format("M %s 1 %s 1", CARET, CARET),
+                String.format("A %s Laura %s 2 %s 2 %s S %s 1", CARET, CARET, CARET, CARET, CARET)
         );
     }
 

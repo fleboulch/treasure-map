@@ -150,6 +150,7 @@ class TreasureQuestRunnerTest {
 
         List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
 
+        assertThat(explorerMovements).hasSize(10);
         assertThat(explorerMovements).contains(beginExplorer, finalExplorer);
 
     }
