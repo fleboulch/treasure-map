@@ -37,6 +37,10 @@ I did not do benchmarks on large CSV files but in [ApplicationFactory](src/main/
 This method is in O(n) so performance could be not really good on large collections.  
 One solution could be using builder for treasure map construction
 
+## Output
+
+Csv result file is dropped in `output/` folder
+
 ## Git history
 
 I did not autosquash my work deliberately in master branch to show the way I work so there is lots of fixme commits
