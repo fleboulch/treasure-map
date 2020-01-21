@@ -10,6 +10,8 @@ import com.fleboulch.treasuremap.map.domain.TreasureMap;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class TreasureQuestRunner {
 
@@ -21,14 +23,18 @@ public class TreasureQuestRunner {
 
         ExplorerOrchestrator explorerOrchestrator = new ExplorerOrchestrator(treasureQuest.explorers());
 
-        // TODO: replace this stream with collectors
-        explorerOrchestrator.explorerNames()
-                .forEach(explorerName -> saveAction(historyTreasureQuest, explorerName, treasureQuest.treasureMap()));
+        Optional<HistoryTreasureQuest> finalQuest = explorerOrchestrator.explorerNames().stream()
+                .map(explorerName -> saveAction(historyTreasureQuest, explorerName, treasureQuest.treasureMap()))
+                .reduce((l, r) -> r);
 
-        return historyTreasureQuest;
+        if (finalQuest.isEmpty()) {
+            return historyTreasureQuest;
+        }
+
+        return finalQuest.get();
     }
 
-    private void saveAction(HistoryTreasureQuest historyTreasureQuest, Name explorerName, TreasureMap treasureMap) {
+    private HistoryTreasureQuest saveAction(HistoryTreasureQuest historyTreasureQuest, Name explorerName, TreasureMap treasureMap) {
         Explorer currentExplorer = historyTreasureQuest.getLastState(explorerName);
 
         Explorer explorerNext = executeAction(currentExplorer, treasureMap);
@@ -37,6 +43,8 @@ public class TreasureQuestRunner {
         if (explorerNext.hasCollectedANewTreasure(currentExplorer)) {
             historyTreasureQuest.removeOneTreasure(explorerNext.coordinates());
         }
+
+        return historyTreasureQuest;
     }
 
     private Explorer executeAction(Explorer currentExplorer, TreasureMap treasureMap) {
