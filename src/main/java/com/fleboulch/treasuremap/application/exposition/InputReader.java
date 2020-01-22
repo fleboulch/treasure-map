@@ -5,6 +5,8 @@ import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.utils.CsvConverter;
 import com.fleboulch.treasuremap.application.exposition.utils.CsvWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,18 +14,20 @@ import java.util.List;
 @Component
 public class InputReader {
 
+    private final Logger log = LoggerFactory.getLogger(InputReader.class);
+
     private final TreasureQuestRunner treasureQuestRunner;
 
     public InputReader(TreasureQuestRunner treasureQuestRunner) {
         this.treasureQuestRunner = treasureQuestRunner;
     }
 
-    public List<String> process(String filePath) {
+    public List<String> process(String filePath, String description) {
 
         TreasureQuest treasureQuest = buildTreasureQuestFromCsv(filePath);
         HistoryTreasureQuest historyQuest = treasureQuestRunner.start(treasureQuest);
 
-        return csvOutput(historyQuest);
+        return csvOutput(historyQuest, description);
 
     }
 
@@ -32,9 +36,11 @@ public class InputReader {
         return ApplicationFactory.toDomain(configurationsWithoutComments);
     }
 
-    private List<String> csvOutput(HistoryTreasureQuest historyQuest) {
+    private List<String> csvOutput(HistoryTreasureQuest historyQuest, String description) {
         List<String> exposition = ApplicationFactory.toExposition(historyQuest);
-        CsvWriter.csvOutput(exposition);
+        String outputPathName = CsvWriter.csvOutput(exposition, description);
+        log.info("'{}' output has been generated into '{}'", description, outputPathName);
+
         return exposition;
     }
 

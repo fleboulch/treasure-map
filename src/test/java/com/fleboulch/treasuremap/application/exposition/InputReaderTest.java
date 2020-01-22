@@ -40,7 +40,7 @@ class InputReaderTest {
     @Test
     void it_should_process_simple_quest(Explorer explorer) throws IOException {
         when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(buildHistoryTreasureQuest(explorer, List.of(buildMountain(1, 1)), List.of(buildTreasure(2, 2, 1))));
-        List<String> response = inputReader.process(buildCsvPath("quest.csv"));
+        List<String> response = inputReader.process(buildCsvPath("quest.csv"), "simple quest");
 
         assertThat(response).containsExactly(
                 String.format("C %s 3 %s 4", CARET, CARET),
@@ -60,7 +60,7 @@ class InputReaderTest {
         historyTreasureQuest.removeOneTreasure(Coordinates.of(2, 2));
 
         when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(historyTreasureQuest);
-        List<String> response = inputReader.process(buildCsvPath("quest.csv"));
+        List<String> response = inputReader.process(buildCsvPath("quest.csv"), "quest with one treasure");
 
         assertThat(response).containsExactly(
                 String.format("C %s 3 %s 4", CARET, CARET),
@@ -94,7 +94,7 @@ class InputReaderTest {
         historyTreasureQuest.removeOneTreasure(finalCoordinates);
 
         when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(historyTreasureQuest);
-        List<String> response = inputReader.process(buildCsvPath("quest.csv"));
+        List<String> response = inputReader.process(buildCsvPath("quest.csv"), "example quest");
 
         assertThat(response).containsExactly(
                 String.format("C %s 3 %s 4", CARET, CARET),
