@@ -13,7 +13,7 @@ import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class MapTest {
+class TreasureMapTest {
 
     @Test
     void create_simple_map_with_valid_dimension() {

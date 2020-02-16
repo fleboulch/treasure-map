@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class TreasureMap {
 
-    private static final String BR_CHARACTER = "\n";
+    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     private final Dimension dimension;
     private final List<MountainBox> mountainBoxes;
@@ -115,13 +115,13 @@ public class TreasureMap {
     public String toString() {
         String mountain = mountainBoxes.stream()
                 .map(MountainBox::toString)
-                .collect(Collectors.joining(BR_CHARACTER));
+                .collect(Collectors.joining(LINE_SEPARATOR));
 
         String treasures = treasureBoxes.stream()
                 .map(TreasureBox::toString)
-                .collect(Collectors.joining(BR_CHARACTER));
+                .collect(Collectors.joining(LINE_SEPARATOR));
 
-        return String.format("C - %s - %s %n%s%n%s%n",
+        return String.format("C - %s - %s %n%s%s",
                 dimension.width().value(),
                 dimension.height().value(),
                 mountain,
