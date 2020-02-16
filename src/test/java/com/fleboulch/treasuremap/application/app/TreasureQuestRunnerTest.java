@@ -141,6 +141,35 @@ class TreasureQuestRunnerTest {
     }
 
     @Test
+    void simple_quest_with_one_explorer_and_one_go_forward_movement_trying_to_go_outside_the_map(
+            @ExplorerZeroThreeCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer beginExplorer,
+            @ExplorerZeroThreeCoordinates @ExplorerSouthOrientation Explorer finalExplorer
+    ) {
+        TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
+        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+
+        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+
+        assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
+
+    }
+
+    @Test
+    void simple_quest_with_one_explorer_and_two_go_forward_movement_trying_to_go_outside_the_map(
+            @ExplorerZeroThreeCoordinates @ExplorerWithTwoGoForward @ExplorerSouthOrientation Explorer beginExplorer,
+            @ExplorerZeroThreeCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer firstMoveExplorer,
+            @ExplorerZeroThreeCoordinates @ExplorerSouthOrientation Explorer finalExplorer
+    ) {
+        TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
+        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+
+        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+
+        assertThat(explorerMovements).containsExactly(beginExplorer, firstMoveExplorer, finalExplorer);
+
+    }
+
+    @Test
     void execute_example_test(
             @ExplorerOneOneCoordinates @ExplorerWithExampleSequenceMovements @ExplorerSouthOrientation Explorer beginExplorer,
             @ExplorerZeroThreeCoordinates @ExplorerSouthOrientation @ExplorerWithThreeTreasures Explorer finalExplorer
@@ -162,7 +191,6 @@ class TreasureQuestRunnerTest {
         assertThat(finalMap.treasureBoxes()).containsExactly(
                 new TreasureBox(Coordinates.of(1, 3), 2)
         );
-
     }
 
     private TreasureQuest buildSimpleQuest(Explorer beginExplorer) {

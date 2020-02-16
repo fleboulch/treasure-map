@@ -31,25 +31,24 @@ public class TreasureMap {
     }
 
     // TODO: need to refacto this method
-    public PlainsBox from(Coordinates coordinates) {
+    public Optional<PlainsBox> from(Coordinates coordinates) {
         if (coordinates.hasValidCoordinates(dimension)) {
             Optional<MountainBox> mountain = findMountainBoxByCoordinates(coordinates);
 
             if (mountain.isPresent()) {
-                return mountain.get();
+                return Optional.of(mountain.get());
             }
 
             Optional<TreasureBox> treasure = findTreasureBoxByCoordinates(coordinates);
 
             if (treasure.isPresent()) {
-                return treasure.get();
+                return Optional.of(treasure.get());
             }
 
-            return new PlainsBox(coordinates);
+            return Optional.of(new PlainsBox(coordinates));
 
         } else {
-            // return a custom exception instead of generic one
-            throw new IllegalArgumentException(String.format("'%s' are out of map with dimensions %s", coordinates, dimension));
+            return Optional.empty();
         }
     }
 
@@ -90,16 +89,6 @@ public class TreasureMap {
         throw new IllegalArgumentException("These coordinates does not represent a treasure box");
     }
 
-    public boolean containsMountainOn(Coordinates coordinates) {
-        PlainsBox box = from(coordinates);
-        return Objects.equals(box.getBoxType(), BoxType.MOUNTAIN);
-    }
-
-    public boolean containsTreasureOn(Coordinates coordinates) {
-        PlainsBox box = from(coordinates);
-        return Objects.equals(box.getBoxType(), BoxType.TREASURE);
-    }
-
     private void checkValidBoxes(List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
         mountainBoxes.forEach(this::checkValidBox);
         treasureBoxes.forEach(this::checkValidBox);
@@ -133,7 +122,7 @@ public class TreasureMap {
                 .map(TreasureBox::toString)
                 .collect(Collectors.joining(LINE_SEPARATOR));
 
-        return String.format("C - %s - %s %n%s%s",
+        return String.format("C - %s - %s %n%s%n%s",
                 dimension.width(),
                 dimension.height(),
                 mountain,

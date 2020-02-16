@@ -82,7 +82,7 @@ class TreasureMapTest {
         Coordinates mountainCoordinates = Coordinates.of(1, 2);
         TreasureMap treasureMap = buildMapWithMountains(3, 4, List.of(buildMountain(mountainCoordinates)));
 
-        PlainsBox box = treasureMap.from(mountainCoordinates);
+        PlainsBox box = treasureMap.from(mountainCoordinates).get();
         assertThat(box).isInstanceOf(MountainBox.class);
         assertThat(box.coordinates()).isEqualTo(mountainCoordinates);
 
@@ -93,7 +93,7 @@ class TreasureMapTest {
         Coordinates treasureCoordinates = Coordinates.of(1, 2);
         TreasureMap treasureMap = buildMapWithTreasures(3, 4, List.of(buildTreasure(treasureCoordinates)));
 
-        PlainsBox box = treasureMap.from(treasureCoordinates);
+        PlainsBox box = treasureMap.from(treasureCoordinates).get();
         assertThat(box).isInstanceOf(TreasureBox.class);
         assertThat(box.coordinates()).isEqualTo(treasureCoordinates);
 
@@ -104,7 +104,7 @@ class TreasureMapTest {
         Coordinates coordinates = Coordinates.of(1, 2);
         TreasureMap treasureMap = buildSimpleMap(3, 4);
 
-        PlainsBox box = treasureMap.from(coordinates);
+        PlainsBox box = treasureMap.from(coordinates).get();
         assertThat(box).isInstanceOf(PlainsBox.class);
         assertThat(box).isNotInstanceOf(MountainBox.class);
         assertThat(box).isNotInstanceOf(TreasureBox.class);
@@ -117,13 +117,11 @@ class TreasureMapTest {
             "10,0",
             "10,10",
     })
-    void check_outside_coordinates_from_map_is_forbidden(int x, int y) {
+    void check_outside_coordinates_from_map_return_an_optional_box(int x, int y) {
         Coordinates coordinates = Coordinates.of(x, y);
         TreasureMap treasureMap = buildSimpleMap(3, 4);
 
-        assertThatThrownBy(() ->
-                treasureMap.from(coordinates)
-        ).isInstanceOf(IllegalArgumentException.class);
+        assertThat(treasureMap.from(coordinates)).isEmpty();
     }
 
     @Test
