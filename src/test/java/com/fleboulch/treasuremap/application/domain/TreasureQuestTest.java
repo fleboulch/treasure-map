@@ -60,7 +60,7 @@ class TreasureQuestTest {
                                 new Name("Laura"),
                                 explorerCoordinates,
                                 new Orientation(orientation),
-                                ""
+                                emptyList()
                         )
                 ))
         );

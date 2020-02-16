@@ -27,7 +27,7 @@ I mainly used it for :
 
 - Treasure quest with multiple users has not been implemented
 - Add additional checks on treasure map configuration (a same box should have only one type)
-- Use an domain id (which is an UUID) for explorer (instead of name)
+- Use a domain id (which is an UUID) for explorer (instead of name)
 - explorer trying to go out of the treasure map throw an exception. It should just let the explorer on the same coordinates and continue the quest
 - Add log message on exceptions
 

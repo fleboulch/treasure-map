@@ -82,11 +82,9 @@ public class ExplorerResolver implements ParameterResolver {
     private OrientationType buildOrientationType(ParameterContext parameterContext) {
         if (parameterContext.isAnnotated(ExplorerSouthOrientation.class)) {
             return SOUTH_ORIENTATION;
-        }
-        else if (parameterContext.isAnnotated(ExplorerNorthOrientation.class)) {
+        } else if (parameterContext.isAnnotated(ExplorerNorthOrientation.class)) {
             return NORTH_ORIENTATION;
-        }
-        else if (parameterContext.isAnnotated(ExplorerWestOrientation.class)) {
+        } else if (parameterContext.isAnnotated(ExplorerWestOrientation.class)) {
             return WEST_ORIENTATION;
         }
         return DEFAULT_ORIENTATION;
@@ -118,8 +116,7 @@ public class ExplorerResolver implements ParameterResolver {
         String name = DEFAULT_NAME.value();
         if (parameterContext.isAnnotated(ExplorerMichel.class)) {
             name = "Michel";
-        }
-        else if (parameterContext.isAnnotated(ExplorerAlberto.class)) {
+        } else if (parameterContext.isAnnotated(ExplorerAlberto.class)) {
             name = "Alberto";
         }
         return new Name(name);
@@ -128,29 +125,21 @@ public class ExplorerResolver implements ParameterResolver {
     private Coordinates buildCustomCoordinates(ParameterContext parameterContext) {
         if (parameterContext.isAnnotated(ExplorerOneOneCoordinates.class)) {
             return ONE_ONE_COORDINATES;
-        }
-        else if (parameterContext.isAnnotated(ExplorerZeroZeroCoordinates.class)) {
+        } else if (parameterContext.isAnnotated(ExplorerZeroZeroCoordinates.class)) {
             return ZERO_ZERO_COORDINATES;
-        }
-        else if (parameterContext.isAnnotated(ExplorerZeroOneCoordinates.class)) {
+        } else if (parameterContext.isAnnotated(ExplorerZeroOneCoordinates.class)) {
             return ZERO_ONE_COORDINATES;
-        }
-        else if (parameterContext.isAnnotated(ExplorerOneTwoCoordinates.class)) {
+        } else if (parameterContext.isAnnotated(ExplorerOneTwoCoordinates.class)) {
             return ONE_TWO_COORDINATES;
-        }
-        else if (parameterContext.isAnnotated(ExplorerOneZeroCoordinates.class)) {
+        } else if (parameterContext.isAnnotated(ExplorerOneZeroCoordinates.class)) {
             return ONE_ZERO_COORDINATES;
-        }
-        else if (parameterContext.isAnnotated(ExplorerTwoOneCoordinates.class)) {
+        } else if (parameterContext.isAnnotated(ExplorerTwoOneCoordinates.class)) {
             return TWO_ONE_COORDINATES;
-        }
-        else if (parameterContext.isAnnotated(ExplorerZeroTwoCoordinates.class)) {
+        } else if (parameterContext.isAnnotated(ExplorerZeroTwoCoordinates.class)) {
             return ZERO_TWO_COORDINATES;
-        }
-        else if (parameterContext.isAnnotated(ExplorerZeroThreeCoordinates.class)) {
+        } else if (parameterContext.isAnnotated(ExplorerZeroThreeCoordinates.class)) {
             return ZERO_THREE_COORDINATES;
-        }
-        else if (parameterContext.isAnnotated(ExplorerTwoTwoCoordinates.class)) {
+        } else if (parameterContext.isAnnotated(ExplorerTwoTwoCoordinates.class)) {
             return TWO_TWO_COORDINATES;
         }
 
@@ -162,10 +151,10 @@ public class ExplorerResolver implements ParameterResolver {
                 name,
                 coordinates,
                 new Orientation(orientationType),
-                buildRawMovements(movementsType)
+                movementsType
         );
 
-        IntStream.range(0,nbTreasures).forEach(index -> explorer.collectTreasure());
+        IntStream.range(0, nbTreasures).forEach(index -> explorer.collectTreasure());
 
         return explorer;
     }

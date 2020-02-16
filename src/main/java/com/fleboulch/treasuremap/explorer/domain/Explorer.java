@@ -6,7 +6,6 @@ import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class Explorer {
 
@@ -27,9 +26,9 @@ public class Explorer {
         this.nbCollectedTreasures = nbCollectedTreasures;
     }
 
-    public static Explorer of(Name name, Coordinates coordinates, Orientation orientation, String rawMovements) {
-        Domain.validateNotNull(rawMovements, "Raw movements should not be null");
-        return new Explorer(name, coordinates, orientation, buildMovements(rawMovements), 0);
+    public static Explorer of(Name name, Coordinates coordinates, Orientation orientation, List<MovementType> movementTypes) {
+        Domain.validateNotNull(movementTypes, "Raw movements should not be null");
+        return new Explorer(name, coordinates, orientation, new Movements(movementTypes), 0);
     }
 
     public boolean isOnMountain(TreasureMap treasureMap) {
@@ -58,26 +57,11 @@ public class Explorer {
         return treasureMap.from(coordinates);
     }
 
-    private static Movements buildMovements(String rawMovements) {
-        return new Movements(buildMovementTypeList(rawMovements));
-    }
-
-    private static List<MovementType> buildMovementTypeList(String rawMovements) {
-        return rawMovements.chars()
-                .mapToObj(explorerIndex -> toMovementType(explorerIndex, rawMovements))
-                .collect(Collectors.toList());
-    }
-
     public MovementType nextMovement() {
         if (movements.movementTypes().isEmpty()) {
             throw new ExplorerHasNoMoreMovementException(this);
         }
         return movements.movementTypes().get(0);
-    }
-
-    private static MovementType toMovementType(int indexMovement, String rawMovements) {
-        char movementAsChar = (char) indexMovement;
-        return MovementType.valueOf(String.valueOf(movementAsChar));
     }
 
     public boolean hasValidCoordinates(Dimension dimension) {
@@ -134,7 +118,8 @@ public class Explorer {
                     return buildExplorerAfterAction(OrientationType.W, null);
                 case W:
                     return buildExplorerAfterAction(OrientationType.N, null);
-                default: throw new IllegalArgumentException("Unknown orientation");
+                default:
+                    throw new IllegalArgumentException("Unknown orientation");
 
             }
         } else if (Objects.equals(direction, MovementType.G)) {
@@ -147,7 +132,8 @@ public class Explorer {
                     return buildExplorerAfterAction(OrientationType.E, null);
                 case W:
                     return buildExplorerAfterAction(OrientationType.S, null);
-                default: throw new IllegalArgumentException("Unknown orientation");
+                default:
+                    throw new IllegalArgumentException("Unknown orientation");
             }
         }
         throw new IllegalArgumentException("Unknown direction for turn");
@@ -232,4 +218,5 @@ public class Explorer {
     public int hashCode() {
         return Objects.hash(name, coordinates, orientation, movements, nbCollectedTreasures);
     }
+
 }

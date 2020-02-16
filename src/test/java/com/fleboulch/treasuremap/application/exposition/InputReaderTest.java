@@ -18,6 +18,7 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -81,7 +82,7 @@ class InputReaderTest {
 
         Coordinates finalCoordinates = Coordinates.of(0, 3);
 
-        Explorer finalExplorer = Explorer.of(explorer.name(), finalCoordinates, explorer.orientation(), "");
+        Explorer finalExplorer = Explorer.of(explorer.name(), finalCoordinates, explorer.orientation(), emptyList());
 
         finalExplorer.collectTreasure();
         finalExplorer.collectTreasure();

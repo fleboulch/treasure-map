@@ -1,6 +1,5 @@
 package com.fleboulch.treasuremap.explorer.domain;
 
-import com.fleboulch.treasuremap.kernel.exceptions.DomainException;
 import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.resolvers.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
@@ -55,7 +54,7 @@ class ExplorerTest {
 
         assertThatThrownBy(() ->
                 buildInvalidExplorer(rawMovements)
-        ).isInstanceOf(DomainException.class);
+        ).isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -132,7 +131,7 @@ class ExplorerTest {
     @Test
     void explorer_go_forward_north(
             @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerNorthOrientation Explorer beginExplorer,
-            @ExplorerOneZeroCoordinates @ExplorerWithOneGoForward@ExplorerNorthOrientation Explorer expectedEndExplorer
+            @ExplorerOneZeroCoordinates @ExplorerWithOneGoForward @ExplorerNorthOrientation Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 
@@ -168,6 +167,7 @@ class ExplorerTest {
 
         assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
     }
+
     @Test
     void explorer_turn_L_from_north(
             @ExplorerZeroZeroCoordinates @ExplorerTurnLeft @ExplorerNorthOrientation Explorer beginExplorer,
@@ -183,7 +183,7 @@ class ExplorerTest {
                 new Name("Lara"),
                 ONE_ONE_COORDINATES,
                 new Orientation(OrientationType.S),
-                rawMovements
+                List.of(MovementType.valueOf(rawMovements))
         );
     }
 
