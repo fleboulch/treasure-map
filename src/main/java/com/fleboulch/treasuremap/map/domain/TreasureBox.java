@@ -15,13 +15,6 @@ public class TreasureBox extends PlainsBox {
         this.nbTreasures = Domain.validatePositive(nbTreasures, "The number of treasures should be positive");
     }
 
-//    public Optional<TreasureBox> decrementNbTreasures() {
-//        if (nbTreasures == 1) {
-//            return Optional.empty();
-//        }
-//        return Optional.of(new TreasureBox(coordinates(), nbTreasures - 1));
-//    }
-
     public BoxType getBoxType() {
         return BoxType.TREASURE;
     }
