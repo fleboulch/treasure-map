@@ -73,14 +73,14 @@ public class ApplicationFactory {
 
     private static List<TreasureBox> buildTreasureBoxes(List<PlainsBox> plainsBoxes) {
         return plainsBoxes.stream()
-                .filter(box -> box instanceof TreasureBox)
+                .filter(box -> Objects.equals(box.getBoxType(), BoxType.TREASURE))
                 .map(box -> (TreasureBox) box)
                 .collect(toList());
     }
 
     private static List<MountainBox> buildMountainBoxesFrom(List<PlainsBox> plainsBoxes) {
         return plainsBoxes.stream()
-                .filter(box -> box instanceof MountainBox)
+                .filter(box -> Objects.equals(box.getBoxType(), BoxType.MOUNTAIN))
                 .map(box -> (MountainBox) box)
                 .collect(toList());
     }

@@ -8,6 +8,10 @@ public class MountainBox extends PlainsBox {
         super(coordinates);
     }
 
+    public BoxType getBoxType() {
+        return BoxType.MOUNTAIN;
+    }
+
     @Override
     public String toString() {
         return String.format("M - %s", coordinates());

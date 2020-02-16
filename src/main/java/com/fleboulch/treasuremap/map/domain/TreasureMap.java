@@ -92,12 +92,12 @@ public class TreasureMap {
 
     public boolean containsMountainOn(Coordinates coordinates) {
         PlainsBox box = from(coordinates);
-        return box.isMountainType();
+        return Objects.equals(box.getBoxType(), BoxType.MOUNTAIN);
     }
 
     public boolean containsTreasureOn(Coordinates coordinates) {
         PlainsBox box = from(coordinates);
-        return box.isTreasureType();
+        return Objects.equals(box.getBoxType(), BoxType.TREASURE);
     }
 
     private void checkValidBoxes(List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {

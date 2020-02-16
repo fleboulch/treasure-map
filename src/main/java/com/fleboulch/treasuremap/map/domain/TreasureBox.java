@@ -22,6 +22,10 @@ public class TreasureBox extends PlainsBox {
 //        return Optional.of(new TreasureBox(coordinates(), nbTreasures - 1));
 //    }
 
+    public BoxType getBoxType() {
+        return BoxType.TREASURE;
+    }
+
     public TreasureBox decrementNbTreasures() {
         if (nbTreasures == 1) {
             return null;

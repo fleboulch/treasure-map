@@ -17,12 +17,8 @@ public class PlainsBox {
         return coordinates.hasValidCoordinates(dimension);
     }
 
-    public boolean isMountainType() {
-        return this instanceof MountainBox;
-    }
-
-    public boolean isTreasureType() {
-        return this instanceof TreasureBox;
+    public BoxType getBoxType() {
+        return BoxType.PLAINS;
     }
 
     public Coordinates coordinates() {
