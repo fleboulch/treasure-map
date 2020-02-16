@@ -60,7 +60,7 @@ public class HistoryTreasureQuest {
 
     private void checkValidExplorer(Explorer explorer) {
         if (!historyMovementsPerExplorer.containsKey(explorer.name())) {
-            throw new ExplorerIsNotAllowedToDoThisQuest(explorer);
+            throw new ExplorerIsNotAllowedToDoThisQuestException(explorer);
         }
     }
 

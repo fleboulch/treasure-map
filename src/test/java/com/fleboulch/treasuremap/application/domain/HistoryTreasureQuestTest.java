@@ -58,7 +58,7 @@ class HistoryTreasureQuestTest {
 
         assertThatThrownBy(() ->
                 historyTreasureQuest.registerMove(explorer2)
-        ).isInstanceOf(ExplorerIsNotAllowedToDoThisQuest.class);
+        ).isInstanceOf(ExplorerIsNotAllowedToDoThisQuestException.class);
 
     }
 
