@@ -122,8 +122,8 @@ public class TreasureMap {
                 .collect(Collectors.joining(LINE_SEPARATOR));
 
         return String.format("C - %s - %s %n%s%s",
-                dimension.width().value(),
-                dimension.height().value(),
+                dimension.width(),
+                dimension.height(),
                 mountain,
                 treasures
         );

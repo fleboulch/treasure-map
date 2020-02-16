@@ -47,8 +47,8 @@ public class Coordinates {
     }
 
     public boolean hasValidCoordinates(Dimension dimension) {
-        return x.index() < dimension.width().value() &&
-                y.index() < dimension.height().value();
+        return x.index() < dimension.width() &&
+                y.index() < dimension.height();
     }
 
     @Override

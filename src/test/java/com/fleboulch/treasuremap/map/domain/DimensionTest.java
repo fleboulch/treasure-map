@@ -19,9 +19,9 @@ class DimensionTest {
             "3,4"
     })
     void a_dimension_should_have_positive_width_and_height(int width, int height) {
-        Dimension dimension = new Dimension(new Width(width), new Height(height));
-        assertThat(dimension.width().value()).isEqualTo(width);
-        assertThat(dimension.height().value()).isEqualTo(height);
+        Dimension dimension = new Dimension(width, height);
+        assertThat(dimension.width()).isEqualTo(width);
+        assertThat(dimension.height()).isEqualTo(height);
     }
 
     @ParameterizedTest
@@ -36,16 +36,8 @@ class DimensionTest {
     void a_dimension_with_negative_or_zero_width_or_height_cannot_be_created(int width, int height) {
 
         assertThatThrownBy(
-                () -> new Dimension(new Width(width), new Height(height))
+                () -> new Dimension(width, height)
         ).isInstanceOf(NegativeOrZeroAttributeException.class);
-    }
-
-    @Test
-    void a_dimension_with_null_width_and_height_cannot_be_created() {
-
-        assertThatThrownBy(
-                () -> new Dimension(null, null)
-        ).isInstanceOf(DomainException.class);
     }
 
 }

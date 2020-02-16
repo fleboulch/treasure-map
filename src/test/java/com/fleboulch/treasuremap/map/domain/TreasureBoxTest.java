@@ -41,7 +41,7 @@ class TreasureBoxTest {
     })
     void treasure_should_be_inside_dimension_if_dimension_is_equal_or_bigger_than_treasure_coordinates(int x, int y, int width, int height) {
 
-        Dimension dimension = new Dimension(new Width(width), new Height(height));
+        Dimension dimension = new Dimension(width, height);
         TreasureBox treasureBox = buildTreasureBox(x, y, 1);
         assertThat(treasureBox.isInside(dimension)).isTrue();
     }
@@ -54,7 +54,7 @@ class TreasureBoxTest {
     })
     void treasure_should_be_outside_dimension_if_dimension_is_smaller_than_treasure_coordinates(int x, int y, int width, int height) {
 
-        Dimension dimension = new Dimension(new Width(width), new Height(height));
+        Dimension dimension = new Dimension(width, height);
         TreasureBox treasureBox = buildTreasureBox(x, y, 1);
         assertThat(treasureBox.isInside(dimension)).isFalse();
     }

@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(ExplorerResolver.class)
 class TreasureQuestRunnerTest {
 
-    private static final Dimension DIMENSION = new Dimension(new Width(3), new Height(4));
+    private static final Dimension DIMENSION = new Dimension(3, 4);
     private static final Coordinates ZERO_ONE_COORDINATES = Coordinates.of(0, 1);
 
     private TreasureQuestRunner runner;

@@ -6,19 +6,19 @@ import java.util.Objects;
 
 public class Dimension {
 
-    private final Width width;
-    private final Height height;
+    private final int width;
+    private final int height;
 
-    public Dimension(Width width, Height height) {
-        this.width = Domain.validateNotNull(width, "A dimension should have a width");
-        this.height = Domain.validateNotNull(height, "A dimension should have a height");
+    public Dimension(int width, int height) {
+        this.width = Domain.validatePositive(width, "The width should be positive");
+        this.height = Domain.validatePositive(height, "The height should be positive");
     }
 
-    public Width width() {
+    public int width() {
         return width;
     }
 
-    public Height height() {
+    public int height() {
         return height;
     }
 
@@ -27,8 +27,8 @@ public class Dimension {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Dimension dimension = (Dimension) o;
-        return width.equals(dimension.width) &&
-                height.equals(dimension.height);
+        return width == dimension.width &&
+                height == dimension.height;
     }
 
     @Override
@@ -38,6 +38,6 @@ public class Dimension {
 
     @Override
     public String toString() {
-        return String.format("[%s, %s]", width.value(), height.value());
+        return String.format("[%s, %s]", width, height);
     }
 }

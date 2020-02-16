@@ -2,9 +2,7 @@ package com.fleboulch.treasuremap.application.domain;
 
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.map.domain.Dimension;
-import com.fleboulch.treasuremap.map.domain.Height;
 import com.fleboulch.treasuremap.map.domain.TreasureMap;
-import com.fleboulch.treasuremap.map.domain.Width;
 import com.fleboulch.treasuremap.resolvers.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,7 +62,7 @@ class HistoryTreasureQuestTest {
 
     private TreasureQuest buildQuest(List<Explorer> explorers) {
         return new TreasureQuest(
-                new TreasureMap(new Dimension(new Width(4), new Height(5)), emptyList(), emptyList()),
+                new TreasureMap(new Dimension(4, 5), emptyList(), emptyList()),
                 new Explorers(explorers)
         );
     }

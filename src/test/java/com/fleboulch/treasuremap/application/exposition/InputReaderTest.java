@@ -127,7 +127,7 @@ class InputReaderTest {
     }
 
     private Dimension buildDimension() {
-        return new Dimension(new Width(3), new Height(4));
+        return new Dimension(3, 4);
     }
 
     private MountainBox buildMountain(int x, int y) {

@@ -125,7 +125,7 @@ public class ApplicationFactory {
 
         int width = ConverterUtils.toInt(line[1]);
         int height = ConverterUtils.toInt(line[2]);
-        return new Dimension(new Width(width), new Height(height));
+        return new Dimension(width, height);
     }
 
     private static Explorer toExplorer(String[] line) {
@@ -239,6 +239,6 @@ public class ApplicationFactory {
     }
 
     private static List<String> buildExpositionDimension(Dimension dimension) {
-        return List.of(String.format("C - %s - %s", dimension.width().value(), dimension.height().value()));
+        return List.of(String.format("C - %s - %s", dimension.width(), dimension.height()));
     }
 }

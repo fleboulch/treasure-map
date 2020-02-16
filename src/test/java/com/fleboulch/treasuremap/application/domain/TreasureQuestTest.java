@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class TreasureQuestTest {
 
-    private static final Dimension DIMENSION = new Dimension(new Width(3), new Height(4));
+    private static final Dimension DIMENSION = new Dimension(3, 4);
     private static final Coordinates ZERO_ZERO_COORDINATES = Coordinates.of(0, 0);
 
     @ParameterizedTest

@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ExplorerTest {
 
     private static final Coordinates ONE_ONE_COORDINATES = Coordinates.of(1, 1);
+    public static final Dimension DIMENSION_FIVE_FIVE = new Dimension(5, 5);
 
     @Test
     void create_movement_sequence_for_an_explorer(
@@ -188,17 +189,17 @@ class ExplorerTest {
     }
 
     private TreasureMap buildSimpleMap() {
-        return new TreasureMap(new Dimension(new Width(5), new Height(5)), emptyList(), emptyList());
+        return new TreasureMap(DIMENSION_FIVE_FIVE, emptyList(), emptyList());
     }
 
     private TreasureMap buildMapWithOneMountain() {
         List<MountainBox> mountains = List.of(buildMountain());
-        return new TreasureMap(new Dimension(new Width(5), new Height(5)), mountains, emptyList());
+        return new TreasureMap(DIMENSION_FIVE_FIVE, mountains, emptyList());
     }
 
     private TreasureMap buildMapWithOneTreasure() {
         List<TreasureBox> treasures = List.of(buildTreasure());
-        return new TreasureMap(new Dimension(new Width(5), new Height(5)), emptyList(), treasures);
+        return new TreasureMap(DIMENSION_FIVE_FIVE, emptyList(), treasures);
     }
 
     private MountainBox buildMountain() {

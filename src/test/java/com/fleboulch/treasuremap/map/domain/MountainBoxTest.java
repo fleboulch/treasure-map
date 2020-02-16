@@ -38,7 +38,7 @@ class MountainBoxTest {
     })
     void mountain_should_be_inside_dimension_if_dimension_is_equal_or_bigger_than_mountain_coordinates(int x, int y, int width, int height) {
 
-        Dimension dimension = new Dimension(new Width(width), new Height(height));
+        Dimension dimension = new Dimension(width, height);
         MountainBox mountainBox = buildMountainBox(x, y);
         assertThat(mountainBox.isInside(dimension)).isTrue();
     }
@@ -51,7 +51,7 @@ class MountainBoxTest {
     })
     void mountain_should_be_outside_dimension_if_dimension_is_smaller_than_mountain_coordinates(int x, int y, int width, int height) {
 
-        Dimension dimension = new Dimension(new Width(width), new Height(height));
+        Dimension dimension = new Dimension(width, height);
         MountainBox mountainBox = buildMountainBox(x, y);
         assertThat(mountainBox.isInside(dimension)).isFalse();
     }
