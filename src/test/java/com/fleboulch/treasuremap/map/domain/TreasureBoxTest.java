@@ -2,8 +2,6 @@ package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.kernel.exceptions.NegativeOrZeroAttributeException;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
-import com.fleboulch.treasuremap.shared.coordinates.domain.HorizontalAxis;
-import com.fleboulch.treasuremap.shared.coordinates.domain.VerticalAxis;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;

@@ -6,44 +6,44 @@ import com.fleboulch.treasuremap.map.domain.Dimension;
 import java.util.Objects;
 
 public class Coordinates {
-    private final HorizontalAxis x;
-    private final VerticalAxis y;
+    private final Axis x;
+    private final Axis y;
 
-    private Coordinates(HorizontalAxis x, VerticalAxis y) {
+    private Coordinates(Axis x, Axis y) {
         this.x = Domain.validateNotNull(x, "Horizontal axis should be not null");
         this.y = Domain.validateNotNull(y, "Vertical axis should be not null");
     }
 
     public static Coordinates of(int x, int y) {
-        return new Coordinates(new HorizontalAxis(x), new VerticalAxis(y));
+        return new Coordinates(new Axis(x), new Axis(y));
     }
 
-    public HorizontalAxis x() {
+    public Axis x() {
         return x;
     }
 
-    public VerticalAxis y() {
+    public Axis y() {
         return y;
     }
 
     public Coordinates goForwardSouth() {
         Axis newY = y.increment();
-        return new Coordinates(x, (VerticalAxis) newY);
+        return new Coordinates(x, newY);
     }
 
     public Coordinates goForwardNorth() {
         Axis newY = y.decrement();
-        return new Coordinates(x, (VerticalAxis) newY);
+        return new Coordinates(x, newY);
     }
 
     public Coordinates goForwardWest() {
         Axis newX = x.decrement();
-        return new Coordinates((HorizontalAxis) newX, y);
+        return new Coordinates(newX, y);
     }
 
     public Coordinates goForwardEast() {
         Axis newX = x.increment();
-        return new Coordinates((HorizontalAxis) newX, y);
+        return new Coordinates(newX, y);
     }
 
     public boolean hasValidCoordinates(Dimension dimension) {

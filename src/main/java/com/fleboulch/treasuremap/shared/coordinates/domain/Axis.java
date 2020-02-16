@@ -4,7 +4,7 @@ import com.fleboulch.treasuremap.kernel.domain.Domain;
 
 import java.util.Objects;
 
-public abstract class Axis {
+public class Axis {
 
     protected final int index;
 
@@ -12,9 +12,15 @@ public abstract class Axis {
         this.index = Domain.validatePositiveOrZero(index, "The index for an axis should be positive");
     }
 
-    public abstract Axis increment();
+    public Axis increment() {
+        int newIndex = index + 1;
+        return new Axis(newIndex);
+    }
 
-    public abstract Axis decrement();
+    public Axis decrement() {
+        int newIndex = index - 1;
+        return new Axis(newIndex);
+    }
 
     public int index() {
         return index;
