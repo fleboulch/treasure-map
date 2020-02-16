@@ -1,4 +1,4 @@
-package com.fleboulch.treasuremap.explorer.domain;
+package com.fleboulch.treasuremap.map.domain.exceptions;
 
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 

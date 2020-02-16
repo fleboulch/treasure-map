@@ -28,7 +28,7 @@ public class TreasureQuest {
         if (!explorer.hasValidCoordinates(dimension)) {
             throw new ExplorerIsOutOfMapException(explorer, dimension);
         }
-        explorer.isOnMountain(treasureMap);
+        treasureMap.explorerIsOnMountain(explorer);
     }
 
     public TreasureMap treasureMap() {

@@ -2,6 +2,7 @@ package com.fleboulch.treasuremap.application.domain;
 
 import com.fleboulch.treasuremap.explorer.domain.*;
 import com.fleboulch.treasuremap.map.domain.*;
+import com.fleboulch.treasuremap.map.domain.exceptions.InvalidCurrentPositionException;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

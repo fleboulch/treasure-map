@@ -1,5 +1,7 @@
 package com.fleboulch.treasuremap.map.domain;
 
+import com.fleboulch.treasuremap.explorer.domain.Explorer;
+import com.fleboulch.treasuremap.map.domain.exceptions.InvalidCurrentPositionException;
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
@@ -48,6 +50,16 @@ public class TreasureMap {
         } else {
             // return a custom exception instead of generic one
             throw new IllegalArgumentException(String.format("'%s' are out of map with dimensions %s", coordinates, dimension));
+        }
+    }
+
+    public boolean explorerIsOnMountain(Explorer currentExplorer) {
+        Coordinates coordinates = currentExplorer.coordinates();
+
+        if (findMountainBoxByCoordinates(coordinates).isPresent()) {
+            throw new InvalidCurrentPositionException(currentExplorer.name().value(), coordinates);
+        } else {
+            return false;
         }
     }
 

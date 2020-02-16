@@ -1,9 +1,15 @@
 package com.fleboulch.treasuremap.map.domain;
 
+import com.fleboulch.treasuremap.explorer.domain.Explorer;
+import com.fleboulch.treasuremap.map.domain.exceptions.InvalidCurrentPositionException;
 import com.fleboulch.treasuremap.kernel.exceptions.DomainException;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
+import com.fleboulch.treasuremap.resolvers.ExplorerOneOneCoordinates;
+import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
+import com.fleboulch.treasuremap.resolvers.ExplorerSouthOrientation;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -13,6 +19,7 @@ import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@ExtendWith(ExplorerResolver.class)
 class TreasureMapTest {
 
     @Test
@@ -138,6 +145,29 @@ class TreasureMapTest {
         assertThatThrownBy(() ->
                 buildMapWithTreasures(1,1, null)
         ).isInstanceOf(DomainException.class);
+    }
+
+
+    @Test
+    void explorer_cannot_be_on_a_mountain(
+            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
+    ) {
+        MountainBox mountain = buildMountain(explorer.coordinates());
+        TreasureMap treasureMap = buildMapWithMountains(5, 5, List.of(mountain));
+        assertThatThrownBy(() ->
+                treasureMap.explorerIsOnMountain(explorer)
+        ).isInstanceOf(InvalidCurrentPositionException.class);
+
+    }
+
+    @Test
+    void check_explorer_is_not_on_a_mountain(
+            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
+    ) {
+        TreasureMap treasureMap = buildSimpleMap(5, 5);
+        boolean onMountain = treasureMap.explorerIsOnMountain(explorer);
+
+        assertThat(onMountain).isFalse();
     }
 
     private MountainBox buildMountain(Coordinates coordinates) {

@@ -67,57 +67,6 @@ class ExplorerTest {
         ).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test
-    void explorer_cannot_be_on_a_mountain(
-            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
-    ) {
-        TreasureMap treasureMap = buildMapWithOneMountain();
-        assertThatThrownBy(() ->
-                explorer.isOnMountain(treasureMap)
-        ).isInstanceOf(InvalidCurrentPositionException.class);
-
-    }
-
-    @Test
-    void check_explorer_is_not_on_a_mountain(
-            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
-    ) {
-        TreasureMap treasureMap = buildSimpleMap();
-        boolean onMountain = explorer.isOnMountain(treasureMap);
-
-        assertThat(onMountain).isFalse();
-    }
-
-    @Test
-    void check_explorer_is_on_a_treasure(
-            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
-    ) {
-        TreasureMap treasureMap = buildMapWithOneTreasure();
-        boolean onTreasure = explorer.isOnTreasure(treasureMap);
-
-        assertThat(onTreasure).isTrue();
-    }
-
-    @Test
-    void check_explorer_is_not_on_a_treasure(
-            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
-    ) {
-        TreasureMap treasureMap = buildSimpleMap();
-        boolean onTreasure = explorer.isOnTreasure(treasureMap);
-
-        assertThat(onTreasure).isFalse();
-    }
-
-
-    @Test
-    void check_explorer_is_on_a_plains(
-            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
-    ) {
-        TreasureMap treasureMap = buildSimpleMap();
-        boolean onPlains = explorer.isOnPlains(treasureMap);
-
-        assertThat(onPlains).isTrue();
-    }
 
     @Test
     void explorer_go_forward_south(

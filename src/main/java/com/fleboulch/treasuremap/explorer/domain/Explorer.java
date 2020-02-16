@@ -31,32 +31,6 @@ public class Explorer {
         return new Explorer(name, coordinates, orientation, new Movements(movementTypes), 0);
     }
 
-    public boolean isOnMountain(TreasureMap treasureMap) {
-        PlainsBox plainsBox = currentBox(treasureMap);
-
-        if (plainsBox.isMountainType()) {
-            throw new InvalidCurrentPositionException(name.value(), coordinates);
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isOnTreasure(TreasureMap treasureMap) {
-        PlainsBox plainsBox = currentBox(treasureMap);
-
-        return (plainsBox instanceof TreasureBox);
-    }
-
-    public boolean isOnPlains(TreasureMap treasureMap) {
-        PlainsBox plainsBox = currentBox(treasureMap);
-
-        return !(plainsBox instanceof TreasureBox) && !(plainsBox instanceof MountainBox);
-    }
-
-    private PlainsBox currentBox(TreasureMap treasureMap) {
-        return treasureMap.from(coordinates);
-    }
-
     public MovementType nextMovement() {
         if (movements.movementTypes().isEmpty()) {
             throw new ExplorerHasNoMoreMovementException(this);
