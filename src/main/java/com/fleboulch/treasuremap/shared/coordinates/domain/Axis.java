@@ -18,6 +18,9 @@ public class Axis {
     }
 
     public Axis decrement() {
+        if (index == 0) {
+            return this;
+        }
         int newIndex = index - 1;
         return new Axis(newIndex);
     }

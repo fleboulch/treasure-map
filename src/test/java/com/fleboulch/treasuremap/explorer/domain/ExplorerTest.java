@@ -1,6 +1,9 @@
 package com.fleboulch.treasuremap.explorer.domain;
 
-import com.fleboulch.treasuremap.map.domain.*;
+import com.fleboulch.treasuremap.map.domain.Dimension;
+import com.fleboulch.treasuremap.map.domain.MountainBox;
+import com.fleboulch.treasuremap.map.domain.TreasureBox;
+import com.fleboulch.treasuremap.map.domain.TreasureMap;
 import com.fleboulch.treasuremap.resolvers.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.assertj.core.data.Index;
@@ -124,6 +127,16 @@ class ExplorerTest {
             @ExplorerZeroZeroCoordinates @ExplorerTurnLeft @ExplorerWestOrientation Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.turn(MovementType.G);
+
+        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
+    }
+
+    @Test
+    void explorer_should_not_go_outside_the_map(
+            @ExplorerZeroZeroCoordinates @ExplorerWithOneGoForward @ExplorerNorthOrientation Explorer beginExplorer,
+            @ExplorerZeroZeroCoordinates @ExplorerWithOneGoForward @ExplorerNorthOrientation Explorer expectedEndExplorer
+    ) {
+        Explorer explorerAfterAction = beginExplorer.goForward();
 
         assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
     }
