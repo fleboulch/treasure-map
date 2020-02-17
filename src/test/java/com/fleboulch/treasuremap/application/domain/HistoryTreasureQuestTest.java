@@ -19,8 +19,8 @@ class HistoryTreasureQuestTest {
     @Test
     void build_history_quest(
             Explorer explorer1,
-            @ExplorerMichel @ExplorerOneOneCoordinates Explorer explorer2,
-            @ExplorerAlberto @ExplorerZeroOneCoordinates Explorer explorer3
+            @ExplorerConfiguration(name = "Michel", yCoordinates = 1) Explorer explorer2,
+            @ExplorerConfiguration(name = "Alberto", xCoordinates = 0, yCoordinates = 1) Explorer explorer3
     ) {
         HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(buildQuest(List.of(
                 explorer1,
@@ -51,7 +51,10 @@ class HistoryTreasureQuestTest {
     }
 
     @Test
-    void register_move_for_an_unknown_explorer_is_forbidden(Explorer explorer, @ExplorerMichel Explorer explorer2) {
+    void register_move_for_an_unknown_explorer_is_forbidden(
+            Explorer explorer,
+            @ExplorerConfiguration(name = "Michel") Explorer explorer2
+    ) {
         HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(buildQuest(List.of(explorer)));
 
         assertThatThrownBy(() ->

@@ -1,10 +1,8 @@
 package com.fleboulch.treasuremap.application.domain;
 
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
-import com.fleboulch.treasuremap.resolvers.ExplorerMichel;
-import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
-import com.fleboulch.treasuremap.resolvers.ExplorerWithOneGoForward;
-import com.fleboulch.treasuremap.resolvers.ExplorerWithTwoGoForward;
+import com.fleboulch.treasuremap.explorer.domain.MovementType;
+import com.fleboulch.treasuremap.resolvers.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -25,7 +23,7 @@ class ExplorerOrchestratorTest {
 
     @Test
     void should_create_orchestrator_from_one_explorer_with_one_go_forward_movement(
-            @ExplorerWithOneGoForward Explorer explorer
+            @ExplorerConfiguration(movements = MovementType.A) Explorer explorer
     ) {
         ExplorerOrchestrator orchestrator = new ExplorerOrchestrator(buildExplorersWith(explorer));
 
@@ -34,8 +32,8 @@ class ExplorerOrchestratorTest {
 
     @Test
     void should_create_orchestrator_from_one_explorer_with_two_go_forward_movements(
-            @ExplorerWithTwoGoForward Explorer beginExplorer,
-            @ExplorerWithOneGoForward Explorer finalExplorer
+            @ExplorerConfiguration(movements = {MovementType.A, MovementType.A}) Explorer beginExplorer,
+            @ExplorerConfiguration(movements = MovementType.A) Explorer finalExplorer
     ) {
         ExplorerOrchestrator orchestrator = new ExplorerOrchestrator(buildExplorersWith(beginExplorer));
 
@@ -45,7 +43,7 @@ class ExplorerOrchestratorTest {
     @Test
     void orchestrator_with_multiple_explorers_has_not_been_implemented_yet(
             Explorer explorer1,
-            @ExplorerMichel Explorer explorer2
+            @ExplorerConfiguration(name = "Michel") Explorer explorer2
     ) {
         assertThatThrownBy(() ->
                 new ExplorerOrchestrator(new Explorers(List.of(explorer1, explorer2)))

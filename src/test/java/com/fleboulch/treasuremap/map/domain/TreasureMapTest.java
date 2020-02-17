@@ -1,12 +1,12 @@
 package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
-import com.fleboulch.treasuremap.map.domain.exceptions.InvalidCurrentPositionException;
+import com.fleboulch.treasuremap.explorer.domain.OrientationType;
 import com.fleboulch.treasuremap.kernel.exceptions.DomainException;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
-import com.fleboulch.treasuremap.resolvers.ExplorerOneOneCoordinates;
+import com.fleboulch.treasuremap.map.domain.exceptions.InvalidCurrentPositionException;
+import com.fleboulch.treasuremap.resolvers.ExplorerConfiguration;
 import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
-import com.fleboulch.treasuremap.resolvers.ExplorerSouthOrientation;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -134,21 +134,21 @@ class TreasureMapTest {
     @Test
     void it_should_fail_to_create_treasure_map_with_null_mountains() {
         assertThatThrownBy(() ->
-                buildMapWithMountains(1,1, null)
+                buildMapWithMountains(1, 1, null)
         ).isInstanceOf(DomainException.class);
     }
 
     @Test
     void it_should_fail_to_create_treasure_map_with_null_treasures() {
         assertThatThrownBy(() ->
-                buildMapWithTreasures(1,1, null)
+                buildMapWithTreasures(1, 1, null)
         ).isInstanceOf(DomainException.class);
     }
 
 
     @Test
     void explorer_cannot_be_on_a_mountain(
-            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
+            @ExplorerConfiguration(yCoordinates = 1, orientationType = OrientationType.S) Explorer explorer
     ) {
         MountainBox mountain = buildMountain(explorer.coordinates());
         TreasureMap treasureMap = buildMapWithMountains(5, 5, List.of(mountain));
@@ -160,7 +160,7 @@ class TreasureMapTest {
 
     @Test
     void check_explorer_is_not_on_a_mountain(
-            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
+            @ExplorerConfiguration(yCoordinates = 1, orientationType = OrientationType.S) Explorer explorer
     ) {
         TreasureMap treasureMap = buildSimpleMap(5, 5);
         boolean onMountain = treasureMap.explorerIsOnMountain(explorer);

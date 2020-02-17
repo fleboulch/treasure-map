@@ -24,7 +24,11 @@ class ExplorerTest {
 
     @Test
     void create_movement_sequence_for_an_explorer(
-            @ExplorerOneOneCoordinates @ExplorerSouthOrientation @ExplorerWithExampleSequenceMovements Explorer explorer
+            @ExplorerConfiguration(
+                    yCoordinates = 1,
+                    orientationType = OrientationType.S,
+                    isExampleSequenceMovements = true
+            ) Explorer explorer
 
     ) {
         List<MovementType> createdMovements = explorer.movements().movementTypes();
@@ -44,7 +48,7 @@ class ExplorerTest {
 
     @Test
     void create_empty_movement_sequence_for_an_explorer(
-            @ExplorerOneOneCoordinates @ExplorerSouthOrientation Explorer explorer
+            @ExplorerConfiguration(yCoordinates = 1, orientationType = OrientationType.S) Explorer explorer
     ) {
 
         List<MovementType> createdMovements = explorer.movements().movementTypes();
@@ -73,8 +77,8 @@ class ExplorerTest {
 
     @Test
     void explorer_go_forward_south(
-            @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer beginExplorer,
-            @ExplorerOneTwoCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer expectedEndExplorer
+            @ExplorerConfiguration(yCoordinates = 1, orientationType = OrientationType.S, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(orientationType = OrientationType.S, movements = MovementType.A) Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 
@@ -83,8 +87,8 @@ class ExplorerTest {
 
     @Test
     void explorer_go_forward_north(
-            @ExplorerOneOneCoordinates @ExplorerWithOneGoForward @ExplorerNorthOrientation Explorer beginExplorer,
-            @ExplorerOneZeroCoordinates @ExplorerWithOneGoForward @ExplorerNorthOrientation Explorer expectedEndExplorer
+            @ExplorerConfiguration(yCoordinates = 1, orientationType = OrientationType.N, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(yCoordinates = 0, orientationType = OrientationType.N, movements = MovementType.A) Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 
@@ -93,8 +97,8 @@ class ExplorerTest {
 
     @Test
     void explorer_go_forward_east(
-            @ExplorerOneOneCoordinates @ExplorerWithOneGoForward Explorer beginExplorer,
-            @ExplorerTwoOneCoordinates @ExplorerWithOneGoForward Explorer expectedEndExplorer
+            @ExplorerConfiguration(yCoordinates = 1, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 2, yCoordinates = 1, movements = MovementType.A) Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 
@@ -103,8 +107,8 @@ class ExplorerTest {
 
     @Test
     void explorer_go_forward_west(
-            @ExplorerOneZeroCoordinates @ExplorerWithOneGoForward @ExplorerWestOrientation Explorer beginExplorer,
-            @ExplorerZeroZeroCoordinates @ExplorerWithOneGoForward @ExplorerWestOrientation Explorer expectedEndExplorer
+            @ExplorerConfiguration(yCoordinates = 0, orientationType = OrientationType.W, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.W, movements = MovementType.A) Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 
@@ -113,8 +117,8 @@ class ExplorerTest {
 
     @Test
     void explorer_turn_D_from_north(
-            @ExplorerZeroZeroCoordinates @ExplorerTurnRight @ExplorerNorthOrientation Explorer beginExplorer,
-            @ExplorerZeroZeroCoordinates @ExplorerTurnRight Explorer expectedEndExplorer
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.N, movements = MovementType.D) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, movements = MovementType.D) Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.turn(MovementType.D);
 
@@ -123,8 +127,8 @@ class ExplorerTest {
 
     @Test
     void explorer_turn_L_from_north(
-            @ExplorerZeroZeroCoordinates @ExplorerTurnLeft @ExplorerNorthOrientation Explorer beginExplorer,
-            @ExplorerZeroZeroCoordinates @ExplorerTurnLeft @ExplorerWestOrientation Explorer expectedEndExplorer
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.N, movements = MovementType.G) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.W, movements = MovementType.G) Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.turn(MovementType.G);
 
@@ -133,8 +137,8 @@ class ExplorerTest {
 
     @Test
     void explorer_should_not_go_outside_the_map(
-            @ExplorerZeroZeroCoordinates @ExplorerWithOneGoForward @ExplorerNorthOrientation Explorer beginExplorer,
-            @ExplorerZeroZeroCoordinates @ExplorerWithOneGoForward @ExplorerNorthOrientation Explorer expectedEndExplorer
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.N, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.N, movements = MovementType.A) Explorer expectedEndExplorer
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 

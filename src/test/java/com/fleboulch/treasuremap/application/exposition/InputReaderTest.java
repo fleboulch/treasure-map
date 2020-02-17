@@ -5,6 +5,8 @@ import com.fleboulch.treasuremap.application.domain.Explorers;
 import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
+import com.fleboulch.treasuremap.explorer.domain.MovementType;
+import com.fleboulch.treasuremap.explorer.domain.OrientationType;
 import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.resolvers.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
@@ -53,8 +55,8 @@ class InputReaderTest {
 
     @Test
     void it_should_process_quest_with_one_treasure(
-            @ExplorerTwoOneCoordinates @ExplorerSouthOrientation @ExplorerWithOneGoForward Explorer explorer,
-            @ExplorerTwoTwoCoordinates @ExplorerSouthOrientation @ExplorerWithOneTreasure Explorer firstMoveExplorer
+            @ExplorerConfiguration(xCoordinates = 2, yCoordinates = 1, orientationType = OrientationType.S, movements = MovementType.A) Explorer explorer,
+            @ExplorerConfiguration(xCoordinates = 2, orientationType = OrientationType.S, nbTreasures = 1) Explorer firstMoveExplorer
     ) throws IOException {
         HistoryTreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer, List.of(buildMountain(1, 1)), List.of(buildTreasure(2, 2, 1)));
         historyTreasureQuest.registerMove(firstMoveExplorer);
@@ -72,7 +74,11 @@ class InputReaderTest {
 
     @Test
     void it_should_process_example_quest(
-            @ExplorerOneOneCoordinates @ExplorerSouthOrientation @ExplorerWithExampleSequenceMovements Explorer explorer
+            @ExplorerConfiguration(
+                    yCoordinates = 1,
+                    orientationType = OrientationType.S,
+                    isExampleSequenceMovements = true
+            ) Explorer explorer
     ) throws IOException {
         HistoryTreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(
                 explorer,

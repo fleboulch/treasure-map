@@ -7,6 +7,7 @@ import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConf
 import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputRowException;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.MovementType;
+import com.fleboulch.treasuremap.explorer.domain.OrientationType;
 import com.fleboulch.treasuremap.map.domain.*;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
 import com.fleboulch.treasuremap.resolvers.*;
@@ -62,7 +63,7 @@ class ApplicationFactoryTest {
     }
 
     @Test
-    void it_should_successfully_convert_configuration_with_one_mountain_to_treasure_quest(@ExplorerZeroZeroCoordinates Explorer explorer) {
+    void it_should_successfully_convert_configuration_with_one_mountain_to_treasure_quest(@ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0) Explorer explorer) {
         String explorerInput = convertToInput(explorer);
 
         List<String> validConfiguration = buildConfiguration(List.of(DIMENSION, MOUNTAIN_1, explorerInput));
@@ -105,7 +106,7 @@ class ApplicationFactoryTest {
     }
 
     @Test
-    void it_should_successfully_convert_complex_configuration_to_treasure_quest(@ExplorerZeroZeroCoordinates Explorer explorer) {
+    void it_should_successfully_convert_complex_configuration_to_treasure_quest(@ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0) Explorer explorer) {
         String explorerInput = convertToInput(explorer);
         List<String> validConfiguration = buildConfiguration(List.of(DIMENSION, TREASURE_1, TREASURE_2, MOUNTAIN_2, MOUNTAIN_1, explorerInput));
         TreasureQuest treasureQuest = ApplicationFactory.toDomain(validConfiguration);
@@ -196,7 +197,7 @@ class ApplicationFactoryTest {
 
     @Test
     void it_should_convert_history_treasure_quest_to_exposition_and_remove_empty_treasure_box(
-            @ExplorerTwoOneCoordinates @ExplorerSouthOrientation @ExplorerWithThreeTreasures Explorer explorer
+            @ExplorerConfiguration(xCoordinates = 2, yCoordinates = 1, orientationType = OrientationType.S, nbTreasures = 3) Explorer explorer
     ) {
         HistoryTreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer);
 

@@ -4,8 +4,14 @@ import com.fleboulch.treasuremap.application.domain.Explorers;
 import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
-import com.fleboulch.treasuremap.map.domain.*;
-import com.fleboulch.treasuremap.resolvers.*;
+import com.fleboulch.treasuremap.explorer.domain.MovementType;
+import com.fleboulch.treasuremap.explorer.domain.OrientationType;
+import com.fleboulch.treasuremap.map.domain.Dimension;
+import com.fleboulch.treasuremap.map.domain.MountainBox;
+import com.fleboulch.treasuremap.map.domain.TreasureBox;
+import com.fleboulch.treasuremap.map.domain.TreasureMap;
+import com.fleboulch.treasuremap.resolvers.ExplorerConfiguration;
+import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +37,7 @@ class TreasureQuestRunnerTest {
 
     @Test
     void simple_quest_with_one_explorer(
-            @ExplorerZeroZeroCoordinates @ExplorerSouthOrientation Explorer beginExplorer
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S) Explorer beginExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
         HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
@@ -44,8 +50,8 @@ class TreasureQuestRunnerTest {
 
     @Test
     void simple_quest_with_one_explorer_and_go_forward_movement(
-            @ExplorerWithOneGoForward @ExplorerZeroZeroCoordinates @ExplorerSouthOrientation Explorer beginExplorer,
-            @ExplorerZeroOneCoordinates @ExplorerSouthOrientation Explorer finalExplorer
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 1, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
         HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
@@ -58,8 +64,8 @@ class TreasureQuestRunnerTest {
 
     @Test
     void simple_quest_with_one_explorer_and_turn_right_movement(
-            @ExplorerZeroZeroCoordinates @ExplorerTurnRight @ExplorerSouthOrientation Explorer beginExplorer,
-            @ExplorerZeroZeroCoordinates @ExplorerWestOrientation Explorer finalExplorer
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S, movements = MovementType.D) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.W) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
         HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
@@ -71,8 +77,8 @@ class TreasureQuestRunnerTest {
 
     @Test
     void simple_quest_with_one_explorer_and_turn_left_movement(
-            @ExplorerZeroZeroCoordinates @ExplorerTurnLeft @ExplorerSouthOrientation Explorer beginExplorer,
-            @ExplorerZeroZeroCoordinates Explorer finalExplorer
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S, movements = MovementType.G) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
         HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
@@ -84,8 +90,8 @@ class TreasureQuestRunnerTest {
 
     @Test
     void an_explorer_should_be_blocked_by_a_mountain(
-            @ExplorerZeroZeroCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer beginExplorer,
-            @ExplorerZeroZeroCoordinates @ExplorerSouthOrientation Explorer finalExplorer
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildQuestWithOneMountain(beginExplorer);
         HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
@@ -97,8 +103,8 @@ class TreasureQuestRunnerTest {
 
     @Test
     void an_explorer_should_collect_one_treasure_on_treasure_box_and_box_should_be_deleted(
-            @ExplorerZeroZeroCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer beginExplorer,
-            @ExplorerZeroOneCoordinates @ExplorerSouthOrientation @ExplorerWithOneTreasure Explorer finalExplorer
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 1, orientationType = OrientationType.S, nbTreasures = 1) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildQuestWithOneTreasure(beginExplorer, 1);
         HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
@@ -112,8 +118,8 @@ class TreasureQuestRunnerTest {
 
     @Test
     void an_explorer_should_collect_one_treasure_on_treasure_box(
-            @ExplorerZeroZeroCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer beginExplorer,
-            @ExplorerZeroOneCoordinates @ExplorerSouthOrientation @ExplorerWithOneTreasure Explorer finalExplorer
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 1, orientationType = OrientationType.S, nbTreasures = 1) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildQuestWithOneTreasure(beginExplorer, 2);
         HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
@@ -127,9 +133,14 @@ class TreasureQuestRunnerTest {
 
     @Test
     void simple_quest_with_one_explorer_and_two_go_forward_movement(
-            @ExplorerZeroZeroCoordinates @ExplorerWithTwoGoForward @ExplorerSouthOrientation Explorer beginExplorer,
-            @ExplorerZeroOneCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer firstMoveExplorer,
-            @ExplorerZeroTwoCoordinates @ExplorerSouthOrientation Explorer finalExplorer
+            @ExplorerConfiguration(
+                    xCoordinates = 0,
+                    yCoordinates = 0,
+                    orientationType = OrientationType.S,
+                    movements = {MovementType.A, MovementType.A}
+            ) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 1, orientationType = OrientationType.S, movements = MovementType.A) Explorer firstMoveExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
         HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
@@ -142,8 +153,8 @@ class TreasureQuestRunnerTest {
 
     @Test
     void simple_quest_with_one_explorer_and_one_go_forward_movement_trying_to_go_outside_the_map(
-            @ExplorerZeroThreeCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer beginExplorer,
-            @ExplorerZeroThreeCoordinates @ExplorerSouthOrientation Explorer finalExplorer
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 3, orientationType = OrientationType.S, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 3, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
         HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
@@ -156,9 +167,14 @@ class TreasureQuestRunnerTest {
 
     @Test
     void simple_quest_with_one_explorer_and_two_go_forward_movement_trying_to_go_outside_the_map(
-            @ExplorerZeroThreeCoordinates @ExplorerWithTwoGoForward @ExplorerSouthOrientation Explorer beginExplorer,
-            @ExplorerZeroThreeCoordinates @ExplorerWithOneGoForward @ExplorerSouthOrientation Explorer firstMoveExplorer,
-            @ExplorerZeroThreeCoordinates @ExplorerSouthOrientation Explorer finalExplorer
+            @ExplorerConfiguration(
+                    xCoordinates = 0,
+                    yCoordinates = 3,
+                    orientationType = OrientationType.S,
+                    movements = {MovementType.A, MovementType.A}
+            ) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 3, orientationType = OrientationType.S, movements = MovementType.A) Explorer firstMoveExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 3, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
         HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
@@ -171,8 +187,12 @@ class TreasureQuestRunnerTest {
 
     @Test
     void execute_example_test(
-            @ExplorerOneOneCoordinates @ExplorerWithExampleSequenceMovements @ExplorerSouthOrientation Explorer beginExplorer,
-            @ExplorerZeroThreeCoordinates @ExplorerSouthOrientation @ExplorerWithThreeTreasures Explorer finalExplorer
+            @ExplorerConfiguration(
+                    yCoordinates = 1,
+                    orientationType = OrientationType.S,
+                    isExampleSequenceMovements = true
+            ) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 3, orientationType = OrientationType.S, nbTreasures = 3) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildComplexQuest(beginExplorer);
         HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
