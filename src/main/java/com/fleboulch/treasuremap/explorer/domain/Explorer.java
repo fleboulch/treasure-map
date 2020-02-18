@@ -78,29 +78,19 @@ public class Explorer {
     }
 
     public Explorer turn(MovementType direction) {
-        OrientationType newOrientationType = direction.turn(position.orientation());
-        return buildExplorerAfterAction(newOrientationType, null);
+        Position newPosition = direction.turn(position);
+        return buildExplorerAfterAction(newPosition);
 
     }
 
-    private Explorer buildExplorerAfterAction(OrientationType newOrientationType, Coordinates newCoordinates) {
-        Orientation updatedOrientation = orientation();
-        Coordinates updatedCoordinates = coordinates();
-
-        if (!Objects.isNull(newOrientationType)) {
-            updatedOrientation = new Orientation(newOrientationType);
-        }
-        if (!Objects.isNull(newCoordinates)) {
-            updatedCoordinates = newCoordinates;
-        }
-
-        return new Explorer(name, new Position(updatedOrientation, updatedCoordinates), movements, nbCollectedTreasures);
+    private Explorer buildExplorerAfterAction(Position newPosition) {
+        return new Explorer(name, newPosition, movements, nbCollectedTreasures);
     }
 
     public Explorer goForward() {
         Coordinates newCoordinates = checkNextPosition();
 
-        return buildExplorerAfterAction(null, newCoordinates);
+        return buildExplorerAfterAction(new Position(orientation(), newCoordinates));
     }
 
     public Explorer goForwardAndCollect() {

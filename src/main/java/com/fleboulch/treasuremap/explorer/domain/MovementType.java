@@ -7,33 +7,33 @@ public enum MovementType {
     G,
     D;
 
-    public OrientationType turn(Orientation orientation) {
+    public Position turn(Position position) {
         if (Objects.equals(this, MovementType.D)) {
-            switch (orientation.orientationType()) {
+            switch (position.orientation().orientationType()) {
                 case N:
-                    return OrientationType.E;
+                    return new Position(new Orientation(OrientationType.E), position.coordinates());
                 case E:
-                    return OrientationType.S;
+                    return new Position(new Orientation(OrientationType.S), position.coordinates());
                 case S:
-                    return OrientationType.W;
+                    return new Position(new Orientation(OrientationType.W), position.coordinates());
                 case W:
-                    return OrientationType.N;
+                    return new Position(new Orientation(OrientationType.N), position.coordinates());
                 default:
-                    throw new IllegalArgumentException("Unknown orientation");
+                    throw new IllegalArgumentException("Unknown position");
 
             }
         } else if (Objects.equals(this, MovementType.G)) {
-            switch (orientation.orientationType()) {
+            switch (position.orientation().orientationType()) {
                 case N:
-                    return OrientationType.W;
+                    return new Position(new Orientation(OrientationType.W), position.coordinates());
                 case E:
-                    return OrientationType.N;
+                    return new Position(new Orientation(OrientationType.N), position.coordinates());
                 case S:
-                    return OrientationType.E;
+                    return new Position(new Orientation(OrientationType.E), position.coordinates());
                 case W:
-                    return OrientationType.S;
+                    return new Position(new Orientation(OrientationType.S), position.coordinates());
                 default:
-                    throw new IllegalArgumentException("Unknown orientation");
+                    throw new IllegalArgumentException("Unknown position");
             }
         }
         throw new IllegalArgumentException("Unknown direction for turn");
