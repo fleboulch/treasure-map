@@ -11,7 +11,7 @@ public class Explorer {
 
     // Add an UUID
     private final Name name;
-    private final Position position;
+    private Position position;
     private final Movements movements;
     private int nbCollectedTreasures;
 
@@ -77,9 +77,8 @@ public class Explorer {
 
     }
 
-    public Explorer turn(MovementType direction) {
-        Position newPosition = direction.executeMovement(position);
-        return buildExplorerAfterAction(newPosition);
+    public void turn(MovementType direction) {
+        position = direction.executeMovement(position);
 
     }
 

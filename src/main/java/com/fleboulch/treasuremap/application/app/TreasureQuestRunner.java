@@ -65,11 +65,13 @@ public class TreasureQuestRunner {
                 explorerAfterAction = goForwardAction(currentExplorer, treasureMap);
                 break;
             case D:
-                explorerAfterAction = currentExplorer.turn(MovementType.D);
+                currentExplorer.turn(MovementType.D);
+                explorerAfterAction = currentExplorer;
                 log.info("{} turned to the right. New orientation is {}", currentExplorer, explorerAfterAction.orientation().orientationType());
                 break;
             case G:
-                explorerAfterAction = currentExplorer.turn(MovementType.G);
+                currentExplorer.turn(MovementType.G);
+                explorerAfterAction = currentExplorer;
                 log.info("{} turned to the left. New orientation is {}", currentExplorer, explorerAfterAction.orientation().orientationType());
                 break;
             default:
