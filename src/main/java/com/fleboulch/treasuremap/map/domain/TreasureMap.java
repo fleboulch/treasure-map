@@ -1,10 +1,12 @@
 package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
-import com.fleboulch.treasuremap.map.domain.exceptions.InvalidCurrentPositionException;
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
+import com.fleboulch.treasuremap.map.domain.exceptions.InvalidCurrentPositionException;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 public class TreasureMap {
 
     private static final String LINE_SEPARATOR = System.lineSeparator();
+    private final Logger log = LoggerFactory.getLogger(TreasureMap.class);
 
     private final Dimension dimension;
     private final List<MountainBox> mountainBoxes;
@@ -49,6 +52,30 @@ public class TreasureMap {
 
         } else {
             return Optional.empty();
+        }
+    }
+
+    public Explorer goForwardAction(Explorer currentExplorer) {
+        Coordinates nextCoordinates = currentExplorer.checkNextPositionWhenGoForward();
+        Optional<PlainsBox> nextBox = from(nextCoordinates);
+
+        if (nextBox.isPresent()) {
+            switch (nextBox.get().getBoxType()) {
+                case MOUNTAIN:
+                    log.info("{} is blocked by mountain in [{}]", currentExplorer, nextCoordinates);
+                    return currentExplorer;
+                case TREASURE:
+                    log.info("{} will go forward and collect one treasure on [{}]", currentExplorer, nextCoordinates);
+                    return currentExplorer.goForwardAndCollect();
+                case PLAINS:
+                    log.info("{} will go forward on [{}]", currentExplorer, nextCoordinates);
+                    return currentExplorer.goForward();
+                default:
+                    throw new IllegalArgumentException(String.format("The box type %s is not known", nextBox.get().getBoxType()));
+            }
+        } else {
+            log.info("{} trying to go outside the map on [{}]", currentExplorer, nextCoordinates);
+            return currentExplorer;
         }
     }
 

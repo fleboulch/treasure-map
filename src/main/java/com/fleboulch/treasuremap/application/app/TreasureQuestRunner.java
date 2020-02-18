@@ -62,7 +62,7 @@ public class TreasureQuestRunner {
         Explorer explorerAfterAction = null;
         switch (movementType) {
             case A:
-                explorerAfterAction = goForwardAction(currentExplorer, treasureMap);
+                explorerAfterAction = treasureMap.goForwardAction(currentExplorer);
                 break;
             case D:
                 currentExplorer.turn(MovementType.D);
@@ -79,31 +79,6 @@ public class TreasureQuestRunner {
         }
 
         return explorerAfterAction.popMovement();
-
-    }
-
-    private Explorer goForwardAction(Explorer currentExplorer, TreasureMap treasureMap) {
-        Coordinates nextCoordinates = currentExplorer.checkNextPositionWhenGoForward();
-        Optional<PlainsBox> nextBox = treasureMap.from(nextCoordinates);
-
-        if (nextBox.isPresent()) {
-            switch (nextBox.get().getBoxType()) {
-                case MOUNTAIN:
-                    log.info("{} is blocked by mountain in [{}]", currentExplorer, nextCoordinates);
-                    return currentExplorer;
-                case TREASURE:
-                    log.info("{} will go forward and collect one treasure on [{}]", currentExplorer, nextCoordinates);
-                    return currentExplorer.goForwardAndCollect();
-                case PLAINS:
-                    log.info("{} will go forward on [{}]", currentExplorer, nextCoordinates);
-                    return currentExplorer.goForward();
-                default:
-                    throw new IllegalArgumentException(String.format("The box type %s is not known", nextBox.get().getBoxType()));
-            }
-        } else {
-            log.info("{} trying to go outside the map on [{}]", currentExplorer, nextCoordinates);
-            return currentExplorer;
-        }
 
     }
 
