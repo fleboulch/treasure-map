@@ -7,8 +7,13 @@ import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.MovementType;
 import com.fleboulch.treasuremap.explorer.domain.OrientationType;
-import com.fleboulch.treasuremap.map.domain.*;
-import com.fleboulch.treasuremap.resolvers.*;
+import com.fleboulch.treasuremap.explorer.domain.Position;
+import com.fleboulch.treasuremap.map.domain.Dimension;
+import com.fleboulch.treasuremap.map.domain.MountainBox;
+import com.fleboulch.treasuremap.map.domain.TreasureBox;
+import com.fleboulch.treasuremap.map.domain.TreasureMap;
+import com.fleboulch.treasuremap.resolvers.ExplorerConfiguration;
+import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -88,7 +93,7 @@ class InputReaderTest {
 
         Coordinates finalCoordinates = Coordinates.of(0, 3);
 
-        Explorer finalExplorer = Explorer.of(explorer.name(), finalCoordinates, explorer.orientation(), emptyList());
+        Explorer finalExplorer = Explorer.of(explorer.name(), new Position(explorer.orientation(), finalCoordinates), emptyList());
 
         finalExplorer.collectTreasure();
         finalExplorer.collectTreasure();

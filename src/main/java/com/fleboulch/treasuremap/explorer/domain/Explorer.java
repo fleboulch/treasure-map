@@ -10,25 +10,21 @@ import java.util.Objects;
 public class Explorer {
 
     // Add an UUID
-
     private final Name name;
-    private final Coordinates coordinates;
-    private final Orientation orientation;
+    private final Position position;
     private final Movements movements;
     private int nbCollectedTreasures;
 
-    private Explorer(Name name, Coordinates coordinates, Orientation orientation, Movements movements, int nbCollectedTreasures) {
+    private Explorer(Name name, Position position, Movements movements, int nbCollectedTreasures) {
         this.name = Domain.validateNotNull(name, "Name should be not null");
-        this.coordinates = Domain.validateNotNull(coordinates, "Coordinates should be not null");
-
-        this.orientation = Domain.validateNotNull(orientation, "Orientation should be not null");
+        this.position = Domain.validateNotNull(position, "Position should be not null");
         this.movements = Domain.validateNotNull(movements, "Movements should be not null");
         this.nbCollectedTreasures = nbCollectedTreasures;
     }
 
-    public static Explorer of(Name name, Coordinates coordinates, Orientation orientation, List<MovementType> movementTypes) {
+    public static Explorer of(Name name, Position position, List<MovementType> movementTypes) {
         Domain.validateNotNull(movementTypes, "Raw movements should not be null");
-        return new Explorer(name, coordinates, orientation, new Movements(movementTypes), 0);
+        return new Explorer(name, position, new Movements(movementTypes), 0);
     }
 
     public MovementType nextMovement() {
@@ -39,7 +35,7 @@ public class Explorer {
     }
 
     public boolean hasValidCoordinates(Dimension dimension) {
-        return coordinates.hasValidCoordinates(dimension);
+        return position.coordinates().hasValidCoordinates(dimension);
     }
 
     public Name name() {
@@ -47,11 +43,11 @@ public class Explorer {
     }
 
     public Coordinates coordinates() {
-        return coordinates;
+        return position.coordinates();
     }
 
     public Orientation orientation() {
-        return orientation;
+        return position.orientation();
     }
 
     public Movements movements() {
@@ -74,15 +70,15 @@ public class Explorer {
     public String toString() {
         return "Explorer{" +
                 "name=" + name +
-                ", coordinates=" + coordinates +
-                ", orientation=" + orientation +
+                ", coordinates=" + position.coordinates() +
+                ", orientation=" + position.orientation() +
                 ", movements=" + movements +
                 ", nbCollectedTreasures=" + nbCollectedTreasures +
                 '}';
     }
 
     public Explorer turn(MovementType direction) {
-        OrientationType newOrientationType = direction.turn(orientation);
+        OrientationType newOrientationType = direction.turn(position.orientation());
         return buildExplorerAfterAction(newOrientationType, null);
 
     }
@@ -98,7 +94,7 @@ public class Explorer {
             updatedCoordinates = newCoordinates;
         }
 
-        return new Explorer(name, updatedCoordinates, updatedOrientation, movements, nbCollectedTreasures);
+        return new Explorer(name, new Position(updatedOrientation, updatedCoordinates), movements, nbCollectedTreasures);
     }
 
     public Explorer goForward() {
@@ -114,7 +110,7 @@ public class Explorer {
     }
 
     public Coordinates checkNextPosition() {
-        switch (orientation.orientationType()) {
+        switch (position.orientation().orientationType()) {
             case N:
                 return goForwardNorth();
             case E:
@@ -129,24 +125,24 @@ public class Explorer {
     }
 
     private Coordinates goForwardWest() {
-        return coordinates.goForwardWest();
+        return position.coordinates().goForwardWest();
     }
 
     private Coordinates goForwardNorth() {
-        return coordinates.goForwardNorth();
+        return position.coordinates().goForwardNorth();
     }
 
     private Coordinates goForwardEast() {
-        return coordinates.goForwardEast();
+        return position.coordinates().goForwardEast();
     }
 
     private Coordinates goForwardSouth() {
-        return coordinates.goForwardSouth();
+        return position.coordinates().goForwardSouth();
     }
 
     public Explorer popMovement() {
         Movements movementsAfterAction = movements().popMovement();
-        return new Explorer(name, coordinates, orientation, movementsAfterAction, nbCollectedTreasures);
+        return new Explorer(name, position, movementsAfterAction, nbCollectedTreasures);
 
     }
 
@@ -157,14 +153,12 @@ public class Explorer {
         Explorer explorer = (Explorer) o;
         return nbCollectedTreasures == explorer.nbCollectedTreasures &&
                 name.equals(explorer.name) &&
-                coordinates.equals(explorer.coordinates) &&
-                orientation.equals(explorer.orientation) &&
+                position.equals(explorer.position) &&
                 movements.equals(explorer.movements);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, coordinates, orientation, movements, nbCollectedTreasures);
+        return Objects.hash(name, position, movements, nbCollectedTreasures);
     }
-
 }

@@ -138,8 +138,10 @@ public class ApplicationFactory {
 
         return Explorer.of(
                 new Name(name),
-                Coordinates.of(horizontalAxis, verticalAxis),
-                new Orientation(OrientationType.valueOf(orientation)),
+                new Position(
+                        new Orientation(OrientationType.valueOf(orientation)),
+                        Coordinates.of(horizontalAxis, verticalAxis)
+                ),
                 buildMovements(buildRawMovementsFrom(line))
         );
 

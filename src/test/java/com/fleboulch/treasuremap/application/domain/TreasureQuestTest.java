@@ -1,7 +1,9 @@
 package com.fleboulch.treasuremap.application.domain;
 
 import com.fleboulch.treasuremap.explorer.domain.*;
-import com.fleboulch.treasuremap.map.domain.*;
+import com.fleboulch.treasuremap.map.domain.Dimension;
+import com.fleboulch.treasuremap.map.domain.MountainBox;
+import com.fleboulch.treasuremap.map.domain.TreasureMap;
 import com.fleboulch.treasuremap.map.domain.exceptions.InvalidCurrentPositionException;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.api.Test;
@@ -59,8 +61,10 @@ class TreasureQuestTest {
                 new Explorers(List.of(
                         Explorer.of(
                                 new Name("Laura"),
-                                explorerCoordinates,
-                                new Orientation(orientation),
+                                new Position(
+                                        new Orientation(orientation),
+                                        explorerCoordinates
+                                ),
                                 emptyList()
                         )
                 ))

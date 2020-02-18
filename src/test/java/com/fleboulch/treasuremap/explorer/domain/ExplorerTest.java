@@ -4,7 +4,8 @@ import com.fleboulch.treasuremap.map.domain.Dimension;
 import com.fleboulch.treasuremap.map.domain.MountainBox;
 import com.fleboulch.treasuremap.map.domain.TreasureBox;
 import com.fleboulch.treasuremap.map.domain.TreasureMap;
-import com.fleboulch.treasuremap.resolvers.*;
+import com.fleboulch.treasuremap.resolvers.ExplorerConfiguration;
+import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.assertj.core.data.Index;
 import org.junit.jupiter.api.Test;
@@ -148,8 +149,10 @@ class ExplorerTest {
     private void buildInvalidExplorer(String rawMovements) {
         Explorer.of(
                 new Name("Lara"),
-                ONE_ONE_COORDINATES,
-                new Orientation(OrientationType.S),
+                new Position(
+                        new Orientation(OrientationType.S),
+                        ONE_ONE_COORDINATES
+                ),
                 List.of(MovementType.valueOf(rawMovements))
         );
     }

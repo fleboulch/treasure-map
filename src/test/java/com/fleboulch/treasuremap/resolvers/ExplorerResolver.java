@@ -96,8 +96,10 @@ public class ExplorerResolver implements ParameterResolver {
     private Explorer buildExplorer(List<MovementType> movementsType, Coordinates coordinates, Name name, OrientationType orientationType, int nbTreasures) {
         Explorer explorer = Explorer.of(
                 name,
-                coordinates,
-                new Orientation(orientationType),
+                new Position(
+                        new Orientation(orientationType),
+                        coordinates
+                ),
                 movementsType
         );
 
