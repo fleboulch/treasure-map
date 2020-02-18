@@ -7,36 +7,17 @@ public enum MovementType {
     G,
     D;
 
-    public Position turn(Position position) {
+    public Position executeMovement(Position position) {
         if (Objects.equals(this, MovementType.D)) {
-            switch (position.orientation().orientationType()) {
-                case N:
-                    return new Position(new Orientation(OrientationType.E), position.coordinates());
-                case E:
-                    return new Position(new Orientation(OrientationType.S), position.coordinates());
-                case S:
-                    return new Position(new Orientation(OrientationType.W), position.coordinates());
-                case W:
-                    return new Position(new Orientation(OrientationType.N), position.coordinates());
-                default:
-                    throw new IllegalArgumentException("Unknown position");
-
-            }
+            return new Position(position.orientation().rightTurn(), position.coordinates());
         } else if (Objects.equals(this, MovementType.G)) {
-            switch (position.orientation().orientationType()) {
-                case N:
-                    return new Position(new Orientation(OrientationType.W), position.coordinates());
-                case E:
-                    return new Position(new Orientation(OrientationType.N), position.coordinates());
-                case S:
-                    return new Position(new Orientation(OrientationType.E), position.coordinates());
-                case W:
-                    return new Position(new Orientation(OrientationType.S), position.coordinates());
-                default:
-                    throw new IllegalArgumentException("Unknown position");
-            }
+            return new Position(position.orientation().leftTurn(), position.coordinates());
+        } else if (Objects.equals(this, MovementType.A)) {
+            return position.goForward();
+        } else {
+            throw new IllegalArgumentException("Unknown movement type");
+
         }
-        throw new IllegalArgumentException("Unknown direction for turn");
     }
 
 }

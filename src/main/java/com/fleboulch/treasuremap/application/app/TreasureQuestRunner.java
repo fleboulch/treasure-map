@@ -81,7 +81,7 @@ public class TreasureQuestRunner {
     }
 
     private Explorer goForwardAction(Explorer currentExplorer, TreasureMap treasureMap) {
-        Coordinates nextCoordinates = currentExplorer.checkNextPosition();
+        Coordinates nextCoordinates = currentExplorer.checkNextPositionWhenGoForward();
         Optional<PlainsBox> nextBox = treasureMap.from(nextCoordinates);
 
         if (nextBox.isPresent()) {

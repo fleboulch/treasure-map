@@ -10,15 +10,40 @@ public class Orientation {
         this.orientationType = orientationType;
     }
 
-    public OrientationType orientationType() {
-        return orientationType;
+
+    public Orientation leftTurn() {
+        switch (orientationType) {
+            case N:
+                return new Orientation(OrientationType.W);
+            case E:
+                return new Orientation(OrientationType.N);
+            case S:
+                return new Orientation(OrientationType.E);
+            case W:
+                return new Orientation(OrientationType.S);
+            default:
+                throw new IllegalArgumentException("Unknown orientation");
+        }
     }
 
-    @Override
-    public String toString() {
-        return "Orientation{" +
-                "orientationType=" + orientationType +
-                '}';
+    public Orientation rightTurn() {
+        switch (orientationType) {
+            case N:
+                return new Orientation(OrientationType.E);
+            case E:
+                return new Orientation(OrientationType.S);
+            case S:
+                return new Orientation(OrientationType.W);
+            case W:
+                return new Orientation(OrientationType.N);
+            default:
+                throw new IllegalArgumentException("Unknown orientation");
+
+        }
+    }
+
+    public OrientationType orientationType() {
+        return orientationType;
     }
 
     @Override
@@ -33,4 +58,12 @@ public class Orientation {
     public int hashCode() {
         return Objects.hash(orientationType);
     }
+
+    @Override
+    public String toString() {
+        return "Orientation{" +
+                "orientationType=" + orientationType +
+                '}';
+    }
+
 }

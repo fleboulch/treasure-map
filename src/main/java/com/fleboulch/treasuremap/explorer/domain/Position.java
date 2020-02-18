@@ -15,6 +15,21 @@ public class Position {
         this.coordinates = Domain.validateNotNull(coordinates, "Coordinates should be not null");
     }
 
+    public Position goForward() {
+        switch (orientation.orientationType()) {
+            case N:
+                return new Position(orientation, coordinates.goForwardNorth());
+            case E:
+                return new Position(orientation, coordinates.goForwardEast());
+            case S:
+                return new Position(orientation, coordinates.goForwardSouth());
+            case W:
+                return new Position(orientation, coordinates.goForwardWest());
+            default:
+                throw new IllegalArgumentException("Unknown orientation"); // replace with custom exception
+        }
+    }
+
     public Orientation orientation() {
         return orientation;
     }

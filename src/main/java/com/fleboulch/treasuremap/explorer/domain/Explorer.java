@@ -27,17 +27,6 @@ public class Explorer {
         return new Explorer(name, position, new Movements(movementTypes), 0);
     }
 
-    public MovementType nextMovement() {
-        if (movements.movementTypes().isEmpty()) {
-            throw new ExplorerHasNoMoreMovementException(this);
-        }
-        return movements.movementTypes().get(0);
-    }
-
-    public boolean hasValidCoordinates(Dimension dimension) {
-        return position.coordinates().hasValidCoordinates(dimension);
-    }
-
     public Name name() {
         return name;
     }
@@ -66,29 +55,36 @@ public class Explorer {
         return nbCollectedTreasures++;
     }
 
-    @Override
-    public String toString() {
-        return "Explorer{" +
-                "name=" + name +
-                ", coordinates=" + position.coordinates() +
-                ", orientation=" + position.orientation() +
-                ", movements=" + movements +
-                ", nbCollectedTreasures=" + nbCollectedTreasures +
-                '}';
+    public boolean hasValidCoordinates(Dimension dimension) {
+        return position.coordinates().hasValidCoordinates(dimension);
+    }
+
+
+    public MovementType nextMovement() {
+        if (movements.movementTypes().isEmpty()) {
+            throw new ExplorerHasNoMoreMovementException(this);
+        }
+        return movements.movementTypes().get(0);
+    }
+
+    public Coordinates checkNextPositionWhenGoForward() {
+        return position.goForward().coordinates();
+    }
+
+    public Explorer popMovement() {
+        Movements movementsAfterAction = movements.popMovement();
+        return new Explorer(name, position, movementsAfterAction, nbCollectedTreasures);
+
     }
 
     public Explorer turn(MovementType direction) {
-        Position newPosition = direction.turn(position);
+        Position newPosition = direction.executeMovement(position);
         return buildExplorerAfterAction(newPosition);
 
     }
 
-    private Explorer buildExplorerAfterAction(Position newPosition) {
-        return new Explorer(name, newPosition, movements, nbCollectedTreasures);
-    }
-
     public Explorer goForward() {
-        Coordinates newCoordinates = checkNextPosition();
+        Coordinates newCoordinates = position.goForward().coordinates();
 
         return buildExplorerAfterAction(new Position(orientation(), newCoordinates));
     }
@@ -99,41 +95,8 @@ public class Explorer {
         return explorerAfterAction;
     }
 
-    public Coordinates checkNextPosition() {
-        switch (position.orientation().orientationType()) {
-            case N:
-                return goForwardNorth();
-            case E:
-                return goForwardEast();
-            case S:
-                return goForwardSouth();
-            case W:
-                return goForwardWest();
-            default:
-                throw new IllegalArgumentException("Unknown orientation"); // replace with custom exception
-        }
-    }
-
-    private Coordinates goForwardWest() {
-        return position.coordinates().goForwardWest();
-    }
-
-    private Coordinates goForwardNorth() {
-        return position.coordinates().goForwardNorth();
-    }
-
-    private Coordinates goForwardEast() {
-        return position.coordinates().goForwardEast();
-    }
-
-    private Coordinates goForwardSouth() {
-        return position.coordinates().goForwardSouth();
-    }
-
-    public Explorer popMovement() {
-        Movements movementsAfterAction = movements().popMovement();
-        return new Explorer(name, position, movementsAfterAction, nbCollectedTreasures);
-
+    private Explorer buildExplorerAfterAction(Position newPosition) {
+        return new Explorer(name, newPosition, movements, nbCollectedTreasures);
     }
 
     @Override
@@ -151,4 +114,16 @@ public class Explorer {
     public int hashCode() {
         return Objects.hash(name, position, movements, nbCollectedTreasures);
     }
+
+    @Override
+    public String toString() {
+        return "Explorer{" +
+                "name=" + name +
+                ", coordinates=" + position.coordinates() +
+                ", orientation=" + position.orientation() +
+                ", movements=" + movements +
+                ", nbCollectedTreasures=" + nbCollectedTreasures +
+                '}';
+    }
+
 }
