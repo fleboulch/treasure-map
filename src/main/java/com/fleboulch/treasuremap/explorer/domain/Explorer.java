@@ -1,7 +1,7 @@
 package com.fleboulch.treasuremap.explorer.domain;
 
 import com.fleboulch.treasuremap.kernel.domain.Domain;
-import com.fleboulch.treasuremap.map.domain.*;
+import com.fleboulch.treasuremap.map.domain.Dimension;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 
 import java.util.List;
@@ -82,35 +82,9 @@ public class Explorer {
     }
 
     public Explorer turn(MovementType direction) {
-        if (Objects.equals(direction, MovementType.D)) {
-            switch (orientation.orientationType()) {
-                case N:
-                    return buildExplorerAfterAction(OrientationType.E, null);
-                case E:
-                    return buildExplorerAfterAction(OrientationType.S, null);
-                case S:
-                    return buildExplorerAfterAction(OrientationType.W, null);
-                case W:
-                    return buildExplorerAfterAction(OrientationType.N, null);
-                default:
-                    throw new IllegalArgumentException("Unknown orientation");
+        OrientationType newOrientationType = direction.turn(orientation);
+        return buildExplorerAfterAction(newOrientationType, null);
 
-            }
-        } else if (Objects.equals(direction, MovementType.G)) {
-            switch (orientation.orientationType()) {
-                case N:
-                    return buildExplorerAfterAction(OrientationType.W, null);
-                case E:
-                    return buildExplorerAfterAction(OrientationType.N, null);
-                case S:
-                    return buildExplorerAfterAction(OrientationType.E, null);
-                case W:
-                    return buildExplorerAfterAction(OrientationType.S, null);
-                default:
-                    throw new IllegalArgumentException("Unknown orientation");
-            }
-        }
-        throw new IllegalArgumentException("Unknown direction for turn");
     }
 
     private Explorer buildExplorerAfterAction(OrientationType newOrientationType, Coordinates newCoordinates) {
