@@ -31,7 +31,7 @@ public class TreasureQuestRunner {
         ExplorerOrchestrator explorerOrchestrator = new ExplorerOrchestrator(treasureQuest.explorers());
 
         Optional<HistoryTreasureQuest> finalQuest = explorerOrchestrator.explorerNames().stream()
-                .map(explorerName -> saveAction(historyTreasureQuest, explorerName, treasureQuest.treasureMap()))
+                .map(explorerName -> saveAction(historyTreasureQuest, explorerName, treasureQuest))
                 .reduce((l, r) -> r);
 
         log.info("Quest is finished");
@@ -43,10 +43,10 @@ public class TreasureQuestRunner {
         return finalQuest.get();
     }
 
-    private HistoryTreasureQuest saveAction(HistoryTreasureQuest historyTreasureQuest, Name explorerName, TreasureMap treasureMap) {
+    private HistoryTreasureQuest saveAction(HistoryTreasureQuest historyTreasureQuest, Name explorerName, TreasureQuest treasureQuest) {
         Explorer currentExplorer = historyTreasureQuest.getLastState(explorerName);
 
-        Explorer explorerNext = executeAction(currentExplorer, treasureMap);
+        Explorer explorerNext = executeAction(currentExplorer, treasureQuest);
         historyTreasureQuest.registerMove(explorerNext);
 
         if (explorerNext.hasCollectedANewTreasure(currentExplorer)) {
@@ -57,12 +57,12 @@ public class TreasureQuestRunner {
         return historyTreasureQuest;
     }
 
-    private Explorer executeAction(Explorer currentExplorer, TreasureMap treasureMap) {
+    private Explorer executeAction(Explorer currentExplorer, TreasureQuest treasureQuest) {
         MovementType movementType = currentExplorer.nextMovement();
         Explorer explorerAfterAction = null;
         switch (movementType) {
             case A:
-                explorerAfterAction = treasureMap.goForwardAction(currentExplorer);
+                explorerAfterAction = treasureQuest.goForwardAction(currentExplorer);
                 break;
             case D:
                 currentExplorer.turn(MovementType.D);
