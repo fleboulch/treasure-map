@@ -17,7 +17,7 @@ public class TreasureQuest {
     private final Logger log = LoggerFactory.getLogger(TreasureQuest.class);
 
     private final TreasureMap treasureMap;
-    private final Explorers explorers;
+    private Explorers explorers;
 
     public TreasureQuest(TreasureMap treasureMap, Explorers explorers) {
         this.treasureMap = Domain.validateNotNull(treasureMap, "Quest should have a not null treasure map");
@@ -47,20 +47,23 @@ public class TreasureQuest {
             switch (nextBox.get().getBoxType()) {
                 case MOUNTAIN:
                     log.info("{} is blocked by mountain in [{}]", currentExplorer, nextCoordinates);
-                    return currentExplorer;
+                    break;
                 case TREASURE:
                     log.info("{} will go forward and collect one treasure on [{}]", currentExplorer, nextCoordinates);
-                    return currentExplorer.goForwardAndCollect();
+                    currentExplorer.goForwardAndCollect();
+                    break;
                 case PLAINS:
                     log.info("{} will go forward on [{}]", currentExplorer, nextCoordinates);
-                    return currentExplorer.goForward();
+                    currentExplorer.goForward();
+                    break;
                 default:
                     throw new IllegalArgumentException(String.format("The box type %s is not known", nextBox.get().getBoxType()));
             }
         } else {
             log.info("{} trying to go outside the map on [{}]", currentExplorer, nextCoordinates);
-            return currentExplorer;
         }
+
+        return currentExplorer;
     }
 
     public TreasureMap treasureMap() {

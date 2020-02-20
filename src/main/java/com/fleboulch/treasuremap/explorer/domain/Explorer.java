@@ -82,20 +82,15 @@ public class Explorer {
 
     }
 
-    public Explorer goForward() {
+    public void goForward() {
         Coordinates newCoordinates = position.goForward().coordinates();
 
-        return buildExplorerAfterAction(new Position(orientation(), newCoordinates));
+        position = new Position(orientation(), newCoordinates);
     }
 
-    public Explorer goForwardAndCollect() {
-        Explorer explorerAfterAction = goForward();
-        explorerAfterAction.collectTreasure();
-        return explorerAfterAction;
-    }
-
-    private Explorer buildExplorerAfterAction(Position newPosition) {
-        return new Explorer(name, newPosition, movements, nbCollectedTreasures);
+    public void goForwardAndCollect() {
+        goForward();
+        collectTreasure();
     }
 
     @Override
@@ -103,15 +98,12 @@ public class Explorer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Explorer explorer = (Explorer) o;
-        return nbCollectedTreasures == explorer.nbCollectedTreasures &&
-                name.equals(explorer.name) &&
-                position.equals(explorer.position) &&
-                movements.equals(explorer.movements);
+        return name.equals(explorer.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, position, movements, nbCollectedTreasures);
+        return Objects.hash(name);
     }
 
     @Override
