@@ -59,19 +59,18 @@ class TreasureQuestRunnerTest {
         List<Explorer> explorerMovements = finalQuest.historyMovements();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
-        Explorer firstExplorer = explorerMovements.get(0);
-        assertAll(
-                () -> assertThat(firstExplorer.position()).isEqualTo(beginExplorer.position()),
-                () -> assertThat(firstExplorer.movements()).isEqualTo(beginExplorer.movements()),
-                () -> assertThat(firstExplorer.nbCollectedTreasures()).isEqualTo(beginExplorer.nbCollectedTreasures())
-        );
-        Explorer lastExplorer = explorerMovements.get(1);
-        assertAll(
-                () -> assertThat(lastExplorer.position()).isEqualTo(finalExplorer.position()),
-                () -> assertThat(lastExplorer.movements()).isEqualTo(finalExplorer.movements()),
-                () -> assertThat(lastExplorer.nbCollectedTreasures()).isEqualTo(finalExplorer.nbCollectedTreasures())
-        );
+        testExplorerEquals(explorerMovements.get(0), beginExplorer);
+        testExplorerEquals(explorerMovements.get(1), finalExplorer);
 
+    }
+
+    private void testExplorerEquals(Explorer actual, Explorer expected) {
+        assertAll(
+                () -> assertThat(actual.name()).isEqualTo(expected.name()),
+                () -> assertThat(actual.position()).isEqualTo(expected.position()),
+                () -> assertThat(actual.movements()).isEqualTo(expected.movements()),
+                () -> assertThat(actual.nbCollectedTreasures()).isEqualTo(expected.nbCollectedTreasures())
+        );
     }
 
     @Test
@@ -85,6 +84,8 @@ class TreasureQuestRunnerTest {
         List<Explorer> explorerMovements = finalQuest.historyMovements();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
+        testExplorerEquals(explorerMovements.get(0), beginExplorer);
+        testExplorerEquals(explorerMovements.get(1), finalExplorer);
     }
 
     @Test
