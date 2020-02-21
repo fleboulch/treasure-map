@@ -52,6 +52,8 @@ public class TreasureQuest {
             switch (nextBox.get().getBoxType()) {
                 case MOUNTAIN:
                     log.info("{} is blocked by mountain in [{}]", currentExplorer, nextCoordinates);
+                    historyMovements = addToHistory(currentExplorer);
+
                     break;
                 case TREASURE:
                     log.info("{} will go forward and collect one treasure on [{}]", currentExplorer, nextCoordinates);
