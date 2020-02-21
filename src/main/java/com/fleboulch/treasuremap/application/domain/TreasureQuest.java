@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class TreasureQuest {
 
@@ -43,7 +45,7 @@ public class TreasureQuest {
     }
 
 
-    public Explorer goForwardAction(Explorer currentExplorer) {
+    public void goForwardAction(Explorer currentExplorer) {
         Coordinates nextCoordinates = currentExplorer.checkNextPositionWhenGoForward();
         Optional<PlainsBox> nextBox = treasureMap.from(nextCoordinates);
 
@@ -59,7 +61,9 @@ public class TreasureQuest {
                     break;
                 case PLAINS:
                     log.info("{} will go forward on [{}]", currentExplorer, nextCoordinates);
-                    currentExplorer.goForward();
+                    Explorer last = historyMovements.get(historyMovements.size() -1);
+
+                    historyMovements = addToHistory(last.goForward());
                     break;
                 default:
                     throw new IllegalArgumentException(String.format("The box type %s is not known", nextBox.get().getBoxType()));
@@ -68,7 +72,7 @@ public class TreasureQuest {
             log.info("{} trying to go outside the map on [{}]", currentExplorer, nextCoordinates);
         }
 
-        return currentExplorer;
+//        return currentExplorer;
     }
 
     public TreasureMap treasureMap() {
@@ -105,8 +109,9 @@ public class TreasureQuest {
                 '}';
     }
 
-    public TreasureQuest popMovementFor(Explorer explorerAfterAction) {
-        return new TreasureQuest(treasureMap, explorers.popMovement(explorerAfterAction));
+    public void popMovementFor() {
+        Explorer last = historyMovements.get(historyMovements.size() -1);
+        last.popMovement();
     }
 
     // TODO: genericity for multiple explorers

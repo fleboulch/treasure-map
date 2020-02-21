@@ -42,7 +42,7 @@ public class TreasureQuestRunner {
 //            return treasureQuest;
 //        }
 
-        log.info("Final position {}", finalQuest.explorers().explorers().get(0));
+        log.info("Final position {}", finalQuest.historyMovements().get(0));
         log.info("Quest is finished");
         return finalQuest;
     }
@@ -67,7 +67,7 @@ public class TreasureQuestRunner {
         Explorer explorerAfterAction = null;
         switch (movementType) {
             case A:
-                explorerAfterAction = treasureQuest.goForwardAction(currentExplorer);
+                treasureQuest.goForwardAction(currentExplorer);
                 break;
             case D:
                 currentExplorer.turn(MovementType.D);
@@ -83,9 +83,9 @@ public class TreasureQuestRunner {
                 throw new IllegalArgumentException("Unknown movement type"); // should never occured
         }
 
-        explorerAfterAction = explorerAfterAction.popMovement();
-        treasureQuest.setHistoryMovements(treasureQuest.addToHistory(explorerAfterAction));
-        treasureQuest.popMovementFor(explorerAfterAction);
+//        explorerAfterAction = explorerAfterAction.popMovement();
+//        treasureQuest.setHistoryMovements(treasureQuest.addToHistory(explorerAfterAction));
+        treasureQuest.popMovementFor();
 
     }
 

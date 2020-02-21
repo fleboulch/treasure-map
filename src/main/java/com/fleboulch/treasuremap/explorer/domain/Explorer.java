@@ -12,7 +12,7 @@ public class Explorer {
     // Add an UUID
     private final Name name;
     private Position position;
-    private final Movements movements;
+    private Movements movements;
     private int nbCollectedTreasures;
 
     private Explorer(Name name, Position position, Movements movements, int nbCollectedTreasures) {
@@ -71,9 +71,8 @@ public class Explorer {
         return position.goForward().coordinates();
     }
 
-    public Explorer popMovement() {
-        Movements movementsAfterAction = movements.popMovement();
-        return new Explorer(name, position, movementsAfterAction, nbCollectedTreasures);
+    public void popMovement() {
+        movements = movements.popMovement();
 
     }
 
@@ -82,10 +81,15 @@ public class Explorer {
 
     }
 
-    public void goForward() {
+    public Explorer goForward() {
         Coordinates newCoordinates = position.goForward().coordinates();
 
-        position = new Position(orientation(), newCoordinates);
+//        position = new Position(orientation(), newCoordinates);
+        return Explorer.of(name, new Position(orientation(), newCoordinates), movements.movementTypes());
+    }
+
+    public Position position() {
+        return position;
     }
 
     public void goForwardAndCollect() {

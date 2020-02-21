@@ -27,14 +27,4 @@ public class Explorers {
         return explorers;
     }
 
-    public Explorers popMovement(Explorer explorerAfterAction) {
-
-        return new Explorers(
-                explorers.stream()
-                        .filter(explorer -> Objects.equals(explorer, explorerAfterAction))
-                        .map(Explorer::popMovement)
-                        .collect(Collectors.toList())
-        );
-
-    }
 }

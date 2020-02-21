@@ -20,6 +20,7 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ExtendWith(ExplorerResolver.class)
 class TreasureQuestRunnerTest {
@@ -49,15 +50,27 @@ class TreasureQuestRunnerTest {
 
     @Test
     void simple_quest_with_one_explorer_and_go_forward_movement(
-            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S, movements = MovementType.A) Explorer currentExplorer,
-            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S, movements = MovementType.A) Explorer beginExplorer
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 1, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
-        TreasureQuest inputTreasureQuest = buildSimpleQuest(currentExplorer);
+        TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
         List<Explorer> explorerMovements = finalQuest.historyMovements();
 
-        assertThat(explorerMovements).containsExactly(beginExplorer, currentExplorer);
+        assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
+        Explorer firstExplorer = explorerMovements.get(0);
+        assertAll(
+                () -> assertThat(firstExplorer.position()).isEqualTo(beginExplorer.position()),
+                () -> assertThat(firstExplorer.movements()).isEqualTo(beginExplorer.movements()),
+                () -> assertThat(firstExplorer.nbCollectedTreasures()).isEqualTo(beginExplorer.nbCollectedTreasures())
+        );
+        Explorer lastExplorer = explorerMovements.get(1);
+        assertAll(
+                () -> assertThat(lastExplorer.position()).isEqualTo(finalExplorer.position()),
+                () -> assertThat(lastExplorer.movements()).isEqualTo(finalExplorer.movements()),
+                () -> assertThat(lastExplorer.nbCollectedTreasures()).isEqualTo(finalExplorer.nbCollectedTreasures())
+        );
 
     }
 
