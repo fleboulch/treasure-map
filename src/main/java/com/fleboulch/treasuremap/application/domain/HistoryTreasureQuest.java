@@ -68,6 +68,11 @@ public class HistoryTreasureQuest {
         return treasureMap;
     }
 
+    // TODO: remove this setter
+    public void setTreasureMap(TreasureMap treasureMap) {
+        this.treasureMap = treasureMap;
+    }
+
     public Map<Name, List<Explorer>> historyMovementsPerExplorer() {
         return historyMovementsPerExplorer;
     }

@@ -16,7 +16,7 @@ public class TreasureQuest {
 
     private final Logger log = LoggerFactory.getLogger(TreasureQuest.class);
 
-    private final TreasureMap treasureMap;
+    private TreasureMap treasureMap;
     private Explorers explorers;
 
     public TreasureQuest(TreasureMap treasureMap, Explorers explorers) {
@@ -51,6 +51,7 @@ public class TreasureQuest {
                 case TREASURE:
                     log.info("{} will go forward and collect one treasure on [{}]", currentExplorer, nextCoordinates);
                     currentExplorer.goForwardAndCollect();
+                    treasureMap = treasureMap.removeOneTreasure(currentExplorer.coordinates());
                     break;
                 case PLAINS:
                     log.info("{} will go forward on [{}]", currentExplorer, nextCoordinates);

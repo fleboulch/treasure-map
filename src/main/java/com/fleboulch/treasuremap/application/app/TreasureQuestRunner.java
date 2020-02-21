@@ -46,18 +46,19 @@ public class TreasureQuestRunner {
     private HistoryTreasureQuest saveAction(HistoryTreasureQuest historyTreasureQuest, Name explorerName, TreasureQuest treasureQuest) {
         Explorer currentExplorer = historyTreasureQuest.getLastState(explorerName);
 
-        Explorer explorerNext = executeAction(currentExplorer, treasureQuest);
-        historyTreasureQuest.registerMove(explorerNext);
+        executeAction(currentExplorer, treasureQuest);
+        historyTreasureQuest.registerMove(currentExplorer);
+        historyTreasureQuest.setTreasureMap(treasureQuest.treasureMap());
 
-        if (explorerNext.hasCollectedANewTreasure(currentExplorer)) {
-            log.info("Remove one treasure on [{}]", explorerNext.coordinates());
-            historyTreasureQuest.removeOneTreasure(explorerNext.coordinates());
-        }
+//        if (explorerNext.hasCollectedANewTreasure(currentExplorer)) {
+//            log.info("Remove one treasure on [{}]", explorerNext.coordinates());
+//            historyTreasureQuest.removeOneTreasure(explorerNext.coordinates());
+//        }
 
         return historyTreasureQuest;
     }
 
-    private Explorer executeAction(Explorer currentExplorer, TreasureQuest treasureQuest) {
+    private TreasureQuest executeAction(Explorer currentExplorer, TreasureQuest treasureQuest) {
         MovementType movementType = currentExplorer.nextMovement();
         Explorer explorerAfterAction = null;
         switch (movementType) {
@@ -78,7 +79,8 @@ public class TreasureQuestRunner {
                 throw new IllegalArgumentException("Unknown movement type"); // should never occured
         }
 
-        return explorerAfterAction.popMovement();
+        explorerAfterAction.popMovement();
+        return treasureQuest;
 
     }
 
