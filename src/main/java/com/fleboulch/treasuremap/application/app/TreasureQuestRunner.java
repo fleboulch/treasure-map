@@ -34,7 +34,7 @@ public class TreasureQuestRunner {
 
         TreasureQuest finalQuest = quests.get(quests.size() - 1);
 
-        log.info("Final position {}", finalQuest.historyMovements().get(0));
+        log.info("Final position {}", finalQuest.historyMovements().get(finalQuest.historyMovements().size() -1));
         log.info("Quest is finished");
         return finalQuest;
     }
@@ -49,20 +49,15 @@ public class TreasureQuestRunner {
 
     private void executeAction(Explorer currentExplorer, TreasureQuest treasureQuest) {
         MovementType movementType = currentExplorer.nextMovement();
-        Explorer explorerAfterAction = null;
         switch (movementType) {
             case A:
                 treasureQuest.goForwardAction(currentExplorer);
                 break;
             case D:
-                currentExplorer.turn(MovementType.D);
-                explorerAfterAction = currentExplorer;
-                log.info("{} turned to the right. New orientation is {}", currentExplorer, explorerAfterAction.orientation().orientationType());
+                treasureQuest.turn(currentExplorer, MovementType.D);
                 break;
             case G:
-                currentExplorer.turn(MovementType.G);
-                explorerAfterAction = currentExplorer;
-                log.info("{} turned to the left. New orientation is {}", currentExplorer, explorerAfterAction.orientation().orientationType());
+                treasureQuest.turn(currentExplorer, MovementType.G);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown movement type"); // should never occured

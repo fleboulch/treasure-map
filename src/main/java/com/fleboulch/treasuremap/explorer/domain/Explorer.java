@@ -76,8 +76,9 @@ public class Explorer {
 
     }
 
-    public void turn(MovementType direction) {
-        position = direction.executeMovement(position);
+    public Explorer turn(MovementType direction) {
+        Position newPosition = direction.executeMovement(this.position);
+        return Explorer.of(name, newPosition, movements.movementTypes());
 
     }
 
