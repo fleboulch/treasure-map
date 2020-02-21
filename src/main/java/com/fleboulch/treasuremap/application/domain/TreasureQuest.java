@@ -71,6 +71,8 @@ public class TreasureQuest {
             }
         } else {
             log.info("{} trying to go outside the map on [{}]", currentExplorer, nextCoordinates);
+            historyMovements = addToHistory(currentExplorer);
+
         }
 
     }
