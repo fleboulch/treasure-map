@@ -1,7 +1,6 @@
 package com.fleboulch.treasuremap.application.exposition;
 
 import com.fleboulch.treasuremap.application.domain.Explorers;
-import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.InputType;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
@@ -185,12 +184,12 @@ public class ApplicationFactory {
         }
     }
 
-    public static List<String> toExposition(HistoryTreasureQuest historyTreasureQuest) {
+    public static List<String> toExposition(TreasureQuest historyTreasureQuest) {
         List<String> expositionDimension = buildExpositionDimension(historyTreasureQuest.treasureMap().dimension());
         List<String> expositionMountains = buildExpositionMountains(historyTreasureQuest.treasureMap().mountainBoxes());
         List<String> expositionTreasures = buildExpositionTreasures(historyTreasureQuest.treasureMap().treasureBoxes());
 
-        List<String> expositionExplorers = buildExpositionExplorers(historyTreasureQuest.historyMovementsPerExplorer());
+        List<String> expositionExplorers = buildExpositionExplorers(historyTreasureQuest.historyMovements());
 
         return concatenate(expositionDimension, expositionMountains, expositionTreasures, expositionExplorers);
     }
@@ -203,11 +202,10 @@ public class ApplicationFactory {
                 .collect(toList());
     }
 
-    private static List<String> buildExpositionExplorers(Map<Name, List<Explorer>> historyMovementsPerExplorer) {
-        return historyMovementsPerExplorer.values().stream()
-                .map(explorers -> explorers.get(explorers.size() - 1))
-                .map(ApplicationFactory::explorerToString)
-                .collect(toList());
+    // TODO: working as there is only one explorer
+    private static List<String> buildExpositionExplorers(List<Explorer> historyMovementsPerExplorer) {
+        Explorer exp = historyMovementsPerExplorer.get(historyMovementsPerExplorer.size() -1);
+        return List.of(explorerToString(exp));
     }
 
     private static String explorerToString(Explorer explorer) {

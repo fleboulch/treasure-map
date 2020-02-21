@@ -1,7 +1,6 @@
 package com.fleboulch.treasuremap.application.app;
 
 import com.fleboulch.treasuremap.application.domain.Explorers;
-import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.MovementType;
@@ -40,9 +39,9 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S) Explorer beginExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
-        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+        TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> historyExplorers = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+        List<Explorer> historyExplorers = finalQuest.historyMovements();
 
         assertThat(historyExplorers).containsExactly(beginExplorer);
 
@@ -50,15 +49,15 @@ class TreasureQuestRunnerTest {
 
     @Test
     void simple_quest_with_one_explorer_and_go_forward_movement(
-            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S, movements = MovementType.A) Explorer beginExplorer,
-            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 1, orientationType = OrientationType.S) Explorer finalExplorer
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S, movements = MovementType.A) Explorer currentExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S, movements = MovementType.A) Explorer beginExplorer
     ) {
-        TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
-        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+        TreasureQuest inputTreasureQuest = buildSimpleQuest(currentExplorer);
+        TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+        List<Explorer> explorerMovements = finalQuest.historyMovements();
 
-        assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
+        assertThat(explorerMovements).containsExactly(beginExplorer, currentExplorer);
 
     }
 
@@ -68,9 +67,9 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.W) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
-        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+        TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+        List<Explorer> explorerMovements = finalQuest.historyMovements();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
     }
@@ -81,9 +80,9 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
-        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+        TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+        List<Explorer> explorerMovements = finalQuest.historyMovements();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
     }
@@ -94,9 +93,9 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildQuestWithOneMountain(beginExplorer);
-        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+        TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+        List<Explorer> explorerMovements = finalQuest.historyMovements();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
     }
@@ -107,9 +106,9 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 1, orientationType = OrientationType.S, nbTreasures = 1) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildQuestWithOneTreasure(beginExplorer, 1);
-        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+        TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+        List<Explorer> explorerMovements = finalQuest.historyMovements();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
         assertThat(finalQuest.treasureMap().treasureBoxes()).isEmpty();
@@ -122,9 +121,9 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 1, orientationType = OrientationType.S, nbTreasures = 1) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildQuestWithOneTreasure(beginExplorer, 2);
-        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+        TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+        List<Explorer> explorerMovements = finalQuest.historyMovements();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
         assertThat(finalQuest.treasureMap().treasureBoxes()).containsExactly(new TreasureBox(ZERO_ONE_COORDINATES, 1));
@@ -143,9 +142,9 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
-        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+        TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+        List<Explorer> explorerMovements = finalQuest.historyMovements();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, firstMoveExplorer, finalExplorer);
 
@@ -157,9 +156,9 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 3, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
-        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+        TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+        List<Explorer> explorerMovements = finalQuest.historyMovements();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
 
@@ -177,9 +176,9 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 3, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
-        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+        TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+        List<Explorer> explorerMovements = finalQuest.historyMovements();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, firstMoveExplorer, finalExplorer);
 
@@ -195,9 +194,9 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 3, orientationType = OrientationType.S, nbTreasures = 3) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildComplexQuest(beginExplorer);
-        HistoryTreasureQuest finalQuest = runner.start(inputTreasureQuest);
+        TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovementsPerExplorer().get(beginExplorer.name());
+        List<Explorer> explorerMovements = finalQuest.historyMovements();
 
         assertThat(explorerMovements).hasSize(10);
         assertThat(explorerMovements).contains(beginExplorer, finalExplorer);

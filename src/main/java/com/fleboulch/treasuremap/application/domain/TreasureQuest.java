@@ -1,6 +1,7 @@
 package com.fleboulch.treasuremap.application.domain;
 
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
+import com.fleboulch.treasuremap.explorer.domain.Name;
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 import com.fleboulch.treasuremap.map.domain.Dimension;
 import com.fleboulch.treasuremap.map.domain.PlainsBox;
@@ -9,6 +10,7 @@ import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,12 +20,14 @@ public class TreasureQuest {
 
     private TreasureMap treasureMap;
     private Explorers explorers;
+    private List<Explorer> historyMovements;
 
     public TreasureQuest(TreasureMap treasureMap, Explorers explorers) {
         this.treasureMap = Domain.validateNotNull(treasureMap, "Quest should have a not null treasure map");
         Domain.validateNotNull(explorers, "Quest should have not null explorers");
         validateStartingCoordinatesFor(explorers.explorers());
         this.explorers = explorers;
+        this.historyMovements = explorers.explorers();
     }
 
     private void validateStartingCoordinatesFor(List<Explorer> explorers) {
@@ -75,11 +79,29 @@ public class TreasureQuest {
         return explorers;
     }
 
+    public List<Explorer> historyMovements() {
+        return historyMovements;
+    }
+
+    public void addToHistory(Explorer exp) {
+//        historyMovements.add(exp);
+        new ArrayList<>(historyMovements).add(exp);
+    }
+
     @Override
     public String toString() {
         return "TreasureQuest{" +
                 "treasureMap= \n" + treasureMap +
                 "explorers= \n" + explorers +
                 '}';
+    }
+
+    public TreasureQuest popMovementFor(Explorer explorerAfterAction) {
+        return new TreasureQuest(treasureMap, explorers.popMovement(explorerAfterAction));
+    }
+
+    // TODO: genericity for multiple explorers
+    public Explorer getLastState(Name explorerName) {
+        return historyMovements.get(historyMovements.size() -1);
     }
 }

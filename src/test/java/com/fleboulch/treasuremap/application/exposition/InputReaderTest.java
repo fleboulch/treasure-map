@@ -2,7 +2,6 @@ package com.fleboulch.treasuremap.application.exposition;
 
 import com.fleboulch.treasuremap.application.app.TreasureQuestRunner;
 import com.fleboulch.treasuremap.application.domain.Explorers;
-import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.MovementType;
@@ -63,9 +62,9 @@ class InputReaderTest {
             @ExplorerConfiguration(xCoordinates = 2, yCoordinates = 1, orientationType = OrientationType.S, movements = MovementType.A) Explorer explorer,
             @ExplorerConfiguration(xCoordinates = 2, orientationType = OrientationType.S, nbTreasures = 1) Explorer firstMoveExplorer
     ) throws IOException {
-        HistoryTreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer, List.of(buildMountain(1, 1)), List.of(buildTreasure(2, 2, 1)));
-        historyTreasureQuest.registerMove(firstMoveExplorer);
-        historyTreasureQuest.removeOneTreasure(Coordinates.of(2, 2));
+        TreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer, List.of(buildMountain(1, 1)), List.of(buildTreasure(2, 2, 1)));
+//        historyTreasureQuest.registerMove(firstMoveExplorer);
+//        historyTreasureQuest.removeOneTreasure(Coordinates.of(2, 2));
 
         when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(historyTreasureQuest);
         List<String> response = inputReader.process(buildCsvPath("quest.csv"), "quest with one treasure");
@@ -85,7 +84,7 @@ class InputReaderTest {
                     isExampleSequenceMovements = true
             ) Explorer explorer
     ) throws IOException {
-        HistoryTreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(
+        TreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(
                 explorer,
                 List.of(buildMountain(1, 0), buildMountain(2, 1)),
                 List.of(buildTreasure(0, 3, 2), buildTreasure(1, 3, 3))
@@ -98,12 +97,12 @@ class InputReaderTest {
         finalExplorer.collectTreasure();
         finalExplorer.collectTreasure();
         finalExplorer.collectTreasure();
-        historyTreasureQuest.registerMove(finalExplorer);
+//        historyTreasureQuest.registerMove(finalExplorer);
 
         Coordinates treasureCoordinates1 = Coordinates.of(1, 3);
-        historyTreasureQuest.removeOneTreasure(treasureCoordinates1);
-        historyTreasureQuest.removeOneTreasure(finalCoordinates);
-        historyTreasureQuest.removeOneTreasure(finalCoordinates);
+//        historyTreasureQuest.removeOneTreasure(treasureCoordinates1);
+//        historyTreasureQuest.removeOneTreasure(finalCoordinates);
+//        historyTreasureQuest.removeOneTreasure(finalCoordinates);
 
         when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(historyTreasureQuest);
         List<String> response = inputReader.process(buildCsvPath("quest.csv"), "example quest");
@@ -117,8 +116,8 @@ class InputReaderTest {
         );
     }
 
-    private HistoryTreasureQuest buildHistoryTreasureQuest(Explorer explorer, List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
-        return HistoryTreasureQuest.of(buildTreasureQuest(explorer, mountainBoxes, treasureBoxes));
+    private TreasureQuest buildHistoryTreasureQuest(Explorer explorer, List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
+        return buildTreasureQuest(explorer, mountainBoxes, treasureBoxes);
     }
 
     private TreasureQuest buildTreasureQuest(Explorer explorer, List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {

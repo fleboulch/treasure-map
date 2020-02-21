@@ -1,14 +1,10 @@
 package com.fleboulch.treasuremap.application.app;
 
 import com.fleboulch.treasuremap.application.domain.ExplorerOrchestrator;
-import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.MovementType;
 import com.fleboulch.treasuremap.explorer.domain.Name;
-import com.fleboulch.treasuremap.map.domain.PlainsBox;
-import com.fleboulch.treasuremap.map.domain.TreasureMap;
-import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -23,39 +19,43 @@ public class TreasureQuestRunner {
     public TreasureQuestRunner() {
     }
 
-    public HistoryTreasureQuest start(TreasureQuest treasureQuest) {
+    public TreasureQuest start(TreasureQuest treasureQuest) {
         log.info("Quest is starting");
         log.info("{}", treasureQuest.treasureMap());
-        HistoryTreasureQuest historyTreasureQuest = HistoryTreasureQuest.of(treasureQuest);
+        log.info("Initial start for explorer 1: {}", treasureQuest.explorers().explorers().get(0));
 
         ExplorerOrchestrator explorerOrchestrator = new ExplorerOrchestrator(treasureQuest.explorers());
 
-        Optional<HistoryTreasureQuest> finalQuest = explorerOrchestrator.explorerNames().stream()
-                .map(explorerName -> saveAction(historyTreasureQuest, explorerName, treasureQuest))
+        Optional<TreasureQuest> finalQuest = explorerOrchestrator.explorerNames().stream()
+                .map(explorerName -> saveAction(explorerName, treasureQuest))
                 .reduce((l, r) -> r);
 
-        log.info("Quest is finished");
 
         if (finalQuest.isEmpty()) {
-            return historyTreasureQuest;
+            log.info("Final position {}", treasureQuest.explorers().explorers().get(0));
+            log.info("Quest is finished");
+
+            return treasureQuest;
         }
 
+        log.info("Final position {}", finalQuest.get().explorers().explorers().get(0));
+        log.info("Quest is finished");
         return finalQuest.get();
     }
 
-    private HistoryTreasureQuest saveAction(HistoryTreasureQuest historyTreasureQuest, Name explorerName, TreasureQuest treasureQuest) {
-        Explorer currentExplorer = historyTreasureQuest.getLastState(explorerName);
+    private TreasureQuest saveAction(Name explorerName, TreasureQuest treasureQuest) {
+        Explorer currentExplorer = treasureQuest.getLastState(explorerName);
 
-        executeAction(currentExplorer, treasureQuest);
-        historyTreasureQuest.registerMove(currentExplorer);
-        historyTreasureQuest.setTreasureMap(treasureQuest.treasureMap());
+        TreasureQuest treasureQuest1 = executeAction(currentExplorer, treasureQuest);
+//        historyTreasureQuest.registerMove(treasureQuest1.explorers().explorers().get(0));
+//        historyTreasureQuest.setTreasureMap(treasureQuest1.treasureMap());
 
 //        if (explorerNext.hasCollectedANewTreasure(currentExplorer)) {
 //            log.info("Remove one treasure on [{}]", explorerNext.coordinates());
 //            historyTreasureQuest.removeOneTreasure(explorerNext.coordinates());
 //        }
 
-        return historyTreasureQuest;
+        return treasureQuest1;
     }
 
     private TreasureQuest executeAction(Explorer currentExplorer, TreasureQuest treasureQuest) {
@@ -79,8 +79,9 @@ public class TreasureQuestRunner {
                 throw new IllegalArgumentException("Unknown movement type"); // should never occured
         }
 
-        explorerAfterAction.popMovement();
-        return treasureQuest;
+        explorerAfterAction = explorerAfterAction.popMovement();
+        treasureQuest.addToHistory(explorerAfterAction);
+        return treasureQuest.popMovementFor(explorerAfterAction);
 
     }
 

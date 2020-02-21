@@ -4,6 +4,8 @@ import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Explorers {
 
@@ -23,5 +25,16 @@ public class Explorers {
 
     public List<Explorer> explorers() {
         return explorers;
+    }
+
+    public Explorers popMovement(Explorer explorerAfterAction) {
+
+        return new Explorers(
+                explorers.stream()
+                        .filter(explorer -> Objects.equals(explorer, explorerAfterAction))
+                        .map(Explorer::popMovement)
+                        .collect(Collectors.toList())
+        );
+
     }
 }

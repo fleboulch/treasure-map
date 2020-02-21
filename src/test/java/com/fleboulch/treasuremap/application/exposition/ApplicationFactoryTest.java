@@ -1,7 +1,6 @@
 package com.fleboulch.treasuremap.application.exposition;
 
 import com.fleboulch.treasuremap.application.domain.Explorers;
-import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
 import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputRowException;
@@ -182,7 +181,7 @@ class ApplicationFactoryTest {
     void it_should_convert_history_treasure_quest_to_exposition(
             Explorer explorer
     ) {
-        HistoryTreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer);
+        TreasureQuest historyTreasureQuest = buildTreasureQuest(explorer);
 
         List<String> response = ApplicationFactory.toExposition(historyTreasureQuest);
 
@@ -199,7 +198,7 @@ class ApplicationFactoryTest {
     void it_should_convert_history_treasure_quest_to_exposition_and_remove_empty_treasure_box(
             @ExplorerConfiguration(xCoordinates = 2, yCoordinates = 1, orientationType = OrientationType.S, nbTreasures = 3) Explorer explorer
     ) {
-        HistoryTreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer);
+        TreasureQuest historyTreasureQuest = buildTreasureQuest(explorer);
 
         List<String> response = ApplicationFactory.toExposition(historyTreasureQuest);
 
@@ -210,10 +209,6 @@ class ApplicationFactoryTest {
                 String.format("T%s2%s2%s1", caret, caret, caret),
                 String.format("A%sLaura%s2%s1%sS%s3", caret, caret, caret, caret, caret)
         );
-    }
-
-    private HistoryTreasureQuest buildHistoryTreasureQuest(Explorer explorer) {
-        return HistoryTreasureQuest.of(buildTreasureQuest(explorer));
     }
 
     private TreasureQuest buildTreasureQuest(Explorer explorer) {
