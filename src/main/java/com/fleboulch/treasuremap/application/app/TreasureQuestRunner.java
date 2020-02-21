@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -33,14 +32,7 @@ public class TreasureQuestRunner {
 //                .reduce((l, r) -> r);
                 .collect(Collectors.toList());
 
-        TreasureQuest finalQuest = quests.get(quests.size() -1);
-
-//        if (finalQuest.()) {
-//            log.info("Final position {}", treasureQuest.explorers().explorers().get(0));
-//            log.info("Quest is finished");
-//
-//            return treasureQuest;
-//        }
+        TreasureQuest finalQuest = quests.get(quests.size() - 1);
 
         log.info("Final position {}", finalQuest.historyMovements().get(0));
         log.info("Quest is finished");
@@ -51,13 +43,6 @@ public class TreasureQuestRunner {
         Explorer currentExplorer = treasureQuest.getLastState(explorerName);
 
         executeAction(currentExplorer, treasureQuest);
-//        historyTreasureQuest.registerMove(treasureQuest1.explorers().explorers().get(0));
-//        historyTreasureQuest.setTreasureMap(treasureQuest1.treasureMap());
-
-//        if (explorerNext.hasCollectedANewTreasure(currentExplorer)) {
-//            log.info("Remove one treasure on [{}]", explorerNext.coordinates());
-//            historyTreasureQuest.removeOneTreasure(explorerNext.coordinates());
-//        }
 
         return treasureQuest;
     }
@@ -83,8 +68,6 @@ public class TreasureQuestRunner {
                 throw new IllegalArgumentException("Unknown movement type"); // should never occured
         }
 
-//        explorerAfterAction = explorerAfterAction.popMovement();
-//        treasureQuest.setHistoryMovements(treasureQuest.addToHistory(explorerAfterAction));
         treasureQuest.popMovementFor();
 
     }

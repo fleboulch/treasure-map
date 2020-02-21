@@ -12,9 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class TreasureQuest {
 
@@ -61,7 +59,7 @@ public class TreasureQuest {
                     break;
                 case PLAINS:
                     log.info("{} will go forward on [{}]", currentExplorer, nextCoordinates);
-                    Explorer last = historyMovements.get(historyMovements.size() -1);
+                    Explorer last = historyMovements.get(historyMovements.size() - 1);
 
                     historyMovements = addToHistory(last.goForward());
                     break;
@@ -72,7 +70,6 @@ public class TreasureQuest {
             log.info("{} trying to go outside the map on [{}]", currentExplorer, nextCoordinates);
         }
 
-//        return currentExplorer;
     }
 
     public TreasureMap treasureMap() {
@@ -94,11 +91,6 @@ public class TreasureQuest {
         List<Explorer> resu = new ArrayList<>(List.copyOf(historyMovements));
         resu.add(exp);
         return resu;
-//        historyMovements = exps;
-    }
-
-    public void setHistoryMovements(List<Explorer> explorers) {
-        historyMovements = explorers;
     }
 
     @Override
@@ -110,12 +102,12 @@ public class TreasureQuest {
     }
 
     public void popMovementFor() {
-        Explorer last = historyMovements.get(historyMovements.size() -1);
+        Explorer last = historyMovements.get(historyMovements.size() - 1);
         last.popMovement();
     }
 
     // TODO: genericity for multiple explorers
     public Explorer getLastState(Name explorerName) {
-        return historyMovements.get(historyMovements.size() -1);
+        return historyMovements.get(historyMovements.size() - 1);
     }
 }

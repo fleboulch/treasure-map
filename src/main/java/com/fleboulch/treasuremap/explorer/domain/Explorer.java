@@ -84,7 +84,6 @@ public class Explorer {
     public Explorer goForward() {
         Coordinates newCoordinates = position.goForward().coordinates();
 
-//        position = new Position(orientation(), newCoordinates);
         return Explorer.of(name, new Position(orientation(), newCoordinates), movements.movementTypes());
     }
 

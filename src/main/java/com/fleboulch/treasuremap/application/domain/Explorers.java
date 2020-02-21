@@ -4,8 +4,6 @@ import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class Explorers {
 
