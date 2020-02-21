@@ -83,9 +83,18 @@ public class TreasureQuest {
         return historyMovements;
     }
 
-    public void addToHistory(Explorer exp) {
+    public List<Explorer> addToHistory(Explorer exp) {
 //        historyMovements.add(exp);
-        new ArrayList<>(historyMovements).add(exp);
+//        List<Explorer> exps = historyMovements;
+//        exps.add(exp);
+        List<Explorer> resu = new ArrayList<>(List.copyOf(historyMovements));
+        resu.add(exp);
+        return resu;
+//        historyMovements = exps;
+    }
+
+    public void setHistoryMovements(List<Explorer> explorers) {
+        historyMovements = explorers;
     }
 
     @Override

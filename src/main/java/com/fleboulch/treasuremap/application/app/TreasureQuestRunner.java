@@ -9,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class TreasureQuestRunner {
@@ -26,27 +28,29 @@ public class TreasureQuestRunner {
 
         ExplorerOrchestrator explorerOrchestrator = new ExplorerOrchestrator(treasureQuest.explorers());
 
-        Optional<TreasureQuest> finalQuest = explorerOrchestrator.explorerNames().stream()
+        List<TreasureQuest> quests = explorerOrchestrator.explorerNames().stream()
                 .map(explorerName -> saveAction(explorerName, treasureQuest))
-                .reduce((l, r) -> r);
+//                .reduce((l, r) -> r);
+                .collect(Collectors.toList());
 
+        TreasureQuest finalQuest = quests.get(quests.size() -1);
 
-        if (finalQuest.isEmpty()) {
-            log.info("Final position {}", treasureQuest.explorers().explorers().get(0));
-            log.info("Quest is finished");
+//        if (finalQuest.()) {
+//            log.info("Final position {}", treasureQuest.explorers().explorers().get(0));
+//            log.info("Quest is finished");
+//
+//            return treasureQuest;
+//        }
 
-            return treasureQuest;
-        }
-
-        log.info("Final position {}", finalQuest.get().explorers().explorers().get(0));
+        log.info("Final position {}", finalQuest.explorers().explorers().get(0));
         log.info("Quest is finished");
-        return finalQuest.get();
+        return finalQuest;
     }
 
     private TreasureQuest saveAction(Name explorerName, TreasureQuest treasureQuest) {
         Explorer currentExplorer = treasureQuest.getLastState(explorerName);
 
-        TreasureQuest treasureQuest1 = executeAction(currentExplorer, treasureQuest);
+        executeAction(currentExplorer, treasureQuest);
 //        historyTreasureQuest.registerMove(treasureQuest1.explorers().explorers().get(0));
 //        historyTreasureQuest.setTreasureMap(treasureQuest1.treasureMap());
 
@@ -55,10 +59,10 @@ public class TreasureQuestRunner {
 //            historyTreasureQuest.removeOneTreasure(explorerNext.coordinates());
 //        }
 
-        return treasureQuest1;
+        return treasureQuest;
     }
 
-    private TreasureQuest executeAction(Explorer currentExplorer, TreasureQuest treasureQuest) {
+    private void executeAction(Explorer currentExplorer, TreasureQuest treasureQuest) {
         MovementType movementType = currentExplorer.nextMovement();
         Explorer explorerAfterAction = null;
         switch (movementType) {
@@ -80,8 +84,8 @@ public class TreasureQuestRunner {
         }
 
         explorerAfterAction = explorerAfterAction.popMovement();
-        treasureQuest.addToHistory(explorerAfterAction);
-        return treasureQuest.popMovementFor(explorerAfterAction);
+        treasureQuest.setHistoryMovements(treasureQuest.addToHistory(explorerAfterAction));
+        treasureQuest.popMovementFor(explorerAfterAction);
 
     }
 
