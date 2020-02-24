@@ -31,6 +31,25 @@ public class TreasureQuest {
         this.historyMovements = explorers.explorers();
     }
 
+    public void executeAction(Name explorerName) {
+        Explorer currentExplorer = getLastState(explorerName);
+        MovementType movementType = currentExplorer.nextMovement();
+        switch (movementType) {
+            case A:
+                goForwardAction(currentExplorer);
+                break;
+            case D:
+                turn(currentExplorer, MovementType.D);
+                break;
+            case G:
+                turn(currentExplorer, MovementType.G);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown movement type"); // should never occured
+        }
+
+    }
+
     private void validateStartingCoordinatesFor(List<Explorer> explorers) {
         explorers.forEach(this::validateStartingCoordinatesFor);
     }
@@ -44,7 +63,7 @@ public class TreasureQuest {
     }
 
 
-    public void goForwardAction(Explorer currentExplorer) {
+    private void goForwardAction(Explorer currentExplorer) {
         Coordinates nextCoordinates = currentExplorer.checkNextPositionWhenGoForward();
         Optional<PlainsBox> nextBox = treasureMap.from(nextCoordinates);
 
@@ -76,7 +95,6 @@ public class TreasureQuest {
             historyMovements = addToHistory(currentExplorer);
 
         }
-
     }
 
     public TreasureMap treasureMap() {
@@ -109,11 +127,11 @@ public class TreasureQuest {
     }
 
     // TODO: genericity for multiple explorers
-    public Explorer getLastState(Name explorerName) {
+    private Explorer getLastState(Name explorerName) {
         return historyMovements.get(historyMovements.size() - 1);
     }
 
-    public void turn(Explorer currentExplorer, MovementType d) {
+    private void turn(Explorer currentExplorer, MovementType d) {
         Explorer last = historyMovements.get(historyMovements.size() - 1);
 
         Explorer explorerAfterTurn = last.turn(d);

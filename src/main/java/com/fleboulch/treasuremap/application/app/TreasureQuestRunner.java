@@ -3,7 +3,6 @@ package com.fleboulch.treasuremap.application.app;
 import com.fleboulch.treasuremap.application.domain.ExplorerOrchestrator;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
-import com.fleboulch.treasuremap.explorer.domain.MovementType;
 import com.fleboulch.treasuremap.explorer.domain.Name;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,35 +37,15 @@ public class TreasureQuestRunner {
 
         TreasureQuest finalQuest = quests.get(quests.size() - 1);
 
-        log.info("Final position {}", finalQuest.historyMovements().get(finalQuest.historyMovements().size() -1));
+        log.info("Final position {}", finalQuest.historyMovements().get(finalQuest.historyMovements().size() - 1));
         log.info("Quest is finished");
         return finalQuest;
     }
 
     private TreasureQuest saveAction(Name explorerName, TreasureQuest treasureQuest) {
-        Explorer currentExplorer = treasureQuest.getLastState(explorerName);
-
-        executeAction(currentExplorer, treasureQuest);
+        treasureQuest.executeAction(explorerName);
 
         return treasureQuest;
-    }
-
-    private void executeAction(Explorer currentExplorer, TreasureQuest treasureQuest) {
-        MovementType movementType = currentExplorer.nextMovement();
-        switch (movementType) {
-            case A:
-                treasureQuest.goForwardAction(currentExplorer);
-                break;
-            case D:
-                treasureQuest.turn(currentExplorer, MovementType.D);
-                break;
-            case G:
-                treasureQuest.turn(currentExplorer, MovementType.G);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown movement type"); // should never occured
-        }
-
     }
 
 }
