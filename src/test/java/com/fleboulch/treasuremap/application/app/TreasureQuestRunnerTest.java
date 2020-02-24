@@ -45,6 +45,7 @@ class TreasureQuestRunnerTest {
         List<Explorer> historyExplorers = finalQuest.historyMovements();
 
         assertThat(historyExplorers).containsExactly(beginExplorer);
+        testExplorerEquals(historyExplorers.get(0), beginExplorer);
 
     }
 
@@ -129,6 +130,9 @@ class TreasureQuestRunnerTest {
         List<Explorer> explorerMovements = finalQuest.historyMovements();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
+        testExplorerEquals(explorerMovements.get(0), beginExplorer);
+        testExplorerEquals(explorerMovements.get(1), finalExplorer);
+
         assertThat(finalQuest.treasureMap().treasureBoxes()).isEmpty();
 
     }
@@ -144,6 +148,9 @@ class TreasureQuestRunnerTest {
         List<Explorer> explorerMovements = finalQuest.historyMovements();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
+        testExplorerEquals(explorerMovements.get(0), beginExplorer);
+        testExplorerEquals(explorerMovements.get(1), finalExplorer);
+
         assertThat(finalQuest.treasureMap().treasureBoxes()).containsExactly(new TreasureBox(ZERO_ONE_COORDINATES, 1));
 
     }
@@ -165,6 +172,9 @@ class TreasureQuestRunnerTest {
         List<Explorer> explorerMovements = finalQuest.historyMovements();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, firstMoveExplorer, finalExplorer);
+        testExplorerEquals(explorerMovements.get(0), beginExplorer);
+        testExplorerEquals(explorerMovements.get(1), firstMoveExplorer);
+        testExplorerEquals(explorerMovements.get(2), finalExplorer);
 
     }
 
@@ -223,6 +233,9 @@ class TreasureQuestRunnerTest {
 
         assertThat(explorerMovements).hasSize(10);
         assertThat(explorerMovements).contains(beginExplorer, finalExplorer);
+
+        testExplorerEquals(explorerMovements.get(0), beginExplorer);
+        testExplorerEquals(explorerMovements.get(9), finalExplorer);
 
         TreasureMap finalMap = finalQuest.treasureMap();
 
