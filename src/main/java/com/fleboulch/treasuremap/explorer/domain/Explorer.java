@@ -72,29 +72,31 @@ public class Explorer {
     }
 
     public Explorer popMovement() {
-        return Explorer.of(name, position, movements.popMovement().movementTypes());
+        return new Explorer(name, position, movements.popMovement(), nbCollectedTreasures);
 
     }
 
     public Explorer turn(MovementType direction) {
         Position newPosition = direction.executeMovement(this.position);
-        return Explorer.of(name, newPosition, movements.movementTypes());
+        return new Explorer(name, newPosition, movements, nbCollectedTreasures);
 
     }
 
     public Explorer goForward() {
         Coordinates newCoordinates = position.goForward().coordinates();
 
-        return Explorer.of(name, new Position(orientation(), newCoordinates), movements.movementTypes());
+        return new Explorer(name, new Position(orientation(), newCoordinates), movements, nbCollectedTreasures);
     }
 
     public Position position() {
         return position;
     }
 
-    public void goForwardAndCollect() {
-        goForward();
-        collectTreasure();
+    public Explorer goForwardAndCollect() {
+        Explorer newExplorer = goForward();
+        newExplorer.collectTreasure();
+
+        return newExplorer;
     }
 
     @Override

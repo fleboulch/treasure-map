@@ -57,8 +57,10 @@ public class TreasureQuest {
                     break;
                 case TREASURE:
                     log.info("{} will go forward and collect one treasure on [{}]", currentExplorer, nextCoordinates);
-                    currentExplorer.goForwardAndCollect();
-                    treasureMap = treasureMap.removeOneTreasure(currentExplorer.coordinates());
+                    Explorer nextExplorer = currentExplorer.goForwardAndCollect();
+                    treasureMap = treasureMap.removeOneTreasure(nextExplorer.coordinates());
+                    historyMovements = addToHistory(nextExplorer);
+
                     break;
                 case PLAINS:
                     log.info("{} will go forward on [{}]", currentExplorer, nextCoordinates);
