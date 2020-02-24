@@ -71,8 +71,8 @@ public class Explorer {
         return position.goForward().coordinates();
     }
 
-    public void popMovement() {
-        movements = movements.popMovement();
+    public Explorer popMovement() {
+        return Explorer.of(name, position, movements.popMovement().movementTypes());
 
     }
 

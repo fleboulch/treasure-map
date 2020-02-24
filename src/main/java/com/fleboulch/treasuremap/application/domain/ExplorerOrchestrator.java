@@ -5,6 +5,7 @@ import com.fleboulch.treasuremap.explorer.domain.Name;
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -94,7 +94,7 @@ public class TreasureQuest {
 //        List<Explorer> exps = historyMovements;
 //        exps.add(exp);
         List<Explorer> resu = new ArrayList<>(List.copyOf(historyMovements));
-        resu.add(exp);
+        resu.add(exp.popMovement());
         return resu;
     }
 
@@ -104,11 +104,6 @@ public class TreasureQuest {
                 "treasureMap= \n" + treasureMap +
                 "explorers= \n" + explorers +
                 '}';
-    }
-
-    public void popMovementFor() {
-        Explorer last = historyMovements.get(historyMovements.size() - 1);
-        last.popMovement();
     }
 
     // TODO: genericity for multiple explorers

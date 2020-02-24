@@ -32,6 +32,10 @@ public class TreasureQuestRunner {
 //                .reduce((l, r) -> r);
                 .collect(Collectors.toList());
 
+        if (quests.isEmpty()) {
+            return treasureQuest;
+        }
+
         TreasureQuest finalQuest = quests.get(quests.size() - 1);
 
         log.info("Final position {}", finalQuest.historyMovements().get(finalQuest.historyMovements().size() -1));
@@ -62,8 +66,6 @@ public class TreasureQuestRunner {
             default:
                 throw new IllegalArgumentException("Unknown movement type"); // should never occured
         }
-
-        treasureQuest.popMovementFor();
 
     }
 
