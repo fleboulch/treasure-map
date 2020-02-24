@@ -2,14 +2,12 @@ package com.fleboulch.treasuremap.application.app;
 
 import com.fleboulch.treasuremap.application.domain.ExplorerOrchestrator;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
-import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.Name;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Component
 public class TreasureQuestRunner {
@@ -26,16 +24,15 @@ public class TreasureQuestRunner {
 
         ExplorerOrchestrator explorerOrchestrator = new ExplorerOrchestrator(treasureQuest.explorers());
 
-        List<TreasureQuest> quests = explorerOrchestrator.explorerNames().stream()
+        Optional<TreasureQuest> optionalQuest = explorerOrchestrator.explorerNames().stream()
                 .map(explorerName -> saveAction(explorerName, treasureQuest))
-//                .reduce((l, r) -> r);
-                .collect(Collectors.toList());
+                .reduce((l, r) -> r);
 
-        if (quests.isEmpty()) {
+        if (optionalQuest.isEmpty()) {
             return treasureQuest;
         }
 
-        TreasureQuest finalQuest = quests.get(quests.size() - 1);
+        TreasureQuest finalQuest = optionalQuest.get();
 
         log.info("Final position {}", finalQuest.historyMovements().get(finalQuest.historyMovements().size() - 1));
         log.info("Quest is finished");
