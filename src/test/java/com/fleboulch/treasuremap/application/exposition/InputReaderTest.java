@@ -63,8 +63,7 @@ class InputReaderTest {
             @ExplorerConfiguration(xCoordinates = 2, orientationType = OrientationType.S, nbTreasures = 1) Explorer firstMoveExplorer
     ) throws IOException {
         TreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer, List.of(buildMountain(1, 1)), List.of(buildTreasure(2, 2, 1)));
-//        historyTreasureQuest.registerMove(firstMoveExplorer);
-//        historyTreasureQuest.removeOneTreasure(Coordinates.of(2, 2));
+        historyTreasureQuest.goForwardAction(explorer);
 
         when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(historyTreasureQuest);
         List<String> response = inputReader.process(buildCsvPath("quest.csv"), "quest with one treasure");
@@ -97,12 +96,42 @@ class InputReaderTest {
         finalExplorer.collectTreasure();
         finalExplorer.collectTreasure();
         finalExplorer.collectTreasure();
-//        historyTreasureQuest.registerMove(finalExplorer);
 
-        Coordinates treasureCoordinates1 = Coordinates.of(1, 3);
-//        historyTreasureQuest.removeOneTreasure(treasureCoordinates1);
-//        historyTreasureQuest.removeOneTreasure(finalCoordinates);
-//        historyTreasureQuest.removeOneTreasure(finalCoordinates);
+        historyTreasureQuest.goForwardAction(explorer);
+        Explorer explorer1 = explorer.goForward();
+        explorer1 = explorer1.popMovement();
+        historyTreasureQuest.goForwardAction(explorer1);
+        explorer1 = explorer1.goForwardAndCollect();
+        explorer1 = explorer1.popMovement();
+
+        historyTreasureQuest.turn(explorer1, MovementType.D);
+        explorer1 = explorer1.turn(MovementType.D);
+        explorer1 = explorer1.popMovement();
+        historyTreasureQuest.goForwardAction(explorer1);
+        explorer1 = explorer1.goForwardAndCollect();
+        explorer1 = explorer1.popMovement();
+
+        historyTreasureQuest.turn(explorer1, MovementType.D);
+
+        explorer1 = explorer1.turn(MovementType.D);
+        explorer1 = explorer1.popMovement();
+
+        historyTreasureQuest.goForwardAction(explorer1);
+        explorer1 = explorer1.goForward();
+        explorer1 = explorer1.popMovement();
+
+        historyTreasureQuest.turn(explorer1, MovementType.G);
+        explorer1 = explorer1.turn(MovementType.G);
+        explorer1 = explorer1.popMovement();
+
+        historyTreasureQuest.turn(explorer1, MovementType.G);
+
+        explorer1 = explorer1.turn(MovementType.G);
+        explorer1 = explorer1.popMovement();
+
+        historyTreasureQuest.goForwardAction(explorer1);
+        explorer1 = explorer1.goForwardAndCollect();
+        explorer1 = explorer1.popMovement();
 
         when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(historyTreasureQuest);
         List<String> response = inputReader.process(buildCsvPath("quest.csv"), "example quest");
