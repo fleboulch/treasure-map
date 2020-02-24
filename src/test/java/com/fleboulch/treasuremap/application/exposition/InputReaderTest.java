@@ -4,9 +4,7 @@ import com.fleboulch.treasuremap.application.app.TreasureQuestRunner;
 import com.fleboulch.treasuremap.application.domain.Explorers;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
-import com.fleboulch.treasuremap.explorer.domain.MovementType;
 import com.fleboulch.treasuremap.explorer.domain.OrientationType;
-import com.fleboulch.treasuremap.explorer.domain.Position;
 import com.fleboulch.treasuremap.map.domain.Dimension;
 import com.fleboulch.treasuremap.map.domain.MountainBox;
 import com.fleboulch.treasuremap.map.domain.TreasureBox;
@@ -23,7 +21,6 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,7 +44,7 @@ class InputReaderTest {
 
     @Test
     void it_should_process_simple_quest(Explorer explorer) throws IOException {
-        when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(buildHistoryTreasureQuest(explorer, List.of(buildMountain(1, 1)), List.of(buildTreasure(2, 2, 1))));
+        when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(buildTreasureQuest(explorer, List.of(buildMountain(1, 1)), List.of(buildTreasure(2, 2, 1))));
         List<String> response = inputReader.process(buildCsvPath("quest.csv"), "simple quest");
 
         assertThat(response).containsExactly(
@@ -62,9 +59,9 @@ class InputReaderTest {
     void it_should_process_quest_with_one_treasure(
             @ExplorerConfiguration(xCoordinates = 2, orientationType = OrientationType.S, nbTreasures = 1) Explorer explorer
     ) throws IOException {
-        TreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer, List.of(buildMountain(1, 1)), emptyList());
+        TreasureQuest treasureQuest = buildTreasureQuest(explorer, List.of(buildMountain(1, 1)), emptyList());
 
-        when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(historyTreasureQuest);
+        when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(treasureQuest);
         List<String> response = inputReader.process(buildCsvPath("quest.csv"), "quest with one treasure");
 
         assertThat(response).containsExactly(
@@ -83,13 +80,13 @@ class InputReaderTest {
                     nbTreasures = 3
             ) Explorer finalExplorer
     ) throws IOException {
-        TreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(
+        TreasureQuest treasureQuest = buildTreasureQuest(
                 finalExplorer,
                 List.of(buildMountain(1, 0), buildMountain(2, 1)),
                 List.of(buildTreasure(1, 3, 2))
         );
 
-        when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(historyTreasureQuest);
+        when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(treasureQuest);
         List<String> response = inputReader.process(buildCsvPath("quest.csv"), "example quest");
 
         assertThat(response).containsExactly(
@@ -99,10 +96,6 @@ class InputReaderTest {
                 String.format("T %s 1 %s 3 %s 2", CARET, CARET, CARET),
                 String.format("A %s Laura %s 0 %s 3 %s S %s 3", CARET, CARET, CARET, CARET, CARET)
         );
-    }
-
-    private TreasureQuest buildHistoryTreasureQuest(Explorer explorer, List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
-        return buildTreasureQuest(explorer, mountainBoxes, treasureBoxes);
     }
 
     private TreasureQuest buildTreasureQuest(Explorer explorer, List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {

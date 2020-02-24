@@ -24,9 +24,9 @@ public class InputReader {
     public List<String> process(String filePath, String description) {
 
         TreasureQuest treasureQuest = buildTreasureQuestFromCsv(filePath);
-        TreasureQuest historyQuest = treasureQuestRunner.start(treasureQuest);
+        TreasureQuest finalTreasureQuest = treasureQuestRunner.start(treasureQuest);
 
-        return csvOutput(historyQuest, description);
+        return csvOutput(finalTreasureQuest, description);
 
     }
 
@@ -35,8 +35,8 @@ public class InputReader {
         return ApplicationFactory.toDomain(configurationsWithoutComments);
     }
 
-    private List<String> csvOutput(TreasureQuest historyQuest, String description) {
-        List<String> exposition = ApplicationFactory.toExposition(historyQuest);
+    private List<String> csvOutput(TreasureQuest treasureQuest, String description) {
+        List<String> exposition = ApplicationFactory.toExposition(treasureQuest);
         String outputPathName = CsvWriter.csvOutput(exposition, description);
         log.info("'{}' output has been generated into '{}'", description, outputPathName);
 

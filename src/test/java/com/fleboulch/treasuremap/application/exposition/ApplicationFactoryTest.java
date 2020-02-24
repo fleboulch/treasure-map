@@ -178,12 +178,12 @@ class ApplicationFactoryTest {
     }
 
     @Test
-    void it_should_convert_history_treasure_quest_to_exposition(
+    void it_should_convert_treasure_quest_to_exposition(
             Explorer explorer
     ) {
-        TreasureQuest historyTreasureQuest = buildTreasureQuest(explorer);
+        TreasureQuest treasureQuest = buildTreasureQuest(explorer);
 
-        List<String> response = ApplicationFactory.toExposition(historyTreasureQuest);
+        List<String> response = ApplicationFactory.toExposition(treasureQuest);
 
         String caret = ApplicationFactory.CARET_DELIMITER;
         assertThat(response).containsExactly(
@@ -195,12 +195,12 @@ class ApplicationFactoryTest {
     }
 
     @Test
-    void it_should_convert_history_treasure_quest_to_exposition_and_remove_empty_treasure_box(
+    void it_should_convert_treasure_quest_to_exposition_and_remove_empty_treasure_box(
             @ExplorerConfiguration(xCoordinates = 2, yCoordinates = 1, orientationType = OrientationType.S, nbTreasures = 3) Explorer explorer
     ) {
-        TreasureQuest historyTreasureQuest = buildTreasureQuest(explorer);
+        TreasureQuest treasureQuest = buildTreasureQuest(explorer);
 
-        List<String> response = ApplicationFactory.toExposition(historyTreasureQuest);
+        List<String> response = ApplicationFactory.toExposition(treasureQuest);
 
         String caret = ApplicationFactory.CARET_DELIMITER;
         assertThat(response).containsExactly(

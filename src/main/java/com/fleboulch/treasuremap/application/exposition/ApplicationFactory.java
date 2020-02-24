@@ -184,12 +184,12 @@ public class ApplicationFactory {
         }
     }
 
-    public static List<String> toExposition(TreasureQuest historyTreasureQuest) {
-        List<String> expositionDimension = buildExpositionDimension(historyTreasureQuest.treasureMap().dimension());
-        List<String> expositionMountains = buildExpositionMountains(historyTreasureQuest.treasureMap().mountainBoxes());
-        List<String> expositionTreasures = buildExpositionTreasures(historyTreasureQuest.treasureMap().treasureBoxes());
+    public static List<String> toExposition(TreasureQuest treasureQuest) {
+        List<String> expositionDimension = buildExpositionDimension(treasureQuest.treasureMap().dimension());
+        List<String> expositionMountains = buildExpositionMountains(treasureQuest.treasureMap().mountainBoxes());
+        List<String> expositionTreasures = buildExpositionTreasures(treasureQuest.treasureMap().treasureBoxes());
 
-        List<String> expositionExplorers = buildExpositionExplorers(historyTreasureQuest.historyMovements());
+        List<String> expositionExplorers = buildExpositionExplorers(treasureQuest.historyMovements());
 
         return concatenate(expositionDimension, expositionMountains, expositionTreasures, expositionExplorers);
     }
