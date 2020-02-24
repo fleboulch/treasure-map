@@ -27,30 +27,6 @@ public class Explorer {
         return new Explorer(name, position, new Movements(movementTypes), 0);
     }
 
-    public Name name() {
-        return name;
-    }
-
-    public Coordinates coordinates() {
-        return position.coordinates();
-    }
-
-    public Orientation orientation() {
-        return position.orientation();
-    }
-
-    public Movements movements() {
-        return movements;
-    }
-
-    public int nbCollectedTreasures() {
-        return nbCollectedTreasures;
-    }
-
-    public boolean hasCollectedANewTreasure(Explorer oldExplorer) {
-        return nbCollectedTreasures == oldExplorer.nbCollectedTreasures + 1;
-    }
-
     public int collectTreasure() {
         return nbCollectedTreasures++;
     }
@@ -58,7 +34,6 @@ public class Explorer {
     public boolean hasValidCoordinates(Dimension dimension) {
         return position.coordinates().hasValidCoordinates(dimension);
     }
-
 
     public MovementType nextMovement() {
         if (movements.movementTypes().isEmpty()) {
@@ -83,13 +58,9 @@ public class Explorer {
     }
 
     public Explorer goForward() {
-        Coordinates newCoordinates = position.goForward().coordinates();
+        Position newPosition = MovementType.A.executeMovement(this.position);
 
-        return new Explorer(name, new Position(orientation(), newCoordinates), movements, nbCollectedTreasures);
-    }
-
-    public Position position() {
-        return position;
+        return new Explorer(name, newPosition, movements, nbCollectedTreasures);
     }
 
     public Explorer goForwardAndCollect() {
@@ -110,6 +81,30 @@ public class Explorer {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    public Name name() {
+        return name;
+    }
+
+    public Position position() {
+        return position;
+    }
+
+    public Coordinates coordinates() {
+        return position.coordinates();
+    }
+
+    public Orientation orientation() {
+        return position.orientation();
+    }
+
+    public Movements movements() {
+        return movements;
+    }
+
+    public int nbCollectedTreasures() {
+        return nbCollectedTreasures;
     }
 
     @Override

@@ -31,7 +31,7 @@ public class TreasureQuest {
         this.historyMovements = explorers.explorers();
     }
 
-    public void executeAction(Name explorerName) {
+    public TreasureQuest executeMove(Name explorerName) {
         Explorer currentExplorer = getLastState(explorerName);
         MovementType movementType = currentExplorer.nextMovement();
         switch (movementType) {
@@ -47,6 +47,8 @@ public class TreasureQuest {
             default:
                 throw new IllegalArgumentException("Unknown movement type"); // should never occured
         }
+
+        return this;
 
     }
 
@@ -71,30 +73,48 @@ public class TreasureQuest {
             switch (nextBox.get().getBoxType()) {
                 case MOUNTAIN:
                     log.info("{} is blocked by mountain in [{}]", currentExplorer, nextCoordinates);
-                    historyMovements = addToHistory(currentExplorer);
 
                     break;
                 case TREASURE:
                     log.info("{} will go forward and collect one treasure on [{}]", currentExplorer, nextCoordinates);
-                    Explorer nextExplorer = currentExplorer.goForwardAndCollect();
-                    treasureMap = treasureMap.removeOneTreasure(nextExplorer.coordinates());
-                    historyMovements = addToHistory(nextExplorer);
+                    currentExplorer = currentExplorer.goForwardAndCollect();
+                    treasureMap = treasureMap.removeOneTreasure(currentExplorer.coordinates());
 
                     break;
                 case PLAINS:
                     log.info("{} will go forward on [{}]", currentExplorer, nextCoordinates);
-                    Explorer last = historyMovements.get(historyMovements.size() - 1);
-
-                    historyMovements = addToHistory(last.goForward());
+                    currentExplorer = currentExplorer.goForward();
                     break;
                 default:
                     throw new IllegalArgumentException(String.format("The box type %s is not known", nextBox.get().getBoxType()));
             }
         } else {
             log.info("{} trying to go outside the map on [{}]", currentExplorer, nextCoordinates);
-            historyMovements = addToHistory(currentExplorer);
 
         }
+        addToHistory(currentExplorer);
+
+    }
+
+    private void addToHistory(Explorer exp) {
+//        historyMovements.add(exp);
+//        List<Explorer> exps = historyMovements;
+//        exps.add(exp);
+        List<Explorer> resu = new ArrayList<>(List.copyOf(historyMovements));
+        resu.add(exp.popMovement());
+        historyMovements = resu;
+    }
+
+    // TODO: handle multiple explorers
+    private Explorer getLastState(Name explorerName) {
+        return historyMovements.get(historyMovements.size() - 1);
+    }
+
+    private void turn(Explorer currentExplorer, MovementType d) {
+        Explorer explorerAfterTurn = currentExplorer.turn(d);
+
+        log.info("{} turned to the left or to the right. New orientation is {}", currentExplorer, explorerAfterTurn.orientation().orientationType());
+        addToHistory(explorerAfterTurn);
     }
 
     public TreasureMap treasureMap() {
@@ -109,34 +129,11 @@ public class TreasureQuest {
         return historyMovements;
     }
 
-    public List<Explorer> addToHistory(Explorer exp) {
-//        historyMovements.add(exp);
-//        List<Explorer> exps = historyMovements;
-//        exps.add(exp);
-        List<Explorer> resu = new ArrayList<>(List.copyOf(historyMovements));
-        resu.add(exp.popMovement());
-        return resu;
-    }
-
     @Override
     public String toString() {
         return "TreasureQuest{" +
                 "treasureMap= \n" + treasureMap +
                 "explorers= \n" + explorers +
                 '}';
-    }
-
-    // TODO: genericity for multiple explorers
-    private Explorer getLastState(Name explorerName) {
-        return historyMovements.get(historyMovements.size() - 1);
-    }
-
-    private void turn(Explorer currentExplorer, MovementType d) {
-        Explorer last = historyMovements.get(historyMovements.size() - 1);
-
-        Explorer explorerAfterTurn = last.turn(d);
-
-        log.info("{} turned to the left or to the right. New orientation is {}", currentExplorer, explorerAfterTurn.orientation().orientationType());
-        historyMovements = addToHistory(explorerAfterTurn);
     }
 }

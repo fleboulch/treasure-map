@@ -8,7 +8,7 @@ import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.MovementType;
 import com.fleboulch.treasuremap.explorer.domain.OrientationType;
 import com.fleboulch.treasuremap.map.domain.*;
-import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
+import com.fleboulch.treasuremap.map.domain.BoxIsOutOfMapException;
 import com.fleboulch.treasuremap.resolvers.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.api.Test;

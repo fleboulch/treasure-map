@@ -3,8 +3,6 @@ package com.fleboulch.treasuremap.map.domain;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.OrientationType;
 import com.fleboulch.treasuremap.kernel.exceptions.DomainException;
-import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
-import com.fleboulch.treasuremap.map.domain.exceptions.InvalidCurrentPositionException;
 import com.fleboulch.treasuremap.resolvers.ExplorerConfiguration;
 import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;

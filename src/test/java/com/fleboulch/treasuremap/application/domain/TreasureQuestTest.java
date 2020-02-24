@@ -4,7 +4,7 @@ import com.fleboulch.treasuremap.explorer.domain.*;
 import com.fleboulch.treasuremap.map.domain.Dimension;
 import com.fleboulch.treasuremap.map.domain.MountainBox;
 import com.fleboulch.treasuremap.map.domain.TreasureMap;
-import com.fleboulch.treasuremap.map.domain.exceptions.InvalidCurrentPositionException;
+import com.fleboulch.treasuremap.map.domain.InvalidCurrentPositionException;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

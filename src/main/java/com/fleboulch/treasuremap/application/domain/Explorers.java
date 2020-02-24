@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Explorers {
 
-    private List<Explorer> explorers;
+    private final List<Explorer> explorers;
 
     public Explorers(List<Explorer> explorers) {
         this.explorers = Domain.validateNotNull(explorers, "Explorers should have not null list");

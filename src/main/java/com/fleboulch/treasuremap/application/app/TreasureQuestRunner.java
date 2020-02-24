@@ -2,7 +2,6 @@ package com.fleboulch.treasuremap.application.app;
 
 import com.fleboulch.treasuremap.application.domain.ExplorerOrchestrator;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
-import com.fleboulch.treasuremap.explorer.domain.Name;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -25,7 +24,7 @@ public class TreasureQuestRunner {
         ExplorerOrchestrator explorerOrchestrator = new ExplorerOrchestrator(treasureQuest.explorers());
 
         Optional<TreasureQuest> optionalQuest = explorerOrchestrator.explorerNames().stream()
-                .map(explorerName -> saveAction(explorerName, treasureQuest))
+                .map(treasureQuest::executeMove)
                 .reduce((l, r) -> r);
 
         if (optionalQuest.isEmpty()) {
@@ -37,12 +36,6 @@ public class TreasureQuestRunner {
         log.info("Final position {}", finalQuest.historyMovements().get(finalQuest.historyMovements().size() - 1));
         log.info("Quest is finished");
         return finalQuest;
-    }
-
-    private TreasureQuest saveAction(Name explorerName, TreasureQuest treasureQuest) {
-        treasureQuest.executeAction(explorerName);
-
-        return treasureQuest;
     }
 
 }

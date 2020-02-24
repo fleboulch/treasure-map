@@ -1,4 +1,4 @@
-package com.fleboulch.treasuremap.map.domain.exceptions;
+package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.map.domain.Dimension;
 import com.fleboulch.treasuremap.map.domain.PlainsBox;
