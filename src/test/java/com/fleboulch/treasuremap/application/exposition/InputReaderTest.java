@@ -23,6 +23,7 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,11 +60,9 @@ class InputReaderTest {
 
     @Test
     void it_should_process_quest_with_one_treasure(
-            @ExplorerConfiguration(xCoordinates = 2, yCoordinates = 1, orientationType = OrientationType.S, movements = MovementType.A) Explorer explorer,
-            @ExplorerConfiguration(xCoordinates = 2, orientationType = OrientationType.S, nbTreasures = 1) Explorer firstMoveExplorer
+            @ExplorerConfiguration(xCoordinates = 2, orientationType = OrientationType.S, nbTreasures = 1) Explorer explorer
     ) throws IOException {
-        TreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer, List.of(buildMountain(1, 1)), List.of(buildTreasure(2, 2, 1)));
-        historyTreasureQuest.goForwardAction(explorer);
+        TreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer, List.of(buildMountain(1, 1)), emptyList());
 
         when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(historyTreasureQuest);
         List<String> response = inputReader.process(buildCsvPath("quest.csv"), "quest with one treasure");
@@ -78,60 +77,17 @@ class InputReaderTest {
     @Test
     void it_should_process_example_quest(
             @ExplorerConfiguration(
-                    yCoordinates = 1,
+                    xCoordinates = 0,
+                    yCoordinates = 3,
                     orientationType = OrientationType.S,
-                    isExampleSequenceMovements = true
-            ) Explorer explorer
+                    nbTreasures = 3
+            ) Explorer finalExplorer
     ) throws IOException {
         TreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(
-                explorer,
+                finalExplorer,
                 List.of(buildMountain(1, 0), buildMountain(2, 1)),
-                List.of(buildTreasure(0, 3, 2), buildTreasure(1, 3, 3))
+                List.of(buildTreasure(1, 3, 2))
         );
-
-        Coordinates finalCoordinates = Coordinates.of(0, 3);
-
-        Explorer finalExplorer = Explorer.of(explorer.name(), new Position(explorer.orientation(), finalCoordinates), emptyList());
-
-        finalExplorer.collectTreasure();
-        finalExplorer.collectTreasure();
-        finalExplorer.collectTreasure();
-
-        historyTreasureQuest.goForwardAction(explorer);
-        Explorer explorer1 = explorer.goForward();
-        explorer1 = explorer1.popMovement();
-        historyTreasureQuest.goForwardAction(explorer1);
-        explorer1 = explorer1.goForwardAndCollect();
-        explorer1 = explorer1.popMovement();
-
-        historyTreasureQuest.turn(explorer1, MovementType.D);
-        explorer1 = explorer1.turn(MovementType.D);
-        explorer1 = explorer1.popMovement();
-        historyTreasureQuest.goForwardAction(explorer1);
-        explorer1 = explorer1.goForwardAndCollect();
-        explorer1 = explorer1.popMovement();
-
-        historyTreasureQuest.turn(explorer1, MovementType.D);
-
-        explorer1 = explorer1.turn(MovementType.D);
-        explorer1 = explorer1.popMovement();
-
-        historyTreasureQuest.goForwardAction(explorer1);
-        explorer1 = explorer1.goForward();
-        explorer1 = explorer1.popMovement();
-
-        historyTreasureQuest.turn(explorer1, MovementType.G);
-        explorer1 = explorer1.turn(MovementType.G);
-        explorer1 = explorer1.popMovement();
-
-        historyTreasureQuest.turn(explorer1, MovementType.G);
-
-        explorer1 = explorer1.turn(MovementType.G);
-        explorer1 = explorer1.popMovement();
-
-        historyTreasureQuest.goForwardAction(explorer1);
-        explorer1 = explorer1.goForwardAndCollect();
-        explorer1 = explorer1.popMovement();
 
         when(treasureQuestRunner.start(any(TreasureQuest.class))).thenReturn(historyTreasureQuest);
         List<String> response = inputReader.process(buildCsvPath("quest.csv"), "example quest");
