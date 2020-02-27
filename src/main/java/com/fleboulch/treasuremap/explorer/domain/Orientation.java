@@ -12,34 +12,12 @@ public class Orientation {
 
 
     public Orientation leftTurn() {
-        switch (orientationType) {
-            case N:
-                return new Orientation(OrientationType.W);
-            case E:
-                return new Orientation(OrientationType.N);
-            case S:
-                return new Orientation(OrientationType.E);
-            case W:
-                return new Orientation(OrientationType.S);
-            default:
-                throw new IllegalArgumentException("Unknown orientation");
-        }
+        return new Orientation(orientationType.turnLeft());
     }
 
     public Orientation rightTurn() {
-        switch (orientationType) {
-            case N:
-                return new Orientation(OrientationType.E);
-            case E:
-                return new Orientation(OrientationType.S);
-            case S:
-                return new Orientation(OrientationType.W);
-            case W:
-                return new Orientation(OrientationType.N);
-            default:
-                throw new IllegalArgumentException("Unknown orientation");
+        return new Orientation(orientationType.turnRight());
 
-        }
     }
 
     public OrientationType orientationType() {
