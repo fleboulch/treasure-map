@@ -6,8 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 public class TreasureQuestRunner {
 
@@ -23,19 +21,11 @@ public class TreasureQuestRunner {
 
         ExplorerOrchestrator explorerOrchestrator = new ExplorerOrchestrator(treasureQuest.explorers());
 
-        Optional<TreasureQuest> optionalQuest = explorerOrchestrator.explorerNames().stream()
-                .map(treasureQuest::executeMove)
-                .reduce((l, r) -> r);
+        explorerOrchestrator.explorerNames().forEach(treasureQuest::executeMove);
 
-        if (optionalQuest.isEmpty()) {
-            return treasureQuest;
-        }
-
-        TreasureQuest finalQuest = optionalQuest.get();
-
-        log.info("Final position {}", finalQuest.historyMovements().get(finalQuest.historyMovements().size() - 1));
+        log.info("Final position {}", treasureQuest.historyMovements().get(treasureQuest.historyMovements().size() - 1));
         log.info("Quest is finished");
-        return finalQuest;
+        return treasureQuest;
     }
 
 }

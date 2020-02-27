@@ -31,7 +31,7 @@ public class TreasureQuest {
         this.historyMovements = explorers.explorers();
     }
 
-    public TreasureQuest executeMove(Name explorerName) {
+    public void executeMove(Name explorerName) {
         Explorer currentExplorer = getLastState(explorerName);
         MovementType movementType = currentExplorer.nextMovement();
         switch (movementType) {
@@ -47,8 +47,6 @@ public class TreasureQuest {
             default:
                 throw new IllegalArgumentException("Unknown movement type"); // should never occured
         }
-
-        return this;
 
     }
 
