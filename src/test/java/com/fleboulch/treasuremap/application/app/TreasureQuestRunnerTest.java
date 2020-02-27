@@ -1,9 +1,11 @@
 package com.fleboulch.treasuremap.application.app;
 
+import com.fleboulch.treasuremap.application.domain.ExplorerOrchestrator;
 import com.fleboulch.treasuremap.application.domain.Explorers;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.MovementType;
+import com.fleboulch.treasuremap.explorer.domain.Name;
 import com.fleboulch.treasuremap.explorer.domain.OrientationType;
 import com.fleboulch.treasuremap.map.domain.Dimension;
 import com.fleboulch.treasuremap.map.domain.MountainBox;
@@ -15,14 +17,20 @@ import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(ExplorerResolver.class)
+@ExtendWith({ExplorerResolver.class, MockitoExtension.class})
 class TreasureQuestRunnerTest {
 
     private static final Dimension DIMENSION = new Dimension(3, 4);
@@ -30,9 +38,12 @@ class TreasureQuestRunnerTest {
 
     private TreasureQuestRunner runner;
 
+    @Mock
+    private ExplorerOrchestrator explorerOrchestrator;
+
     @BeforeEach
     void setup() {
-        runner = new TreasureQuestRunner();
+        runner = new TreasureQuestRunner(explorerOrchestrator);
     }
 
     @Test
@@ -55,6 +66,7 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 1, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
+        when(explorerOrchestrator.buildExplorerNamesFrom(any())).thenReturn(buildExplorerOrchestratorNames(1));
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
         List<Explorer> explorerMovements = finalQuest.historyMovements();
@@ -62,6 +74,13 @@ class TreasureQuestRunnerTest {
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
         testExplorerEquals(explorerMovements.get(0), beginExplorer);
         testExplorerEquals(explorerMovements.get(1), finalExplorer);
+
+    }
+
+    private List<Name> buildExplorerOrchestratorNames(int nbNames) {
+        return IntStream.rangeClosed(1, nbNames)
+                .mapToObj(i -> new Name("Laura"))
+                .collect(toList());
 
     }
 
@@ -80,6 +99,7 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.W) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
+        when(explorerOrchestrator.buildExplorerNamesFrom(any())).thenReturn(buildExplorerOrchestratorNames(1));
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
         List<Explorer> explorerMovements = finalQuest.historyMovements();
@@ -95,6 +115,8 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
+        when(explorerOrchestrator.buildExplorerNamesFrom(any())).thenReturn(buildExplorerOrchestratorNames(1));
+
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
         List<Explorer> explorerMovements = finalQuest.historyMovements();
@@ -110,6 +132,8 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildQuestWithOneMountain(beginExplorer);
+        when(explorerOrchestrator.buildExplorerNamesFrom(any())).thenReturn(buildExplorerOrchestratorNames(1));
+
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
         List<Explorer> explorerMovements = finalQuest.historyMovements();
@@ -125,6 +149,8 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 1, orientationType = OrientationType.S, nbTreasures = 1) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildQuestWithOneTreasure(beginExplorer, 1);
+        when(explorerOrchestrator.buildExplorerNamesFrom(any())).thenReturn(buildExplorerOrchestratorNames(1));
+
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
         List<Explorer> explorerMovements = finalQuest.historyMovements();
@@ -143,6 +169,8 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 1, orientationType = OrientationType.S, nbTreasures = 1) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildQuestWithOneTreasure(beginExplorer, 2);
+        when(explorerOrchestrator.buildExplorerNamesFrom(any())).thenReturn(buildExplorerOrchestratorNames(1));
+
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
         List<Explorer> explorerMovements = finalQuest.historyMovements();
@@ -167,6 +195,8 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
+        when(explorerOrchestrator.buildExplorerNamesFrom(any())).thenReturn(buildExplorerOrchestratorNames(2));
+
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
         List<Explorer> explorerMovements = finalQuest.historyMovements();
@@ -184,6 +214,8 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 3, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
+        when(explorerOrchestrator.buildExplorerNamesFrom(any())).thenReturn(buildExplorerOrchestratorNames(1));
+
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
         List<Explorer> explorerMovements = finalQuest.historyMovements();
@@ -206,6 +238,8 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 3, orientationType = OrientationType.S) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
+        when(explorerOrchestrator.buildExplorerNamesFrom(any())).thenReturn(buildExplorerOrchestratorNames(2));
+
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
         List<Explorer> explorerMovements = finalQuest.historyMovements();
@@ -227,6 +261,8 @@ class TreasureQuestRunnerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 3, orientationType = OrientationType.S, nbTreasures = 3) Explorer finalExplorer
     ) {
         TreasureQuest inputTreasureQuest = buildComplexQuest(beginExplorer);
+        when(explorerOrchestrator.buildExplorerNamesFrom(any())).thenReturn(buildExplorerOrchestratorNames(9));
+
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
         List<Explorer> explorerMovements = finalQuest.historyMovements();

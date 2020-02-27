@@ -2,23 +2,16 @@ package com.fleboulch.treasuremap.application.domain;
 
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.Name;
-import com.fleboulch.treasuremap.kernel.domain.Domain;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class ExplorerOrchestrator {
 
-    private final List<Name> explorerNames;
-
-    public ExplorerOrchestrator(Explorers explorers) {
-        Domain.validateNotNull(explorers, "Explorers should not be null");
-        this.explorerNames = buildExplorerNamesFrom(explorers);
-    }
-
-    private List<Name> buildExplorerNamesFrom(Explorers explorers) {
+    public List<Name> buildExplorerNamesFrom(Explorers explorers) {
         if (explorers.explorers().size() > 1) {
             throw new MultipleExplorersQuestNotImplementedException();
         }
@@ -35,7 +28,4 @@ public class ExplorerOrchestrator {
                 .collect(Collectors.toList());
     }
 
-    public List<Name> explorerNames() {
-        return explorerNames;
-    }
 }
