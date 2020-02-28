@@ -1,20 +1,15 @@
 package com.fleboulch.treasuremap.explorer.domain;
 
 import com.fleboulch.treasuremap.map.domain.Dimension;
-import com.fleboulch.treasuremap.map.domain.MountainBox;
-import com.fleboulch.treasuremap.map.domain.TreasureBox;
-import com.fleboulch.treasuremap.map.domain.TreasureMap;
 import com.fleboulch.treasuremap.resolvers.ExplorerConfiguration;
 import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.assertj.core.data.Index;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -156,28 +151,6 @@ class ExplorerTest {
                 ),
                 List.of(MovementType.valueOf(rawMovements))
         );
-    }
-
-    private TreasureMap buildSimpleMap() {
-        return new TreasureMap(DIMENSION_FIVE_FIVE, emptyList(), emptyList());
-    }
-
-    private TreasureMap buildMapWithOneMountain() {
-        List<MountainBox> mountains = List.of(buildMountain());
-        return new TreasureMap(DIMENSION_FIVE_FIVE, mountains, emptyList());
-    }
-
-    private TreasureMap buildMapWithOneTreasure() {
-        List<TreasureBox> treasures = List.of(buildTreasure());
-        return new TreasureMap(DIMENSION_FIVE_FIVE, emptyList(), treasures);
-    }
-
-    private MountainBox buildMountain() {
-        return new MountainBox(ONE_ONE_COORDINATES);
-    }
-
-    private TreasureBox buildTreasure() {
-        return new TreasureBox(ONE_ONE_COORDINATES, 1);
     }
 
 }
