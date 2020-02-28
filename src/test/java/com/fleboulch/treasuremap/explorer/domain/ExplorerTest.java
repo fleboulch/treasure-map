@@ -118,25 +118,23 @@ class ExplorerTest {
     }
 
     @Test
-    @Disabled
     void explorer_turn_D_from_north(
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.N, movements = MovementType.D) Explorer beginExplorer,
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, movements = MovementType.D) Explorer expectedEndExplorer
     ) {
-//        Explorer explorerAfterAction = beginExplorer.turn(MovementType.D);
-//
-//        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
+        Explorer explorerAfterAction = beginExplorer.turn(MovementType.D);
+
+        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
     }
 
     @Test
-    @Disabled
     void explorer_turn_L_from_north(
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.N, movements = MovementType.G) Explorer beginExplorer,
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.W, movements = MovementType.G) Explorer expectedEndExplorer
     ) {
-//        Explorer explorerAfterAction = beginExplorer.turn(MovementType.G);
-//
-//        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
+        Explorer explorerAfterAction = beginExplorer.turn(MovementType.G);
+
+        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
     }
 
     @Test
