@@ -29,7 +29,7 @@ public class TreasureQuestRunner {
 
         explorerNames.forEach(treasureQuest::executeMove);
 
-        log.info("Final position {}", treasureQuest.historyMovements().get(treasureQuest.historyMovements().size() - 1));
+        log.info("Final position {}", treasureQuest.historyMovements().explorers().get(treasureQuest.historyMovements().explorers().size() - 1));
         log.info("Quest is finished");
         return treasureQuest;
     }

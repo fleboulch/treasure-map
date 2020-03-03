@@ -21,14 +21,14 @@ public class TreasureQuest {
 
     private TreasureMap treasureMap;
     private Explorers explorers;
-    private List<Explorer> historyMovements;
+    private Explorers historyMovements;
 
     public TreasureQuest(TreasureMap treasureMap, Explorers explorers) {
         this.treasureMap = Domain.validateNotNull(treasureMap, "Quest should have a not null treasure map");
         Domain.validateNotNull(explorers, "Quest should have not null explorers");
         validateStartingCoordinatesFor(explorers.explorers());
         this.explorers = explorers;
-        this.historyMovements = explorers.explorers();
+        this.historyMovements = explorers;
     }
 
     public void executeMove(Name explorerName) {
@@ -95,17 +95,12 @@ public class TreasureQuest {
     }
 
     private void addToHistory(Explorer exp) {
-//        historyMovements.add(exp);
-//        List<Explorer> exps = historyMovements;
-//        exps.add(exp);
-        List<Explorer> resu = new ArrayList<>(List.copyOf(historyMovements));
-        resu.add(exp.popMovement());
-        historyMovements = resu;
+        historyMovements = historyMovements.add(exp.popMovement());
     }
 
     // TODO: handle multiple explorers
     private Explorer getLastState(Name explorerName) {
-        return historyMovements.get(historyMovements.size() - 1);
+        return historyMovements.explorers().get(historyMovements.explorers().size() - 1);
     }
 
     private void turn(Explorer currentExplorer, MovementType d) {
@@ -123,7 +118,7 @@ public class TreasureQuest {
         return explorers;
     }
 
-    public List<Explorer> historyMovements() {
+    public Explorers historyMovements() {
         return historyMovements;
     }
 

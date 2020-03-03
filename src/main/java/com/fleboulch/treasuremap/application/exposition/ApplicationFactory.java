@@ -203,8 +203,8 @@ public class ApplicationFactory {
     }
 
     // TODO: working as there is only one explorer
-    private static List<String> buildExpositionExplorers(List<Explorer> historyMovementsPerExplorer) {
-        Explorer exp = historyMovementsPerExplorer.get(historyMovementsPerExplorer.size() -1);
+    private static List<String> buildExpositionExplorers(Explorers historyMovementsPerExplorer) {
+        Explorer exp = historyMovementsPerExplorer.explorers().get(historyMovementsPerExplorer.explorers().size() -1);
         return List.of(explorerToString(exp));
     }
 

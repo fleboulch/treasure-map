@@ -53,7 +53,7 @@ class TreasureQuestRunnerTest {
         TreasureQuest inputTreasureQuest = buildSimpleQuest(beginExplorer);
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> historyExplorers = finalQuest.historyMovements();
+        List<Explorer> historyExplorers = finalQuest.historyMovements().explorers();
 
         assertThat(historyExplorers).containsExactly(beginExplorer);
         testExplorerEquals(historyExplorers.get(0), beginExplorer);
@@ -69,7 +69,7 @@ class TreasureQuestRunnerTest {
         when(explorerOrchestrator.buildExplorerNamesFrom(any())).thenReturn(buildExplorerOrchestratorNames(1));
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovements();
+        List<Explorer> explorerMovements = finalQuest.historyMovements().explorers();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
         testExplorerEquals(explorerMovements.get(0), beginExplorer);
@@ -102,7 +102,7 @@ class TreasureQuestRunnerTest {
         when(explorerOrchestrator.buildExplorerNamesFrom(any())).thenReturn(buildExplorerOrchestratorNames(1));
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovements();
+        List<Explorer> explorerMovements = finalQuest.historyMovements().explorers();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
         testExplorerEquals(explorerMovements.get(0), beginExplorer);
@@ -119,7 +119,7 @@ class TreasureQuestRunnerTest {
 
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovements();
+        List<Explorer> explorerMovements = finalQuest.historyMovements().explorers();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
         testExplorerEquals(explorerMovements.get(0), beginExplorer);
@@ -136,7 +136,7 @@ class TreasureQuestRunnerTest {
 
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovements();
+        List<Explorer> explorerMovements = finalQuest.historyMovements().explorers();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
         testExplorerEquals(explorerMovements.get(0), beginExplorer);
@@ -153,7 +153,7 @@ class TreasureQuestRunnerTest {
 
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovements();
+        List<Explorer> explorerMovements = finalQuest.historyMovements().explorers();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
         testExplorerEquals(explorerMovements.get(0), beginExplorer);
@@ -173,7 +173,7 @@ class TreasureQuestRunnerTest {
 
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovements();
+        List<Explorer> explorerMovements = finalQuest.historyMovements().explorers();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
         testExplorerEquals(explorerMovements.get(0), beginExplorer);
@@ -199,7 +199,7 @@ class TreasureQuestRunnerTest {
 
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovements();
+        List<Explorer> explorerMovements = finalQuest.historyMovements().explorers();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, firstMoveExplorer, finalExplorer);
         testExplorerEquals(explorerMovements.get(0), beginExplorer);
@@ -218,7 +218,7 @@ class TreasureQuestRunnerTest {
 
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovements();
+        List<Explorer> explorerMovements = finalQuest.historyMovements().explorers();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, finalExplorer);
         testExplorerEquals(explorerMovements.get(0), beginExplorer);
@@ -242,7 +242,7 @@ class TreasureQuestRunnerTest {
 
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovements();
+        List<Explorer> explorerMovements = finalQuest.historyMovements().explorers();
 
         assertThat(explorerMovements).containsExactly(beginExplorer, firstMoveExplorer, finalExplorer);
         testExplorerEquals(explorerMovements.get(0), beginExplorer);
@@ -265,7 +265,7 @@ class TreasureQuestRunnerTest {
 
         TreasureQuest finalQuest = runner.start(inputTreasureQuest);
 
-        List<Explorer> explorerMovements = finalQuest.historyMovements();
+        List<Explorer> explorerMovements = finalQuest.historyMovements().explorers();
 
         assertThat(explorerMovements).hasSize(10);
         assertThat(explorerMovements).contains(beginExplorer, finalExplorer);
