@@ -11,7 +11,6 @@ import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +30,7 @@ public class TreasureQuest {
         this.historyMovements = explorers;
     }
 
-    public void executeMove(Name explorerName) {
+    public void executeNextMove(Name explorerName) {
         Explorer currentExplorer = getLastState(explorerName);
         MovementType movementType = currentExplorer.nextMovement();
         switch (movementType) {
@@ -103,10 +102,10 @@ public class TreasureQuest {
         return historyMovements.explorers().get(historyMovements.explorers().size() - 1);
     }
 
-    private void turn(Explorer currentExplorer, MovementType d) {
-        Explorer explorerAfterTurn = currentExplorer.turn(d);
+    private void turn(Explorer currentExplorer, MovementType movementType) {
+        Explorer explorerAfterTurn = currentExplorer.turn(movementType);
 
-        log.info("{} turned to the left or to the right. New orientation is {}", currentExplorer, explorerAfterTurn.orientation().orientationType());
+        log.info("{} turned to '{}'. New orientation is {}", currentExplorer, movementType, explorerAfterTurn.orientation().orientationType());
         addToHistory(explorerAfterTurn);
     }
 

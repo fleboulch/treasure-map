@@ -27,7 +27,7 @@ public class TreasureQuestRunner {
 
         List<Name> explorerNames = explorerOrchestrator.buildExplorerNamesFrom(treasureQuest.explorers());
 
-        explorerNames.forEach(treasureQuest::executeMove);
+        explorerNames.forEach(treasureQuest::executeNextMove);
 
         log.info("Final position {}", treasureQuest.historyMovements().explorers().get(treasureQuest.historyMovements().explorers().size() - 1));
         log.info("Quest is finished");
