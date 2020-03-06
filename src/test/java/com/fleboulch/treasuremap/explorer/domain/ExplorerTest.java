@@ -1,6 +1,5 @@
 package com.fleboulch.treasuremap.explorer.domain;
 
-import com.fleboulch.treasuremap.map.domain.Dimension;
 import com.fleboulch.treasuremap.resolvers.ExplorerConfiguration;
 import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
@@ -15,9 +14,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(ExplorerResolver.class)
 class ExplorerTest {
-
-    private static final Coordinates ONE_ONE_COORDINATES = Coordinates.of(1, 1);
-    public static final Dimension DIMENSION_FIVE_FIVE = new Dimension(5, 5);
 
     @Test
     void create_movement_sequence_for_an_explorer(
@@ -77,9 +73,9 @@ class ExplorerTest {
             @ExplorerConfiguration(yCoordinates = 1, orientationType = OrientationType.S, movements = MovementType.A) Explorer beginExplorer,
             @ExplorerConfiguration(orientationType = OrientationType.S, movements = MovementType.A) Explorer expectedEndExplorer
     ) {
-        beginExplorer.goForward();
+        Explorer explorerAfterAction = beginExplorer.goForward();
 
-        assertThat(beginExplorer).isEqualTo(expectedEndExplorer);
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
     }
 
     @Test
@@ -87,9 +83,9 @@ class ExplorerTest {
             @ExplorerConfiguration(yCoordinates = 1, orientationType = OrientationType.N, movements = MovementType.A) Explorer beginExplorer,
             @ExplorerConfiguration(yCoordinates = 0, orientationType = OrientationType.N, movements = MovementType.A) Explorer expectedEndExplorer
     ) {
-        beginExplorer.goForward();
+        Explorer explorerAfterAction = beginExplorer.goForward();
 
-        assertThat(beginExplorer).isEqualTo(expectedEndExplorer);
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
     }
 
     @Test
@@ -97,9 +93,9 @@ class ExplorerTest {
             @ExplorerConfiguration(yCoordinates = 1, movements = MovementType.A) Explorer beginExplorer,
             @ExplorerConfiguration(xCoordinates = 2, yCoordinates = 1, movements = MovementType.A) Explorer expectedEndExplorer
     ) {
-        beginExplorer.goForward();
+        Explorer explorerAfterAction = beginExplorer.goForward();
 
-        assertThat(beginExplorer).isEqualTo(expectedEndExplorer);
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
     }
 
     @Test
@@ -107,9 +103,9 @@ class ExplorerTest {
             @ExplorerConfiguration(yCoordinates = 0, orientationType = OrientationType.W, movements = MovementType.A) Explorer beginExplorer,
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.W, movements = MovementType.A) Explorer expectedEndExplorer
     ) {
-        beginExplorer.goForward();
+        Explorer explorerAfterAction = beginExplorer.goForward();
 
-        assertThat(beginExplorer).isEqualTo(expectedEndExplorer);
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
     }
 
     @Test
@@ -119,7 +115,7 @@ class ExplorerTest {
     ) {
         Explorer explorerAfterAction = beginExplorer.turn(MovementType.D);
 
-        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
     }
 
     @Test
@@ -129,7 +125,7 @@ class ExplorerTest {
     ) {
         Explorer explorerAfterAction = beginExplorer.turn(MovementType.G);
 
-        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
     }
 
     @Test
@@ -137,9 +133,33 @@ class ExplorerTest {
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.N, movements = MovementType.A) Explorer beginExplorer,
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.N, movements = MovementType.A) Explorer expectedEndExplorer
     ) {
-        beginExplorer.goForward();
+        Explorer explorerAfterAction = beginExplorer.goForward();
 
-        assertThat(beginExplorer).isEqualTo(expectedEndExplorer);
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
+    }
+
+    @Test
+    void when_explorer_pop_movement_it_should_remove_the_movement_correctly(
+            @ExplorerConfiguration(movements = MovementType.A) Explorer beginExplorer
+    ) {
+        Explorer explorerAfterAction = beginExplorer.popMovement();
+        assertThat(explorerAfterAction.movements().movementTypes()).isEmpty();
+    }
+
+    @Test
+    void it_should_return_next_position_when_explorer_try_to_go_forward(
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 1, orientationType = OrientationType.S) Explorer finalExplorer
+    ) {
+        Coordinates nextCoordinates = beginExplorer.checkNextPositionWhenGoForward();
+        assertThat(nextCoordinates).isEqualTo(finalExplorer.coordinates());
+    }
+
+    void explorer_are_equals(Explorer actualExplorer, Explorer expectedExplorer) {
+        assertThat(actualExplorer).isEqualTo(expectedExplorer);
+        assertThat(actualExplorer.position()).isEqualTo(expectedExplorer.position());
+        assertThat(actualExplorer.movements()).isEqualTo(expectedExplorer.movements());
+        assertThat(actualExplorer.nbCollectedTreasures()).isEqualTo(expectedExplorer.nbCollectedTreasures());
     }
 
     private void buildInvalidExplorer(String rawMovements) {
@@ -147,7 +167,7 @@ class ExplorerTest {
                 new Name("Lara"),
                 new Position(
                         new Orientation(OrientationType.S),
-                        ONE_ONE_COORDINATES
+                        Coordinates.of(1, 1)
                 ),
                 List.of(MovementType.valueOf(rawMovements))
         );
