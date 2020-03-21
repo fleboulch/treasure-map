@@ -6,6 +6,7 @@ import com.fleboulch.treasuremap.explorer.domain.Name;
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 import com.fleboulch.treasuremap.map.domain.Dimension;
 import com.fleboulch.treasuremap.map.domain.PlainsBox;
+import com.fleboulch.treasuremap.map.domain.TreasureBox;
 import com.fleboulch.treasuremap.map.domain.TreasureMap;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.slf4j.Logger;
@@ -75,7 +76,7 @@ public class TreasureQuest {
                 case TREASURE:
                     log.info("{} will go forward and collect one treasure on [{}]", currentExplorer, nextCoordinates);
                     currentExplorer = currentExplorer.goForwardAndCollect();
-                    treasureMap = treasureMap.removeOneTreasure(currentExplorer.coordinates());
+                    treasureMap.removeOneTreasureOn((TreasureBox) nextBox.get());
 
                     break;
                 case PLAINS:

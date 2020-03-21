@@ -15,7 +15,7 @@ public class TreasureMap {
 
     private final Dimension dimension;
     private final List<MountainBox> mountainBoxes;
-    private final List<TreasureBox> treasureBoxes;
+    private List<TreasureBox> treasureBoxes;
 
     public TreasureMap(Dimension dimension, List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
         this.dimension = Domain.validateNotNull(dimension, "A map should have a dimension");
@@ -72,19 +72,13 @@ public class TreasureMap {
                 .findFirst();
     }
 
-    public TreasureMap removeOneTreasure(Coordinates coordinates) {
-        Optional<TreasureBox> optionalTreasureBoxToUpdate = findTreasureBoxByCoordinates(coordinates);
-        if (optionalTreasureBoxToUpdate.isPresent()) {
-            TreasureBox treasureBoxToUpdate = optionalTreasureBoxToUpdate.get();
+    public void removeOneTreasureOn(TreasureBox treasureBoxToUpdate) {
 
-            List<TreasureBox> treasures = treasureBoxes.stream()
-                    .map(treasureBox -> Objects.equals(treasureBox, treasureBoxToUpdate) ? treasureBox.decrementNbTreasures() : Optional.of(treasureBox))
-                    .flatMap(Optional::stream)
-                    .collect(Collectors.toList());
+        treasureBoxes = treasureBoxes.stream()
+                .map(treasureBox -> Objects.equals(treasureBox, treasureBoxToUpdate) ? treasureBox.decrementNbTreasures() : Optional.of(treasureBox))
+                .flatMap(Optional::stream)
+                .collect(Collectors.toList());
 
-            return new TreasureMap(dimension, mountainBoxes, treasures);
-        }
-        throw new IllegalArgumentException("These coordinates does not represent a treasure box");
     }
 
     private void checkValidBoxes(List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
