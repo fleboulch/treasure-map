@@ -19,11 +19,11 @@ public class TreasureBox extends PlainsBox {
         return BoxType.TREASURE;
     }
 
-    public TreasureBox decrementNbTreasures() {
+    public Optional<TreasureBox> decrementNbTreasures() {
         if (nbTreasures == 1) {
-            return null;
+            return Optional.empty();
         }
-        return new TreasureBox(coordinates(), nbTreasures - 1);
+        return Optional.of(new TreasureBox(coordinates(), nbTreasures - 1));
     }
 
     public int nbTreasures() {

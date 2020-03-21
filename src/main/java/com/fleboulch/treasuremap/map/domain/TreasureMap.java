@@ -78,8 +78,8 @@ public class TreasureMap {
             TreasureBox treasureBoxToUpdate = optionalTreasureBoxToUpdate.get();
 
             List<TreasureBox> treasures = treasureBoxes.stream()
-                    .map(treasureBox -> Objects.equals(treasureBox, treasureBoxToUpdate) ? treasureBox.decrementNbTreasures() : treasureBox)
-                    .filter(Objects::nonNull)
+                    .map(treasureBox -> Objects.equals(treasureBox, treasureBoxToUpdate) ? treasureBox.decrementNbTreasures() : Optional.of(treasureBox))
+                    .flatMap(Optional::stream)
                     .collect(Collectors.toList());
 
             return new TreasureMap(dimension, mountainBoxes, treasures);
