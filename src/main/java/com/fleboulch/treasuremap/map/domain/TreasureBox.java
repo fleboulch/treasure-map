@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class TreasureBox extends PlainsBox {
 
-    private final int nbTreasures;
+    private int nbTreasures;
 
     public TreasureBox(Coordinates coordinates, int nbTreasures) {
         super(coordinates);
@@ -19,11 +19,12 @@ public class TreasureBox extends PlainsBox {
         return BoxType.TREASURE;
     }
 
-    public TreasureBox decrementNbTreasures() {
+    public Optional<TreasureBox> decrementNbTreasures() {
         if (nbTreasures == 1) {
-            return null;
+            return Optional.empty();
         }
-        return new TreasureBox(coordinates(), nbTreasures - 1);
+        nbTreasures = nbTreasures - 1;
+        return Optional.of(this);
     }
 
     public int nbTreasures() {

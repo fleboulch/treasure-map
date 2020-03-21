@@ -1,10 +1,7 @@
 package com.fleboulch.treasuremap.explorer.domain;
 
-import com.fleboulch.treasuremap.map.domain.Dimension;
-import com.fleboulch.treasuremap.map.domain.MountainBox;
-import com.fleboulch.treasuremap.map.domain.TreasureBox;
-import com.fleboulch.treasuremap.map.domain.TreasureMap;
-import com.fleboulch.treasuremap.resolvers.*;
+import com.fleboulch.treasuremap.resolvers.ExplorerConfiguration;
+import com.fleboulch.treasuremap.resolvers.ExplorerResolver;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.assertj.core.data.Index;
 import org.junit.jupiter.api.Test;
@@ -12,15 +9,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(ExplorerResolver.class)
 class ExplorerTest {
-
-    private static final Coordinates ONE_ONE_COORDINATES = Coordinates.of(1, 1);
-    public static final Dimension DIMENSION_FIVE_FIVE = new Dimension(5, 5);
 
     @Test
     void create_movement_sequence_for_an_explorer(
@@ -82,7 +75,7 @@ class ExplorerTest {
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 
-        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
     }
 
     @Test
@@ -92,7 +85,7 @@ class ExplorerTest {
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 
-        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
     }
 
     @Test
@@ -102,7 +95,7 @@ class ExplorerTest {
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 
-        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
     }
 
     @Test
@@ -112,7 +105,17 @@ class ExplorerTest {
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 
-        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
+    }
+
+    @Test
+    void explorer_go_forward_and_collect(
+            @ExplorerConfiguration(yCoordinates = 0, orientationType = OrientationType.W, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.W, movements = MovementType.A, nbTreasures = 1) Explorer expectedEndExplorer
+    ) {
+        Explorer explorerAfterAction = beginExplorer.goForwardAndCollect();
+
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
     }
 
     @Test
@@ -122,7 +125,17 @@ class ExplorerTest {
     ) {
         Explorer explorerAfterAction = beginExplorer.turn(MovementType.D);
 
-        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
+    }
+
+    @Test
+    void explorer_turn_A_is_not_allowed(
+            @ExplorerConfiguration Explorer beginExplorer
+    ) {
+        assertThatThrownBy(() ->
+                beginExplorer.turn(MovementType.A)
+        ).isInstanceOf(InvalidMovementTypeForTurnException.class);
+
     }
 
     @Test
@@ -132,7 +145,7 @@ class ExplorerTest {
     ) {
         Explorer explorerAfterAction = beginExplorer.turn(MovementType.G);
 
-        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
     }
 
     @Test
@@ -142,38 +155,42 @@ class ExplorerTest {
     ) {
         Explorer explorerAfterAction = beginExplorer.goForward();
 
-        assertThat(explorerAfterAction).isEqualTo(expectedEndExplorer);
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
+    }
+
+    @Test
+    void when_explorer_pop_movement_it_should_remove_the_movement_correctly(
+            @ExplorerConfiguration(movements = MovementType.A) Explorer beginExplorer
+    ) {
+        Explorer explorerAfterAction = beginExplorer.popMovement();
+        assertThat(explorerAfterAction.movements().movementTypes()).isEmpty();
+    }
+
+    @Test
+    void it_should_return_next_position_when_explorer_try_to_go_forward(
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.S, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 1, orientationType = OrientationType.S) Explorer finalExplorer
+    ) {
+        Coordinates nextCoordinates = beginExplorer.checkNextPositionWhenGoForward();
+        assertThat(nextCoordinates).isEqualTo(finalExplorer.coordinates());
+    }
+
+    void explorer_are_equals(Explorer actualExplorer, Explorer expectedExplorer) {
+        assertThat(actualExplorer).isEqualTo(expectedExplorer);
+        assertThat(actualExplorer.position()).isEqualTo(expectedExplorer.position());
+        assertThat(actualExplorer.movements()).isEqualTo(expectedExplorer.movements());
+        assertThat(actualExplorer.nbCollectedTreasures()).isEqualTo(expectedExplorer.nbCollectedTreasures());
     }
 
     private void buildInvalidExplorer(String rawMovements) {
         Explorer.of(
                 new Name("Lara"),
-                ONE_ONE_COORDINATES,
-                new Orientation(OrientationType.S),
+                new Position(
+                        new Orientation(OrientationType.S),
+                        Coordinates.of(1, 1)
+                ),
                 List.of(MovementType.valueOf(rawMovements))
         );
-    }
-
-    private TreasureMap buildSimpleMap() {
-        return new TreasureMap(DIMENSION_FIVE_FIVE, emptyList(), emptyList());
-    }
-
-    private TreasureMap buildMapWithOneMountain() {
-        List<MountainBox> mountains = List.of(buildMountain());
-        return new TreasureMap(DIMENSION_FIVE_FIVE, mountains, emptyList());
-    }
-
-    private TreasureMap buildMapWithOneTreasure() {
-        List<TreasureBox> treasures = List.of(buildTreasure());
-        return new TreasureMap(DIMENSION_FIVE_FIVE, emptyList(), treasures);
-    }
-
-    private MountainBox buildMountain() {
-        return new MountainBox(ONE_ONE_COORDINATES);
-    }
-
-    private TreasureBox buildTreasure() {
-        return new TreasureBox(ONE_ONE_COORDINATES, 1);
     }
 
 }

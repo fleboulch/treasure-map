@@ -3,6 +3,7 @@ package com.fleboulch.treasuremap.application.domain;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.kernel.domain.Domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Explorers {
@@ -21,7 +22,14 @@ public class Explorers {
         }
     }
 
+    public Explorers add(Explorer explorer) {
+        List<Explorer> newExplorerList = new ArrayList<>(List.copyOf(explorers));
+        newExplorerList.add(explorer);
+        return new Explorers(newExplorerList);
+    }
+
     public List<Explorer> explorers() {
         return explorers;
     }
+
 }

@@ -1,7 +1,6 @@
 package com.fleboulch.treasuremap.application.exposition;
 
 import com.fleboulch.treasuremap.application.domain.Explorers;
-import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.InputType;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
@@ -138,8 +137,10 @@ public class ApplicationFactory {
 
         return Explorer.of(
                 new Name(name),
-                Coordinates.of(horizontalAxis, verticalAxis),
-                new Orientation(OrientationType.valueOf(orientation)),
+                new Position(
+                        new Orientation(OrientationType.valueOf(orientation)),
+                        Coordinates.of(horizontalAxis, verticalAxis)
+                ),
                 buildMovements(buildRawMovementsFrom(line))
         );
 
@@ -183,12 +184,12 @@ public class ApplicationFactory {
         }
     }
 
-    public static List<String> toExposition(HistoryTreasureQuest historyTreasureQuest) {
-        List<String> expositionDimension = buildExpositionDimension(historyTreasureQuest.treasureMap().dimension());
-        List<String> expositionMountains = buildExpositionMountains(historyTreasureQuest.treasureMap().mountainBoxes());
-        List<String> expositionTreasures = buildExpositionTreasures(historyTreasureQuest.treasureMap().treasureBoxes());
+    public static List<String> toExposition(TreasureQuest treasureQuest) {
+        List<String> expositionDimension = buildExpositionDimension(treasureQuest.treasureMap().dimension());
+        List<String> expositionMountains = buildExpositionMountains(treasureQuest.treasureMap().mountainBoxes());
+        List<String> expositionTreasures = buildExpositionTreasures(treasureQuest.treasureMap().treasureBoxes());
 
-        List<String> expositionExplorers = buildExpositionExplorers(historyTreasureQuest.historyMovementsPerExplorer());
+        List<String> expositionExplorers = buildExpositionExplorers(treasureQuest.historyMovements());
 
         return concatenate(expositionDimension, expositionMountains, expositionTreasures, expositionExplorers);
     }
@@ -201,11 +202,10 @@ public class ApplicationFactory {
                 .collect(toList());
     }
 
-    private static List<String> buildExpositionExplorers(Map<Name, List<Explorer>> historyMovementsPerExplorer) {
-        return historyMovementsPerExplorer.values().stream()
-                .map(explorers -> explorers.get(explorers.size() - 1))
-                .map(ApplicationFactory::explorerToString)
-                .collect(toList());
+    // TODO: working as there is only one explorer
+    private static List<String> buildExpositionExplorers(Explorers historyMovementsPerExplorer) {
+        Explorer exp = historyMovementsPerExplorer.explorers().get(historyMovementsPerExplorer.explorers().size() -1);
+        return List.of(explorerToString(exp));
     }
 
     private static String explorerToString(Explorer explorer) {

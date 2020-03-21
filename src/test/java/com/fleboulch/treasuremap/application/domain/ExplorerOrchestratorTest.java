@@ -3,6 +3,7 @@ package com.fleboulch.treasuremap.application.domain;
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.MovementType;
 import com.fleboulch.treasuremap.resolvers.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -14,20 +15,23 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ExtendWith(ExplorerResolver.class)
 class ExplorerOrchestratorTest {
 
+    private ExplorerOrchestrator orchestrator;
+
+    @BeforeEach
+    void setUp() {
+        orchestrator = new ExplorerOrchestrator();
+    }
+
     @Test
     void should_create_orchestrator_from_one_explorer_with_no_movement(Explorer explorer) {
-        ExplorerOrchestrator orchestrator = new ExplorerOrchestrator(buildExplorersWith(explorer));
-
-        assertThat(orchestrator.explorerNames()).isEmpty();
+        assertThat(orchestrator.buildExplorerNamesFrom(buildExplorersWith(explorer))).isEmpty();
     }
 
     @Test
     void should_create_orchestrator_from_one_explorer_with_one_go_forward_movement(
             @ExplorerConfiguration(movements = MovementType.A) Explorer explorer
     ) {
-        ExplorerOrchestrator orchestrator = new ExplorerOrchestrator(buildExplorersWith(explorer));
-
-        assertThat(orchestrator.explorerNames()).containsExactly(explorer.name());
+        assertThat(orchestrator.buildExplorerNamesFrom(buildExplorersWith(explorer))).containsExactly(explorer.name());
     }
 
     @Test
@@ -35,9 +39,8 @@ class ExplorerOrchestratorTest {
             @ExplorerConfiguration(movements = {MovementType.A, MovementType.A}) Explorer beginExplorer,
             @ExplorerConfiguration(movements = MovementType.A) Explorer finalExplorer
     ) {
-        ExplorerOrchestrator orchestrator = new ExplorerOrchestrator(buildExplorersWith(beginExplorer));
 
-        assertThat(orchestrator.explorerNames()).containsExactly(finalExplorer.name(), finalExplorer.name());
+        assertThat(orchestrator.buildExplorerNamesFrom(buildExplorersWith(beginExplorer))).containsExactly(finalExplorer.name(), finalExplorer.name());
     }
 
     @Test
@@ -46,7 +49,8 @@ class ExplorerOrchestratorTest {
             @ExplorerConfiguration(name = "Michel") Explorer explorer2
     ) {
         assertThatThrownBy(() ->
-                new ExplorerOrchestrator(new Explorers(List.of(explorer1, explorer2)))
+                orchestrator.buildExplorerNamesFrom(new Explorers(List.of(explorer1, explorer2)))
+
         ).isInstanceOf(MultipleExplorersQuestNotImplementedException.class);
 
     }

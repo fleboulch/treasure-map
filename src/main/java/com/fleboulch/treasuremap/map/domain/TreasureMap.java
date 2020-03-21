@@ -1,9 +1,7 @@
 package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.explorer.domain.Explorer;
-import com.fleboulch.treasuremap.map.domain.exceptions.InvalidCurrentPositionException;
 import com.fleboulch.treasuremap.kernel.domain.Domain;
-import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 
 import java.util.List;
@@ -17,7 +15,7 @@ public class TreasureMap {
 
     private final Dimension dimension;
     private final List<MountainBox> mountainBoxes;
-    private final List<TreasureBox> treasureBoxes;
+    private List<TreasureBox> treasureBoxes;
 
     public TreasureMap(Dimension dimension, List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
         this.dimension = Domain.validateNotNull(dimension, "A map should have a dimension");
@@ -28,6 +26,17 @@ public class TreasureMap {
         checkValidBoxes(mountainBoxes, treasureBoxes);
         this.mountainBoxes = mountainBoxes;
         this.treasureBoxes = treasureBoxes;
+    }
+
+    private void checkValidBoxes(List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
+        mountainBoxes.forEach(this::checkValidBox);
+        treasureBoxes.forEach(this::checkValidBox);
+    }
+
+    private void checkValidBox(PlainsBox box) {
+        if (!box.isInside(dimension)) {
+            throw new BoxIsOutOfMapException(box, dimension);
+        }
     }
 
     // TODO: need to refacto this method
@@ -52,16 +61,6 @@ public class TreasureMap {
         }
     }
 
-    public boolean explorerIsOnMountain(Explorer currentExplorer) {
-        Coordinates coordinates = currentExplorer.coordinates();
-
-        if (findMountainBoxByCoordinates(coordinates).isPresent()) {
-            throw new InvalidCurrentPositionException(currentExplorer.name().value(), coordinates);
-        } else {
-            return false;
-        }
-    }
-
     private Optional<MountainBox> findMountainBoxByCoordinates(Coordinates coordinates) {
         return mountainBoxes.stream()
                 .filter(mountainBox -> Objects.equals(mountainBox.coordinates(), coordinates))
@@ -74,30 +73,23 @@ public class TreasureMap {
                 .findFirst();
     }
 
-    public TreasureMap removeOneTreasure(Coordinates coordinates) {
-        Optional<TreasureBox> optionalTreasureBoxToUpdate = findTreasureBoxByCoordinates(coordinates);
-        if (optionalTreasureBoxToUpdate.isPresent()) {
-            TreasureBox treasureBoxToUpdate = optionalTreasureBoxToUpdate.get();
+    public boolean explorerIsOnMountain(Explorer currentExplorer) {
+        Coordinates coordinates = currentExplorer.coordinates();
 
-            List<TreasureBox> treasures = treasureBoxes.stream()
-                    .map(treasureBox -> Objects.equals(treasureBox, treasureBoxToUpdate) ? treasureBox.decrementNbTreasures() : treasureBox)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-
-            return new TreasureMap(dimension, mountainBoxes, treasures);
+        if (findMountainBoxByCoordinates(coordinates).isPresent()) {
+            throw new InvalidCurrentPositionException(currentExplorer.name().value(), coordinates);
+        } else {
+            return false;
         }
-        throw new IllegalArgumentException("These coordinates does not represent a treasure box");
     }
 
-    private void checkValidBoxes(List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
-        mountainBoxes.forEach(this::checkValidBox);
-        treasureBoxes.forEach(this::checkValidBox);
-    }
+    public void removeOneTreasureOn(TreasureBox treasureBoxToUpdate) {
 
-    private void checkValidBox(PlainsBox box) {
-        if (!box.isInside(dimension)) {
-            throw new BoxIsOutOfMapException(box, dimension);
-        }
+        treasureBoxes = treasureBoxes.stream()
+                .map(treasureBox -> Objects.equals(treasureBox, treasureBoxToUpdate) ? treasureBox.decrementNbTreasures() : Optional.of(treasureBox))
+                .flatMap(Optional::stream)
+                .collect(Collectors.toList());
+
     }
 
     public Dimension dimension() {

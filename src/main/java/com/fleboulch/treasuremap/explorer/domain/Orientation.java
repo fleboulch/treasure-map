@@ -10,15 +10,18 @@ public class Orientation {
         this.orientationType = orientationType;
     }
 
-    public OrientationType orientationType() {
-        return orientationType;
+
+    public Orientation leftTurn() {
+        return new Orientation(orientationType.turnLeft());
     }
 
-    @Override
-    public String toString() {
-        return "Orientation{" +
-                "orientationType=" + orientationType +
-                '}';
+    public Orientation rightTurn() {
+        return new Orientation(orientationType.turnRight());
+
+    }
+
+    public OrientationType orientationType() {
+        return orientationType;
     }
 
     @Override
@@ -33,4 +36,12 @@ public class Orientation {
     public int hashCode() {
         return Objects.hash(orientationType);
     }
+
+    @Override
+    public String toString() {
+        return "Orientation{" +
+                "orientationType=" + orientationType +
+                '}';
+    }
+
 }

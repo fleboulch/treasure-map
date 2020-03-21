@@ -2,9 +2,12 @@ package com.fleboulch.treasuremap.map.domain;
 
 import com.fleboulch.treasuremap.kernel.exceptions.NegativeOrZeroAttributeException;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -59,6 +62,21 @@ class TreasureBoxTest {
         assertThat(treasureBox.isInside(dimension)).isFalse();
     }
 
+    @Test
+    void treasure_box_with_two_treasures_should_contain_one_treasure_after_decrement() {
+        TreasureBox treasureBox = buildTreasureBox(0, 0, 2);
+        Optional<TreasureBox> finalTreasureBox = treasureBox.decrementNbTreasures();
+
+        assertThat(finalTreasureBox).contains(buildTreasureBox(0, 0, 1));
+    }
+
+    @Test
+    void treasure_box_with_one_treasures_should_return_nothing_after_decrement() {
+        TreasureBox treasureBox = buildTreasureBox(0, 0, 1);
+        Optional<TreasureBox> finalTreasureBox = treasureBox.decrementNbTreasures();
+
+        assertThat(finalTreasureBox).isEmpty();
+    }
 
     private TreasureBox buildTreasureBox(int x, int y, int nbTreasures) {
         return new TreasureBox(Coordinates.of(x, y), nbTreasures);

@@ -1,7 +1,6 @@
 package com.fleboulch.treasuremap.application.exposition;
 
 import com.fleboulch.treasuremap.application.domain.Explorers;
-import com.fleboulch.treasuremap.application.domain.HistoryTreasureQuest;
 import com.fleboulch.treasuremap.application.domain.TreasureQuest;
 import com.fleboulch.treasuremap.application.exposition.exceptions.DimensionConfigurationNotDefinedException;
 import com.fleboulch.treasuremap.application.exposition.exceptions.InvalidInputRowException;
@@ -9,7 +8,7 @@ import com.fleboulch.treasuremap.explorer.domain.Explorer;
 import com.fleboulch.treasuremap.explorer.domain.MovementType;
 import com.fleboulch.treasuremap.explorer.domain.OrientationType;
 import com.fleboulch.treasuremap.map.domain.*;
-import com.fleboulch.treasuremap.map.domain.exceptions.BoxIsOutOfMapException;
+import com.fleboulch.treasuremap.map.domain.BoxIsOutOfMapException;
 import com.fleboulch.treasuremap.resolvers.*;
 import com.fleboulch.treasuremap.shared.coordinates.domain.Coordinates;
 import org.junit.jupiter.api.Test;
@@ -179,12 +178,12 @@ class ApplicationFactoryTest {
     }
 
     @Test
-    void it_should_convert_history_treasure_quest_to_exposition(
+    void it_should_convert_treasure_quest_to_exposition(
             Explorer explorer
     ) {
-        HistoryTreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer);
+        TreasureQuest treasureQuest = buildTreasureQuest(explorer);
 
-        List<String> response = ApplicationFactory.toExposition(historyTreasureQuest);
+        List<String> response = ApplicationFactory.toExposition(treasureQuest);
 
         String caret = ApplicationFactory.CARET_DELIMITER;
         assertThat(response).containsExactly(
@@ -196,12 +195,12 @@ class ApplicationFactoryTest {
     }
 
     @Test
-    void it_should_convert_history_treasure_quest_to_exposition_and_remove_empty_treasure_box(
+    void it_should_convert_treasure_quest_to_exposition_and_remove_empty_treasure_box(
             @ExplorerConfiguration(xCoordinates = 2, yCoordinates = 1, orientationType = OrientationType.S, nbTreasures = 3) Explorer explorer
     ) {
-        HistoryTreasureQuest historyTreasureQuest = buildHistoryTreasureQuest(explorer);
+        TreasureQuest treasureQuest = buildTreasureQuest(explorer);
 
-        List<String> response = ApplicationFactory.toExposition(historyTreasureQuest);
+        List<String> response = ApplicationFactory.toExposition(treasureQuest);
 
         String caret = ApplicationFactory.CARET_DELIMITER;
         assertThat(response).containsExactly(
@@ -210,10 +209,6 @@ class ApplicationFactoryTest {
                 String.format("T%s2%s2%s1", caret, caret, caret),
                 String.format("A%sLaura%s2%s1%sS%s3", caret, caret, caret, caret, caret)
         );
-    }
-
-    private HistoryTreasureQuest buildHistoryTreasureQuest(Explorer explorer) {
-        return HistoryTreasureQuest.of(buildTreasureQuest(explorer));
     }
 
     private TreasureQuest buildTreasureQuest(Explorer explorer) {
