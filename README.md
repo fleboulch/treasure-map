@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/fleboulch/treasure-map/branch/master/graph/badge.svg)](https://codecov.io/gh/fleboulch/treasure-map)
+
 # Treasure map
 
 ## Prerequisites
