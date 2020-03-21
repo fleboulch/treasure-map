@@ -18,8 +18,18 @@ repositories {
 
 test {
     useJUnitPlatform()
+    exclude "**/*IntTest*"
     jvmArgs '-Djunit.jupiter.displayname.generator.default=org.junit.jupiter.api.DisplayNameGenerator$ReplaceUnderscores'
 }
+
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+    description = "Execute integration tests."
+    group = "verification"
+    include "**/*IntTest*"
+
+}
+check.dependsOn integrationTest
 
 testlogger {
     theme = "mocha"
