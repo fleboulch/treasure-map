@@ -109,6 +109,16 @@ class ExplorerTest {
     }
 
     @Test
+    void explorer_go_forward_and_collect(
+            @ExplorerConfiguration(yCoordinates = 0, orientationType = OrientationType.W, movements = MovementType.A) Explorer beginExplorer,
+            @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.W, movements = MovementType.A, nbTreasures = 1) Explorer expectedEndExplorer
+    ) {
+        Explorer explorerAfterAction = beginExplorer.goForwardAndCollect();
+
+        explorer_are_equals(explorerAfterAction, expectedEndExplorer);
+    }
+
+    @Test
     void explorer_turn_D_from_north(
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.N, movements = MovementType.D) Explorer beginExplorer,
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, movements = MovementType.D) Explorer expectedEndExplorer
