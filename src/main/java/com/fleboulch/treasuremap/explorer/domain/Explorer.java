@@ -52,6 +52,9 @@ public class Explorer {
     }
 
     public Explorer turn(MovementType direction) {
+        if (Objects.equals(direction, MovementType.A)) {
+            throw new InvalidMovementTypeForTurnException(direction);
+        }
         Position newPosition = direction.executeMovement(this.position);
         return new Explorer(name, newPosition, movements, nbCollectedTreasures);
 

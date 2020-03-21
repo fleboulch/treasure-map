@@ -119,6 +119,16 @@ class ExplorerTest {
     }
 
     @Test
+    void explorer_turn_A_is_not_allowed(
+            @ExplorerConfiguration Explorer beginExplorer
+    ) {
+        assertThatThrownBy(() ->
+                beginExplorer.turn(MovementType.A)
+        ).isInstanceOf(InvalidMovementTypeForTurnException.class);
+
+    }
+
+    @Test
     void explorer_turn_L_from_north(
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.N, movements = MovementType.G) Explorer beginExplorer,
             @ExplorerConfiguration(xCoordinates = 0, yCoordinates = 0, orientationType = OrientationType.W, movements = MovementType.G) Explorer expectedEndExplorer
