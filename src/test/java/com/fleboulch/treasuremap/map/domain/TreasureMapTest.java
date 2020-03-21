@@ -166,6 +166,24 @@ class TreasureMapTest {
         assertThat(onMountain).isFalse();
     }
 
+    @Test
+    void remove_last_treasure_on_treasure_box() {
+        TreasureBox treasureBox = buildTreasure(Coordinates.of(1, 1));
+        TreasureMap treasureMap = buildMapWithTreasures(5, 5, List.of(treasureBox));
+
+        treasureMap.removeOneTreasureOn(treasureBox);
+        assertThat(treasureMap.treasureBoxes()).isEmpty();
+    }
+
+    @Test
+    void remove_one_treasure_on_treasure_box_should() {
+        TreasureBox treasureBox = new TreasureBox(Coordinates.of(1, 1), 2);
+        TreasureMap treasureMap = buildMapWithTreasures(5, 5, List.of(treasureBox));
+
+        treasureMap.removeOneTreasureOn(treasureBox);
+        assertThat(treasureMap.treasureBoxes()).containsExactly(new TreasureBox(Coordinates.of(1, 1), 1));
+    }
+
     private MountainBox buildMountain(Coordinates coordinates) {
         return new MountainBox(coordinates);
     }
