@@ -28,6 +28,17 @@ public class TreasureMap {
         this.treasureBoxes = treasureBoxes;
     }
 
+    private void checkValidBoxes(List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
+        mountainBoxes.forEach(this::checkValidBox);
+        treasureBoxes.forEach(this::checkValidBox);
+    }
+
+    private void checkValidBox(PlainsBox box) {
+        if (!box.isInside(dimension)) {
+            throw new BoxIsOutOfMapException(box, dimension);
+        }
+    }
+
     // TODO: need to refacto this method
     public Optional<PlainsBox> from(Coordinates coordinates) {
         if (coordinates.hasValidCoordinates(dimension)) {
@@ -50,16 +61,6 @@ public class TreasureMap {
         }
     }
 
-    public boolean explorerIsOnMountain(Explorer currentExplorer) {
-        Coordinates coordinates = currentExplorer.coordinates();
-
-        if (findMountainBoxByCoordinates(coordinates).isPresent()) {
-            throw new InvalidCurrentPositionException(currentExplorer.name().value(), coordinates);
-        } else {
-            return false;
-        }
-    }
-
     private Optional<MountainBox> findMountainBoxByCoordinates(Coordinates coordinates) {
         return mountainBoxes.stream()
                 .filter(mountainBox -> Objects.equals(mountainBox.coordinates(), coordinates))
@@ -72,6 +73,16 @@ public class TreasureMap {
                 .findFirst();
     }
 
+    public boolean explorerIsOnMountain(Explorer currentExplorer) {
+        Coordinates coordinates = currentExplorer.coordinates();
+
+        if (findMountainBoxByCoordinates(coordinates).isPresent()) {
+            throw new InvalidCurrentPositionException(currentExplorer.name().value(), coordinates);
+        } else {
+            return false;
+        }
+    }
+
     public void removeOneTreasureOn(TreasureBox treasureBoxToUpdate) {
 
         treasureBoxes = treasureBoxes.stream()
@@ -79,17 +90,6 @@ public class TreasureMap {
                 .flatMap(Optional::stream)
                 .collect(Collectors.toList());
 
-    }
-
-    private void checkValidBoxes(List<MountainBox> mountainBoxes, List<TreasureBox> treasureBoxes) {
-        mountainBoxes.forEach(this::checkValidBox);
-        treasureBoxes.forEach(this::checkValidBox);
-    }
-
-    private void checkValidBox(PlainsBox box) {
-        if (!box.isInside(dimension)) {
-            throw new BoxIsOutOfMapException(box, dimension);
-        }
     }
 
     public Dimension dimension() {
