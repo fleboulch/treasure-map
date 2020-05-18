@@ -1,6 +1,7 @@
 package com.fleboulch.treasuremap.ddd.exposition;
 
 import com.fleboulch.treasuremap.ddd.app.StudentCRUD;
+import com.fleboulch.treasuremap.ddd.app.StudentDoesNotExistException;
 import com.fleboulch.treasuremap.ddd.domain.Student;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import static org.mockito.Mockito.when;
 @WebMvcTest(controllers = StudentApi.class)
 class StudentApiTest {
 
+    public static final String STUDENTS_URL = "/api/students";
     @Autowired
     private MockMvc mockMvc;
 
@@ -30,10 +32,18 @@ class StudentApiTest {
         UUID id = UUID.randomUUID();
         when(service.findById(any())).thenReturn(buildStudent(id));
 
-        String url = "/api/students";
-
-        mockMvc.perform(MockMvcRequestBuilders.get(url + "/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.get(STUDENTS_URL + "/{id}", id))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void it_should_return_not_found() throws Exception {
+
+        UUID id = UUID.randomUUID();
+        when(service.findById(any())).thenThrow(StudentDoesNotExistException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(STUDENTS_URL + "/{id}", id))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     private Student buildStudent(UUID id) {
