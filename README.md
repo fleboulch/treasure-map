@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-- JDK 13
+- JDK 14
 
 ## Build project
 

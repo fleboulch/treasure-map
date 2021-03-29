@@ -10,8 +10,8 @@ group = "com.fleboulch"
 description = "treasure-map"
 version = "1.0-SNAPSHOT"
 
-sourceCompatibility = 13
-targetCompatibility = 13
+sourceCompatibility = 14
+targetCompatibility = 14
 
 repositories {
     mavenCentral()
